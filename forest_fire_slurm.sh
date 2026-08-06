@@ -12,4 +12,4 @@
 make clean
 make
 
-time ./decay
+time ./forest-fire
