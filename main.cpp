@@ -1,38 +1,17 @@
 #include <cstdint>
-#include <fstream>
 #include <iostream>
+#include <memory>
 #include <random>
 #include <string>
 #include <vector>
 
 #include "build_info.hpp"
+#include "save_file.hpp"
 
 enum class CellState : std::uint8_t { Empty, Tree, Burning };
 
-#ifndef NO_VISUALISE
-#pragma pack(push, 1)
-struct SaveHeader {
-  char magic[4];
-  std::uint16_t version;
-  std::uint32_t grid_size;
-  std::uint64_t frame_count;
-  std::uint32_t frame_interval;
-  std::uint8_t cell_size;
-};
-#pragma pack(pop)
-
-void print_grid(const std::vector<std::vector<CellState>> &grid) {
-  for (int y = 0; y < static_cast<int>(grid.size()); ++y) {
-    for (int x = 0; x < static_cast<int>(grid.size()); ++x) {
-      std::cout << static_cast<int>(grid[x][y]) << ' ';
-    }
-    std::cout << '\n';
-  }
-}
-#endif
-
 int main(int argc, char *argv[]) {
-#ifndef NO_VISUALISE
+#ifndef NO_VISUALIZATION
   const bool visualise = argc == 6 && std::string(argv[5]) == "-v";
   if (argc < 5 || argc > 6 || (argc == 6 && !visualise)) {
     std::cerr << "Usage: " << argv[0] << " <grid_size> <timesteps> <p> <f> [-v]"
@@ -53,20 +32,12 @@ int main(int argc, char *argv[]) {
   double f = std::stod(argv[4]);
 
   build_info::print_startup_banner(grid_size, timesteps, p, f);
-#ifndef NO_VISUALISE
-  std::ofstream binary;
-  std::ofstream csv;
+#ifndef NO_VISUALIZATION
+  std::unique_ptr<SaveFile> save_file;
   if (visualise) {
-    binary.open("out/fire.bin", std::ios::binary);
-    csv.open("out/fire.csv");
-
-    SaveHeader header{{'F', 'F', 'C', 'A'},
-                      1,
-                      static_cast<std::uint32_t>(grid_size),
-                      static_cast<std::uint64_t>(timesteps),
-                      1,
-                      1};
-    binary.write(reinterpret_cast<const char *>(&header), sizeof(header));
+    save_file = std::make_unique<SaveFile>(
+        "out/fire.bin", "out/fire.csv", static_cast<std::uint32_t>(grid_size),
+        static_cast<std::uint64_t>(timesteps));
   }
 #endif
 
@@ -91,23 +62,9 @@ int main(int argc, char *argv[]) {
       }
     }
 
-#ifndef NO_VISUALISE
+#ifndef NO_VISUALIZATION
     if (visualise) {
-      for (int y = 0; y < grid_size; ++y) {
-        for (int x = 0; x < grid_size; ++x) {
-          const auto cell = static_cast<std::uint8_t>(grid[x][y]);
-          binary.write(reinterpret_cast<const char *>(&cell), sizeof(cell));
-          csv << static_cast<int>(cell);
-          if (x + 1 < grid_size) {
-            csv << ',';
-          }
-        }
-        csv << '\n';
-      }
-      csv << '\n';
-
-      // std::cout << "Timestep " << t << '\n';
-      // print_grid(grid);
+      save_file->write_frame(grid);
     }
 #endif
   }

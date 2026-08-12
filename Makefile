@@ -2,7 +2,7 @@ CXX        ?= g++
 TARGET     ?= bin/fire
 OPT_TARGET := $(TARGET)-o
 LOPT_TARGET := $(TARGET)-lo
-SOURCES    := main.cpp build_info.cpp
+SOURCES    := main.cpp build_info.cpp save_file.cpp
 
 # These values are compiled into the startup banner so it describes the
 # binary that is actually being run, rather than relying on runtime guesses.
