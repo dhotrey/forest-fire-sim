@@ -9,7 +9,11 @@
 ##SBATCH --mem-per-cpu=1G # memory (MB)
 #SBATCH --time=0-00:01 # time (D-HH:MM)
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+PROJECT_DIR=$(dirname -- "$SCRIPT_DIR")
+cd "$PROJECT_DIR" || exit 1
+
 make clean
 make
 
-time ./forest-fire
+time ./bin/fire 100 500 0.01 0.001
