@@ -9,9 +9,10 @@
 ##SBATCH --mem-per-cpu=1G # memory (MB)
 #SBATCH --time=0-00:01 # time (D-HH:MM)
 
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
-PROJECT_DIR=$(dirname -- "$SCRIPT_DIR")
-cd "$PROJECT_DIR" || exit 1
+set -euo pipefail
+
+PROJECT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+cd "$PROJECT_DIR"
 
 make clean
 make o3timised
