@@ -1,6 +1,7 @@
 #include "build_info.hpp"
 
 #include <iostream>
+#include <string>
 
 #ifndef BUILD_TARGET_NAME
 #define BUILD_TARGET_NAME "unspecified"
@@ -60,7 +61,8 @@ const char *optimisation_status() {
 
 namespace build_info {
 
-void print_startup_banner(int grid_size, int timesteps, double p, double f) {
+void print_startup_banner(int grid_size, int timesteps, double p, double f,
+                          std::string version, std::string version_name) {
   std::cout << "Cellular automata based forest fire model\n"
             << "--------------------------------------------------\n"
             << "Model configuration\n"
@@ -70,10 +72,11 @@ void print_startup_banner(int grid_size, int timesteps, double p, double f) {
             << "  f (lightning):   " << f << '\n'
             << "--------------------------------------------------\n"
             << "Build information\n"
+            << "  Version          " << version << " " << version_name << '\n'
             << "  Compiled:        " << __DATE__ << ' ' << __TIME__ << '\n'
             << "  Compiler:        " << compiler_name() << '\n'
-            << "  C++ standard:    " << cpp_standard() << " (__cplusplus="
-            << __cplusplus << ")\n"
+            << "  C++ standard:    " << cpp_standard()
+            << " (__cplusplus=" << __cplusplus << ")\n"
             << "  Compiler target: " << BUILD_COMPILER_TARGET << '\n'
             << "  Executable:      " << BUILD_TARGET_NAME << '\n'
             << "  Build profile:   " << BUILD_PROFILE << '\n'

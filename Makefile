@@ -6,6 +6,8 @@ O2_TARGET  ?= $(TARGET)-o2timised
 O3_TARGET  ?= $(TARGET)-o3timised
 SOURCES    := main.cpp build_info.cpp save_file.cpp
 
+.DEFAULT_GOAL := $(TARGET)
+
 # These values are compiled into the startup banner so it describes the
 # binary that is actually being run, rather than relying on runtime guesses.
 COMPILER_TARGET  ?= $(shell $(CXX) -dumpmachine 2>/dev/null || echo unknown)

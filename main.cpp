@@ -4,12 +4,14 @@
 #include <memory>
 #include <random>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "build_info.hpp"
 #include "save_file.hpp"
 
 const std::string VERSION = "0.0";
+const std::string VERSION_NAME = "baseline";
 
 int main(int argc, char *argv[]) {
 #ifndef NO_VISUALIZATION
@@ -19,8 +21,8 @@ int main(int argc, char *argv[]) {
 
   if (valid_arguments && argc >= 6 && std::string(argv[5]) == "--visualise") {
     visualise = true;
-    if (argc == 7 && (std::string(argv[6]) == "--v" ||
-                      std::string(argv[6]) == "-v")) {
+    if (argc == 7 &&
+        (std::string(argv[6]) == "--v" || std::string(argv[6]) == "-v")) {
       verbose = true;
     } else if (argc == 7) {
       visualise = false;
@@ -36,18 +38,21 @@ int main(int argc, char *argv[]) {
   }
 #else
   if (argc != 5) {
-    std::cerr << "Usage: " << argv[0]
-              << " <grid_size> <timesteps> <p> <f>" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <grid_size> <timesteps> <p> <f>"
+              << std::endl;
     return 1;
   }
 #endif
 
-  int grid_size = std::stoi(argv[1]);
+  int grid_size =
+      std::stoi(argv[1]) + 2; // padding so that i don't have to check for
+                              // boundry conditions in the hot loop
   int timesteps = std::stoi(argv[2]);
   double p = std::stod(argv[3]);
   double f = std::stod(argv[4]);
 
-  build_info::print_startup_banner(grid_size, timesteps, p, f);
+  build_info::print_startup_banner(grid_size, timesteps, p, f, VERSION,
+                                   VERSION_NAME);
 #ifndef NO_VISUALIZATION
   std::unique_ptr<SaveFile> save_file;
   if (visualise) {
@@ -60,27 +65,51 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
-  std::vector<std::vector<CellState>> grid(grid_size,
-                                           std::vector<CellState>(grid_size));
-
   // std::random_device randominator;
   // std::mt19937 gen(randominator());
   std::mt19937 gen(80085);
   std::uniform_real_distribution<double> dist(0.0, 1.0);
 
+  std::vector<std::vector<CellState>> grid(grid_size,
+                                           std::vector<CellState>(grid_size));
+
+  std::vector<std::vector<CellState>> next(grid_size,
+                                           std::vector<CellState>(grid_size));
   for (int t = 0; t < timesteps; ++t) {
-    for (int y = 0; y < grid_size; ++y) {
-      for (int x = 0; x < grid_size; ++x) {
-        if (grid[x][y] == CellState::Empty || grid[x][y] == CellState::Tree) {
-          if (dist(gen) < f) {
-            grid[x][y] = CellState::Burning;
-          } else if (dist(gen) < p) {
-            grid[x][y] = CellState::Tree;
+    for (int y = 1; y < grid_size - 1; ++y) {
+      for (int x = 1; x < grid_size - 1; ++x) {
+        auto r = dist(gen);
+        switch (grid[x][y]) {
+        case CellState::Empty:
+          if (r < p) {
+            next[x][y] = CellState::Tree;
+          } else {
+            next[x][y] = CellState::Empty;
           }
+          break;
+        case CellState::Burning:
+          next[x][y] = CellState::Empty;
+          break;
+        case CellState::Tree:
+          const auto up = grid[x][y - 1];
+          const auto down = grid[x][y + 1];
+          const auto left = grid[x - 1][y];
+          const auto right = grid[x + 1][y];
+
+          if (up == CellState::Burning || down == CellState::Burning ||
+              left == CellState::Burning || right == CellState::Burning) {
+            next[x][y] = CellState::Burning;
+          } else if (r < f) {
+            next[x][y] = CellState::Burning;
+          } else {
+            next[x][y] = CellState::Tree;
+          }
+          break;
         }
       }
     }
 
+    std::swap(grid, next);
 #ifndef NO_VISUALIZATION
     if (visualise) {
       save_file->write_frame(grid);
