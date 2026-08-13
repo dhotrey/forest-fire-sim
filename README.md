@@ -64,7 +64,7 @@ this:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────┐
-│ Header (23 bytes)                                                    │
+│ Header (23 bytes)                                                   │
 ├────────┬───────────┬───────────┬────────────┬───────────┬───────────┤
 │ "FFCA" │ version   │ grid size │ frame count│ interval  │ cell size │
 │ 4 B    │ 2 B       │ 4 B       │ 8 B        │ 4 B       │ 1 B       │
@@ -72,13 +72,13 @@ this:
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────────────┐
-│ Frame 0: grid_size × grid_size one-byte cell states                  │
+│ Frame 0: grid_size × grid_size one-byte cell states                 │
 ├─────────────────────────────────────────────────────────────────────┤
-│ Frame 1: grid_size × grid_size one-byte cell states                  │
+│ Frame 1: grid_size × grid_size one-byte cell states                 │
 ├─────────────────────────────────────────────────────────────────────┤
 │ ...                                                                 │
 ├─────────────────────────────────────────────────────────────────────┤
-│ Frame frame_count - 1: grid_size × grid_size one-byte cell states    │
+│ Frame frame_count - 1: grid_size × grid_size one-byte cell states   │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
