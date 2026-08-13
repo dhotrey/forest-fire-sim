@@ -4,26 +4,19 @@
 #include <cstdint>
 #include <fstream>
 #include <string>
+#include <vector>
+
+enum class CellState : std::uint8_t { Empty, Tree, Burning };
+
+std::string make_save_file_path(const std::string &version);
 
 class SaveFile {
 public:
-  SaveFile(const std::string &binary_path, const std::string &csv_path,
-           std::uint32_t grid_size, std::uint64_t frame_count);
+  SaveFile(const std::string &binary_path, std::uint32_t grid_size,
+           std::uint64_t frame_count,
+           bool write_csv = false);
 
-  template <typename Grid> void write_frame(const Grid &grid) {
-    for (std::uint32_t y = 0; y < grid_size_; ++y) {
-      for (std::uint32_t x = 0; x < grid_size_; ++x) {
-        const auto cell = static_cast<std::uint8_t>(grid[x][y]);
-        binary_.write(reinterpret_cast<const char *>(&cell), sizeof(cell));
-        csv_ << static_cast<int>(cell);
-        if (x + 1 < grid_size_) {
-          csv_ << ',';
-        }
-      }
-      csv_ << '\n';
-    }
-    csv_ << '\n';
-  }
+  void write_frame(const std::vector<std::vector<CellState>> &grid);
 
 private:
   std::ofstream binary_;

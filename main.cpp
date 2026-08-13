@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <filesystem>
 #include <iostream>
 #include <memory>
 #include <random>
@@ -8,20 +9,35 @@
 #include "build_info.hpp"
 #include "save_file.hpp"
 
-enum class CellState : std::uint8_t { Empty, Tree, Burning };
+const std::string VERSION = "0.0";
 
 int main(int argc, char *argv[]) {
 #ifndef NO_VISUALIZATION
-  const bool visualise = argc == 6 && std::string(argv[5]) == "-v";
-  if (argc < 5 || argc > 6 || (argc == 6 && !visualise)) {
-    std::cerr << "Usage: " << argv[0] << " <grid_size> <timesteps> <p> <f> [-v]"
+  bool visualise = false;
+  bool verbose = false;
+  const bool valid_arguments = argc >= 5 && argc <= 7;
+
+  if (valid_arguments && argc >= 6 && std::string(argv[5]) == "--visualise") {
+    visualise = true;
+    if (argc == 7 && (std::string(argv[6]) == "--v" ||
+                      std::string(argv[6]) == "-v")) {
+      verbose = true;
+    } else if (argc == 7) {
+      visualise = false;
+    }
+  }
+
+  if (!valid_arguments || (argc >= 6 && !visualise)) {
+    std::cerr << "Usage: " << argv[0]
+              << " <grid_size> <timesteps> <p> <f>"
+                 " [--visualise [--v|-v]]"
               << std::endl;
     return 1;
   }
 #else
   if (argc != 5) {
-    std::cerr << "Usage: " << argv[0] << " <grid_size> <timesteps> <p> <f>"
-              << std::endl;
+    std::cerr << "Usage: " << argv[0]
+              << " <grid_size> <timesteps> <p> <f>" << std::endl;
     return 1;
   }
 #endif
@@ -35,9 +51,12 @@ int main(int argc, char *argv[]) {
 #ifndef NO_VISUALIZATION
   std::unique_ptr<SaveFile> save_file;
   if (visualise) {
+    std::filesystem::create_directories("out");
+    const std::string binary_path = make_save_file_path(VERSION);
     save_file = std::make_unique<SaveFile>(
-        "out/fire.bin", "out/fire.csv", static_cast<std::uint32_t>(grid_size),
-        static_cast<std::uint64_t>(timesteps));
+        binary_path, static_cast<std::uint32_t>(grid_size),
+        static_cast<std::uint64_t>(timesteps), verbose);
+    std::cout << "Visualisation binary: " << binary_path << '\n';
   }
 #endif
 

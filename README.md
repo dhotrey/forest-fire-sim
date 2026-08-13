@@ -7,7 +7,23 @@ the `p` and `f` probabilities:
 
 ```sh
 make
-./bin/fire 100 500 0.01 0.001
+./out/fire 100 500 0.01 0.001
+```
+
+The default `make` target builds the standard binary and the three
+optimisation builds. The optimisation targets are available individually:
+
+```sh
+make o1timised
+make o2timised
+make o3timised
+```
+
+The optimisation builds omit visualisation support by default. Enable it when
+building one of them with `VISUALISE=1`, for example:
+
+```sh
+make o3timised VISUALISE=1
 ```
 
 On startup, the program prints the model configuration and the build metadata:
@@ -15,43 +31,68 @@ compile date/time, compiler and version, C++ standard, compiler target,
 executable target, build profile, and optimisation settings.
 
 Normal runs do not write simulation frames to disk. Add `--visualise` when a
-save file and a frame-by-frame console dump are wanted:
+binary save file is wanted:
 
 ```sh
-./bin/fire 100 500 0.01 0.001 --visualise
-python3 visualise.py fire.bin 10
+./out/fire 100 500 0.01 0.001 --visualise
 ```
 
-The flag takes no argument. It writes every completed timestep to `fire.bin`.
-The second argument to `visualise.py` is optional and displays every Nth saved
-frame; `10` therefore displays frames 0, 10, 20, and so on.
+The program prints the generated path, which has the form
+`out/fire-{version}-{date}-{time}.bin`. The current version is `0.0`.
+The `--visualise` flag writes every completed timestep but does not create a
+CSV. Add `--v` (or `-v`) after it for verbose visualisation, which also writes
+the matching CSV:
+
+```sh
+./out/fire 100 500 0.01 0.001 --visualise --v
+```
+
+The animation script accepts the generated binary path. Its optional second
+argument displays every Nth saved frame; `10` therefore displays frames 0, 10,
+20, and so on:
+
+```sh
+python3 animation/visualise.py out/fire-0.0-YYYY-MM-DD-HH-MM-SS-mmm.bin 10
+```
 
 ## Binary save-file format
 
-`fire.bin` is self-describing and does not require the Python script to be told
-the grid size or number of timesteps. All integer fields are fixed-width and
-little-endian. The header is 23 bytes:
+`fire-{version}-{date}-{time}.bin` is self-describing and does not require the
+Python script to be told the grid size or number of timesteps. All integer
+fields are fixed-width and little-endian. The complete file is laid out like
+this:
 
 ```text
-offset  size  field
-0       4     magic bytes: "FFCA"
-4       2     format version: uint16, currently 1
-6       4     square grid size: uint32
-10      8     number of saved frames: uint64
-18      4     frame interval: uint32, currently 1
-22      1     cell size in bytes: uint8, currently 1
+┌─────────────────────────────────────────────────────────────────────┐
+│ Header (23 bytes)                                                    │
+├────────┬───────────┬───────────┬────────────┬───────────┬───────────┤
+│ "FFCA" │ version   │ grid size │ frame count│ interval  │ cell size │
+│ 4 B    │ 2 B       │ 4 B       │ 8 B        │ 4 B       │ 1 B       │
+└────────┴───────────┴───────────┴────────────┴───────────┴───────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│ Frame 0: grid_size × grid_size one-byte cell states                  │
+├─────────────────────────────────────────────────────────────────────┤
+│ Frame 1: grid_size × grid_size one-byte cell states                  │
+├─────────────────────────────────────────────────────────────────────┤
+│ ...                                                                 │
+├─────────────────────────────────────────────────────────────────────┤
+│ Frame frame_count - 1: grid_size × grid_size one-byte cell states    │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
-The header is followed by `number of saved frames` flattened grids. Each grid
-contains `grid_size * grid_size` one-byte cell states in display order: all x
-values for y = 0, then all x values for y = 1, and so on. The current states
-are `0 = Empty`, `1 = Tree`, and `2 = Burning`. Frame 0 is the grid after the
-first completed update, so a run with `timesteps = N` contains exactly N
+The header fields are, in order: the magic bytes `FFCA`; format version
+`uint16` (currently `1`); square grid size `uint32`; saved-frame count
+`uint64`; frame interval `uint32` (currently `1`); and cell size `uint8`
+(currently `1`). Each frame contains `grid_size * grid_size` cells in display
+order: all x values for y = 0, then all x values for y = 1, and so on. Cell
+states are `0 = Empty`, `1 = Tree`, and `2 = Burning`. Frame 0 is the grid after
+the first completed update, so a run with `timesteps = N` contains exactly N
 frames.
 
-Use `make optimized` (or `make optimised`) for the `-O3` build, and `make debug`
-for the debug build. The selected profile and optimisation flags are included
-in the startup banner.
+Use `make debug` for a debug build. The selected profile and optimisation flags
+are included in the startup banner.
 
 # Random
 

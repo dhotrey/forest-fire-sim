@@ -16,4 +16,4 @@ cd "$PROJECT_DIR" || exit 1
 make clean
 make
 
-time ./bin/fire 100 500 0.01 0.001
+time ./out/fire 100 500 0.01 0.001
