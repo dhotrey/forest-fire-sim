@@ -15,7 +15,7 @@ PROJECT_DIR="${SLURM_SUBMIT_DIR:-$(pwd)}"
 cd "$PROJECT_DIR"
 
 make clean
-make o3timised
+make o1timised
 
 # Arguments: grid size, timesteps, tree growth probability, fire probability.
 GRID_SIZE="${1:-100}"
@@ -23,4 +23,4 @@ TIMESTEPS="${2:-500}"
 P="${3:-0.01}"
 F="${4:-0.001}"
 
-time ./bin/fire-o3timised "$GRID_SIZE" "$TIMESTEPS" "$P" "$F"
+time ./bin/fire-o1timised "$GRID_SIZE" "$TIMESTEPS" "$P" "$F"

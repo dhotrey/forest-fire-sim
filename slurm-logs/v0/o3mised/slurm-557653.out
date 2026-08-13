@@ -1,0 +1,25 @@
+rm -f bin/fire bin/fire-o1timised bin/fire-o2timised bin/fire-o3timised
+rm -rf out
+g++ -std=c++17 -Wall -Wextra -Wpedantic -Werror -DBUILD_TARGET_NAME=\"bin/fire-o3timised\" -DBUILD_COMPILER_TARGET=\"x86_64-redhat-linux\" -DBUILD_PROFILE=\"O3timised\" -DBUILD_OPTIMISATION=\"-O3\" -DNO_VISUALIZATION  -O3 -DNDEBUG  main.cpp build_info.cpp save_file.cpp -lstdc++fs -o bin/fire-o3timised
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      10000
+  p (growth):      0.01
+  f (lightning):   0.001
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 13 2026 21:38:27
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-o3timised
+  Build profile:   O3timised
+  Optimisation:    -O3 (enabled)
+
+
+real	0m2.318s
+user	0m2.281s
+sys	0m0.002s
