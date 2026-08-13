@@ -14,6 +14,12 @@ PROJECT_DIR=$(dirname -- "$SCRIPT_DIR")
 cd "$PROJECT_DIR" || exit 1
 
 make clean
-make
+make o3timised
 
-time ./out/fire 100 500 0.01 0.001
+# Arguments: grid size, timesteps, tree growth probability, fire probability.
+GRID_SIZE="${1:-100}"
+TIMESTEPS="${2:-500}"
+P="${3:-0.01}"
+F="${4:-0.001}"
+
+time ./bin/fire-o3timised "$GRID_SIZE" "$TIMESTEPS" "$P" "$F"
