@@ -15,8 +15,9 @@ BUILD_TARGET_NAME ?= $(TARGET)
 BUILD_PROFILE     ?= Standard
 OPTIMISATION     ?= compiler-default
 
-STANDARD := -std=c++2a
+STANDARD := -std=c++17
 WARNINGS := -Wall -Wextra -Wpedantic -Werror
+LDLIBS ?= -lstdc++fs
 
 # Optimised binaries omit visualisation unless it is explicitly requested.
 VISUALISE ?= 0
