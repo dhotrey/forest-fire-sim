@@ -1,0 +1,12 @@
+Exp Sel Total 
+=== === ===== 
+  1 all     1 
+Current metrics: e.%totalcpu:i.%totalcpu:name
+Current Sort Metric: Exclusive Total CPU Time ( e.%totalcpu )
+Available metrics:
+Exclusive Total CPU Time: e.%totalcpu
+Inclusive Total CPU Time: i.%totalcpu
+                    Size: size
+              PC Address: address
+                    Name: name
+

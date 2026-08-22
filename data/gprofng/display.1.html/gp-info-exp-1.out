@@ -1,0 +1,57 @@
+Experiment: /home/aryan/projects/forest-fire-sim/gprofng/test.2.er
+No errors
+*** Collector Warning: Collection interval timer period was changed (10007 -> 0); profile data may be unreliable
+Archive command ` /usr/bin/gprofng-archive -n -a on --outfile /home/aryan/sync/obsidian/UQ/SEM 2 2026/COSC3500/forest-fire-sim/test.2.er/archive.log /home/aryan/sync/obsidian/UQ/SEM 2 2026/COSC3500/forest-fire-sim/test.2.er'
+
+Target command (64-bit): './bin/fire-debug 1000 500 0.01 0.001'
+Process pid 384990, ppid 382663, pgrp 384990, sid 382663
+Current working directory: /home/aryan/sync/obsidian/UQ/SEM 2 2026/COSC3500/forest-fire-sim
+Collector version: `2.45.1'; experiment version 12.4 (64-bit)
+Host `thinkpad', OS `Linux 7.1.8-100.fc43.x86_64', page size 4096, architecture `x86_64'
+  12 CPUs, with clocks ranging from 1113 to 4042 MHz.; max of 4042 MHz. assumed
+  Memory: 5843533 pages @  4096 = 22826 MB.
+Data collection parameters:
+  Clock-profiling, interval = 10007 microsecs.
+  Periodic sampling, 1 secs.
+  Follow descendant processes from: fork|exec|combo
+
+Experiment started Sat Aug 22 16:22:21 2026
+
+Experiment Ended: 82.874402689
+Data Collection Duration: 82.874402689
+Experiment: /home/aryan/projects/forest-fire-sim/gprofng/test.2.er
+        Aggregated statistics for selected samples
+
+                                       Start Label: Total
+                                         End Label: Total
+                                 Start Time (sec.):  0.000
+                                   End Time (sec.): 82.874
+                                   Duration (sec.): 82.874
+                          Total Thread Time (sec.): 82.874
+                         Average number of Threads:  1.000
+
+                              Process Times (sec.):
+                                          User CPU: 82.506 ( 99.6%)
+                                        System CPU:  0.005 (  0.0%)
+                                          Trap CPU:  0.    (  0. %)
+                                         User Lock:  0.    (  0. %)
+                                   Data Page Fault:  0.    (  0. %)
+                                   Text Page Fault:  0.    (  0. %)
+                                 Kernel Page Fault:  0.    (  0. %)
+                                           Stopped:  0.    (  0. %)
+                                          Wait CPU:  0.    (  0. %)
+                                             Sleep:  0.363 (  0.4%)
+
+                                 Minor Page Faults:    589
+                                 Major Page Faults:      2
+                                     Process swaps:      0
+                                      Input blocks:      0
+                                     Output blocks:    312
+                                     Messages sent:      0
+                                 Messages received:      0
+                                   Signals handled:      0
+                        Voluntary context switches:      0
+                      Involuntary context switches:    917
+                                      System calls:      0
+                                 Characters of I/O:      0
+

@@ -1,0 +1,59 @@
+Source file: (unknown)
+Object file: libm.so.6 (found as test.2.er/archives/libm.so.6_OCEC1bthLm2)
+Load Object: libm.so.6 (found as test.2.er/archives/libm.so.6_OCEC1bthLm2)
+
+   Excl.
+   Total
+   CPU sec.
+                        <Function: logl>
+   0.010                [?]     2450:  endbr64
+   0.                   [?]     2454:  push   %rbp
+   0.                   [?]     2455:  mov    %rsp,%rbp
+   0.                   [?]     2458:  sub    $0x10,%rsp
+## 0.330                [?]     245c:  fldt   0x10(%rbp)
+   0.                   [?]     245f:  fldz
+   0.030                [?]     2461:  fucomi %st(1),%st
+   0.050                [?]     2463:  jae    .+0x1d [ 0x2480 ]
+   0.                   [?]     2465:  fstp   %st(0)
+   0.                   [?]     2467:  jmp    .+0xb [ 0x2472 ]
+   0.                   [?]     2469:  nopl   0x0(%rax)
+   0.                   [?]     2470:  fstp   %st(0)
+   0.080                [?]     2472:  fstpt  0x10(%rbp)
+   0.                   [?]     2475:  leave
+   0.                   [?]     2476:  jmp    .+0x31d6a [ 0x341e0 ]
+   0.                   [?]     247b:  nopl   0x0(%rax,%rax,1)
+   0.                   [?]     2480:  mov    0xf1b39(%rip),%rax        # 0xf1b40
+   0.                   [?]     2487:  cmpl   $0xffffffff,(%rax)
+   0.                   [?]     248a:  je     .-0x1a [ 0x2470 ]
+   0.                   [?]     248c:  fxch   %st(1)
+   0.                   [?]     248e:  fucomi %st(1),%st
+   0.                   [?]     2490:  fstp   %st(1)
+   0.                   [?]     2492:  jp     .+0x36 [ 0x24c8 ]
+   0.                   [?]     2494:  jne    .+0x34 [ 0x24c8 ]
+   0.                   [?]     2496:  mov    $0x4,%edi
+   0.                   [?]     249b:  fstpt  -0x10(%rbp)
+   0.                   [?]     249e:  call   feraiseexcept [ 0xe30, .-0x166e]
+   0.                   [?]     24a3:  fldt   -0x10(%rbp)
+   0.                   [?]     24a6:  sub    $0x20,%rsp
+   0.                   [?]     24aa:  mov    $0xd8,%edi
+   0.                   [?]     24af:  fld    %st(0)
+   0.                   [?]     24b1:  fstpt  0x10(%rsp)
+   0.                   [?]     24b5:  fstpt  (%rsp)
+   0.                   [?]     24b8:  call   .-0x1008 [ 0x14b0 ]  // Unable to determine target symbol
+   0.                   [?]     24bd:  add    $0x20,%rsp
+   0.                   [?]     24c1:  leave
+   0.                   [?]     24c2:  ret
+   0.                   [?]     24c3:  nopl   0x0(%rax,%rax,1)
+   0.                   [?]     24c8:  mov    $0x1,%edi
+   0.                   [?]     24cd:  fstpt  -0x10(%rbp)
+   0.                   [?]     24d0:  call   feraiseexcept [ 0xe30, .-0x16a0]
+   0.                   [?]     24d5:  fldt   -0x10(%rbp)
+   0.                   [?]     24d8:  sub    $0x20,%rsp
+   0.                   [?]     24dc:  mov    $0xd9,%edi
+   0.                   [?]     24e1:  fld    %st(0)
+   0.                   [?]     24e3:  fstpt  0x10(%rsp)
+   0.                   [?]     24e7:  fstpt  (%rsp)
+   0.                   [?]     24ea:  call   .-0x103a [ 0x14b0 ]  // Unable to determine target symbol
+   0.                   [?]     24ef:  add    $0x20,%rsp
+   0.                   [?]     24f3:  leave
+   0.                   [?]     24f4:  ret

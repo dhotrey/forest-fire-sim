@@ -1,0 +1,327 @@
+<!DOCTYPE html public "-//w3c//dtd html 3.2//en">
+<html lang="en_IN.UTF-8">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+<title>Source std::__detail::_Adaptor<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>, double>::_Adaptor(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&) (/usr/include/c++/15/bits/stl_construct.h)</title>
+</head>
+<body lang="en_IN.UTF-8" bgcolor=White>
+<style>
+div.left {
+text-align: left;
+}
+div.right {
+text-align: right;
+}
+div.center {
+text-align: center;
+}
+div.justify {
+text-align: justify;
+}
+</style>
+<div class="right"><br><a href='index.html' style='background-color:Lavender'><b>Return to main view</b></a></div>
+<pre>
+<i>Source file: /usr/include/c++/15/bits/stl_construct.h</i>
+<i>Object file: fire-debug (found as test.2.er/archives/fire-debug_d9AA6D6Pugd)</i>
+<i>Load Object: fire-debug (found as test.2.er/archives/fire-debug_d9AA6D6Pugd)</i>
+<i></i>
+<i>   Excl.</i>
+<i>   Total</i>
+<i>   CPU sec.</i>
+<a id="line_4"></a>                     4. //
+<a id="line_5"></a>                     5. // This file is part of the GNU ISO C++ Library.  This library is free
+<a id="line_6"></a>                     6. // software; you can redistribute it and/or modify it under the
+<a id="line_7"></a>                     7. // terms of the GNU General Public License as published by the
+<a id="line_8"></a>                     8. // Free Software Foundation; either version 3, or (at your option)
+<a id="line_9"></a>                     9. // any later version.
+<a id="line_10"></a>                    10. 
+<a id="line_11"></a>                    11. // This library is distributed in the hope that it will be useful,
+<a id="line_12"></a>                    12. // but WITHOUT ANY WARRANTY; without even the implied warranty of
+<a id="line_13"></a>                    13. // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+<a id="line_14"></a>                    14. // GNU General Public License for more details.
+<a id="line_15"></a>                    15. 
+<a id="line_16"></a>                    16. // Under Section 7 of GPL version 3, you are granted additional
+<a id="line_17"></a>                    17. // permissions described in the GCC Runtime Library Exception, version
+<a id="line_18"></a>                    18. // 3.1, as published by the Free Software Foundation.
+<a id="line_19"></a>                    19. 
+<a id="line_20"></a>                    20. // You should have received a copy of the GNU General Public License and
+<a id="line_21"></a>                    21. // a copy of the GCC Runtime Library Exception along with this program;
+<a id="line_22"></a>                    22. // see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
+<a id="line_23"></a>                    23. // &lt;http://www.gnu.org/licenses/>.
+<a id="line_24"></a>                    24. 
+<a id="line_25"></a>                    25. /*
+<a id="line_26"></a>                    26.  *
+<a id="line_27"></a>                    27.  * Copyright (c) 1994
+<a id="line_28"></a>                    28.  * Hewlett-Packard Company
+<a id="line_29"></a>                    29.  *
+<a id="line_30"></a>                    30.  * Permission to use, copy, modify, distribute and sell this software
+<a id="line_31"></a>                    31.  * and its documentation for any purpose is hereby granted without fee,
+<a id="line_32"></a>                    32.  * provided that the above copyright notice appear in all copies and
+<a id="line_33"></a>                    33.  * that both that copyright notice and this permission notice appear
+<a id="line_34"></a>                    34.  * in supporting documentation.  Hewlett-Packard Company makes no
+<a id="line_35"></a>                    35.  * representations about the suitability of this software for any
+<a id="line_36"></a>                    36.  * purpose.  It is provided "as is" without express or implied warranty.
+<a id="line_37"></a>                    37.  *
+<a id="line_38"></a>                    38.  *
+<a id="line_39"></a>                    39.  * Copyright (c) 1996,1997
+<a id="line_40"></a>                    40.  * Silicon Graphics Computer Systems, Inc.
+<a id="line_41"></a>                    41.  *
+<a id="line_42"></a>                    42.  * Permission to use, copy, modify, distribute and sell this software
+<a id="line_43"></a>                    43.  * and its documentation for any purpose is hereby granted without fee,
+<a id="line_44"></a>                    44.  * provided that the above copyright notice appear in all copies and
+<a id="line_45"></a>                    45.  * that both that copyright notice and this permission notice appear
+<a id="line_46"></a>                    46.  * in supporting documentation.  Silicon Graphics makes no
+<a id="line_47"></a>                    47.  * representations about the suitability of this software for any
+<a id="line_48"></a>                    48.  * purpose.  It is provided "as is" without express or implied warranty.
+<a id="line_49"></a>                    49.  */
+<a id="line_50"></a>                    50. 
+<a id="line_51"></a>                    51. /** @file bits/stl_construct.h
+<a id="line_52"></a>                    52.  *  This is an internal header file, included by other library headers.
+<a id="line_53"></a>                    53.  *  Do not attempt to use it directly. @headername{memory}
+<a id="line_54"></a>                    54.  */
+<a id="line_55"></a>                    55. 
+<a id="line_56"></a>                    56. #ifndef _STL_CONSTRUCT_H
+<a id="line_57"></a>                    57. #define _STL_CONSTRUCT_H 1
+<a id="line_58"></a>                    58. 
+<a id="line_59"></a>                    59. #include &lt;new>
+<a id="line_60"></a>                    60. #include &lt;bits/move.h>
+<a id="line_61"></a>                    61. #include &lt;bits/stl_iterator_base_types.h> // for iterator_traits
+<a id="line_62"></a>                    62. #include &lt;bits/stl_iterator_base_funcs.h> // for advance
+<a id="line_63"></a>                    63. 
+<a id="line_64"></a>                    64. /* This file provides the C++17 functions std::destroy_at, std::destroy, and
+<a id="line_65"></a>                    65.  * std::destroy_n, and the C++20 function std::construct_at.
+<a id="line_66"></a>                    66.  * It also provides std::_Construct, std::_Destroy,and std::_Destroy_n functions
+<a id="line_67"></a>                    67.  * which are defined in all standard modes and so can be used in C++98-14 code.
+<a id="line_68"></a>                    68.  * The _Destroy functions will dispatch to destroy_at during constant
+<a id="line_69"></a>                    69.  * evaluation, because calls to that function are intercepted by the compiler
+<a id="line_70"></a>                    70.  * to allow use in constant expressions.
+<a id="line_71"></a>                    71.  */
+<a id="line_72"></a>                    72. 
+<a id="line_73"></a>                    73. namespace std _GLIBCXX_VISIBILITY(default)
+<a id="line_74"></a>                    74. {
+<a id="line_75"></a>                    75. _GLIBCXX_BEGIN_NAMESPACE_VERSION
+<a id="line_76"></a>                    76. 
+<a id="line_77"></a>                    77. #if __glibcxx_raw_memory_algorithms // >= C++17
+<a id="line_78"></a>                    78.   template &lt;typename _Tp>
+<a id="line_79"></a>                    79.     _GLIBCXX20_CONSTEXPR inline void
+<a id="line_80"></a>                    80.     destroy_at(_Tp* __location)
+<a id="line_81"></a>                    81.     {
+<a id="line_82"></a>                    82.       if constexpr (__cplusplus > 201703L && is_array_v&lt;_Tp>)
+<a id="line_83"></a>                    83. 	{
+<a id="line_84"></a>                    84. 	  for (auto& __x : *__location)
+<a id="line_85"></a>                    85. 	    std::destroy_at(std::__addressof(__x));
+<a id="line_86"></a>                    86. 	}
+<a id="line_87"></a>                    87.       else
+<a id="line_88"></a>                    88. 	__location->~_Tp();
+<a id="line_89"></a>                    89.     }
+<a id="line_90"></a>                    90. 
+<a id="line_91"></a>                    91. #if __cpp_constexpr_dynamic_alloc // >= C++20
+<a id="line_92"></a>                    92.   template&lt;typename _Tp, typename... _Args>
+<a id="line_93"></a>                    93.     requires (!is_unbounded_array_v&lt;_Tp>)
+<a id="line_94"></a>                    94.       && requires { ::new((void*)0) _Tp(std::declval&lt;_Args>()...); }
+<a id="line_95"></a>                    95.     constexpr _Tp*
+<a id="line_96"></a>                    96.     construct_at(_Tp* __location, _Args&&... __args)
+<a id="line_97"></a>                    97.     noexcept(noexcept(::new((void*)0) _Tp(std::declval&lt;_Args>()...)))
+<a id="line_98"></a>                    98.     {
+<a id="line_99"></a>                    99.       void* __loc = __location;
+<a id="line_100"></a>                   100.       // _GLIBCXX_RESOLVE_LIB_DEFECTS
+<a id="line_101"></a>                   101.       // 3436. std::construct_at should support arrays
+<a id="line_102"></a>                   102.       if constexpr (is_array_v&lt;_Tp>)
+<a id="line_103"></a>                   103. 	{
+<a id="line_104"></a>                   104. 	  static_assert(sizeof...(_Args) == 0, "std::construct_at for array "
+<a id="line_105"></a>                   105. 		       "types must not use any arguments to initialize the "
+<a id="line_106"></a>                   106. 		       "array");
+<a id="line_107"></a>                   107. 	  return ::new(__loc) _Tp[1]();
+<a id="line_108"></a>                   108. 	}
+<a id="line_109"></a>                   109.       else
+<a id="line_110"></a>                   110. 	return ::new(__loc) _Tp(std::forward&lt;_Args>(__args)...);
+<a id="line_111"></a>                   111.     }
+<a id="line_112"></a>                   112. #endif // C++20
+<a id="line_113"></a>                   113. #endif// C++17
+<a id="line_114"></a>                   114. 
+<a id="line_115"></a>                   115.   /**
+<a id="line_116"></a>                   116.    * Constructs an object in existing memory by invoking an allocated
+<a id="line_117"></a>                   117.    * object's constructor with an initializer.
+<a id="line_118"></a>                   118.    */
+<a id="line_119"></a>                   119. #if __cplusplus >= 201103L
+<a id="line_120"></a>                   120.   template&lt;typename _Tp, typename... _Args>
+<a id="line_121"></a>                   121.     _GLIBCXX20_CONSTEXPR
+<a id="line_122"></a>                   122.     inline void
+<a id="line_func"></a><font color='BlueViolet'><b>                        &lt;Function: std::__new_allocator&lt;std::vector&lt;CellState, std::allocator&lt;CellState> > >::allocate(unsigned long, void const*)></b></font>
+<a id="line_123"></a>                   123.     _Construct(_Tp* __p, _Args&&... __args)
+<a id="line_124"></a>                   124.     {
+<a id="line_125"></a>                   125. #if __cpp_constexpr_dynamic_alloc // >= C++20
+<a id="line_126"></a>                   126.       if (std::__is_constant_evaluated())
+<a id="line_127"></a>                   127. 	{
+<a id="line_128"></a>                   128. 	  // Allow std::_Construct to be used in constant expressions.
+<a id="line_129"></a>                   129. 	  std::construct_at(__p, std::forward&lt;_Args>(__args)...);
+<a id="line_130"></a>                   130. 	  return;
+<a id="line_131"></a>                   131. 	}
+<a id="line_132"></a>                   132. #endif
+<a id="line_133"></a>                   133.       ::new(static_cast&lt;void*>(__p)) _Tp(std::forward&lt;_Args>(__args)...);
+<a id="line_134"></a>                   134.     }
+<a id="line_135"></a>                   135. #else
+<a id="line_136"></a>                   136.   template&lt;typename _T1, typename _T2>
+<a id="line_137"></a>                   137.     inline void
+<a id="line_138"></a>                   138.     _Construct(_T1* __p, const _T2& __value)
+<a id="line_139"></a>                   139.     {
+<a id="line_140"></a>                   140.       // _GLIBCXX_RESOLVE_LIB_DEFECTS
+<a id="line_141"></a>                   141.       // 402. wrong new expression in [some_]allocator::construct
+<a id="line_142"></a>                   142.       ::new(static_cast&lt;void*>(__p)) _T1(__value);
+<a id="line_143"></a>                   143.     }
+<a id="line_144"></a>                   144. #endif
+<a id="line_145"></a>                   145. 
+<a id="line_146"></a>                   146.   template&lt;typename _T1>
+<a id="line_147"></a>                   147.     _GLIBCXX26_CONSTEXPR
+<a id="line_148"></a>                   148.     inline void
+<a id="line_149"></a>                   149.     _Construct_novalue(_T1* __p)
+<a id="line_150"></a>                   150.     { ::new(static_cast&lt;void*>(__p)) _T1; }
+<a id="line_151"></a>                   151. 
+<a id="line_152"></a>                   152.   template&lt;typename _ForwardIterator>
+<a id="line_153"></a>                   153.     _GLIBCXX20_CONSTEXPR void
+<a id="line_154"></a>                   154.     _Destroy(_ForwardIterator __first, _ForwardIterator __last);
+<a id="line_155"></a>                   155. 
+<a id="line_156"></a>                   156.   /**
+<a id="line_157"></a>                   157.    * Destroy the object pointed to by a pointer type.
+<a id="line_158"></a>                   158.    */
+<a id="line_159"></a>                   159.   template&lt;typename _Tp>
+<a id="line_160"></a>                   160.     _GLIBCXX14_CONSTEXPR inline void
+<a id="line_func"></a><font color='BlueViolet'><b>                        &lt;Function: std::mersenne_twister_engine&lt;unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::min()></b></font>
+<a id="line_161"></a>                   161.     _Destroy(_Tp* __pointer)
+<a id="line_162"></a>                   162.     {
+<a id="line_163"></a>                   163. #if __cpp_constexpr_dynamic_alloc // >= C++20
+<a id="line_164"></a>                   164.       std::destroy_at(__pointer);
+<a id="line_165"></a>                   165. #else
+<a id="line_166"></a>                   166.       __pointer->~_Tp();
+<a id="line_167"></a>                   167. #endif
+<a id="line_168"></a>                   168.     }
+<a id="line_169"></a>                   169. 
+<a id="line_170"></a>                   170. #pragma GCC diagnostic push
+<a id="line_171"></a>                   171. #pragma GCC diagnostic ignored "-Wc++17-extensions" // for if-constexpr
+<a id="line_172"></a>                   172. 
+<a id="line_173"></a>                   173. #if __cplusplus &lt; 201103L
+<a id="line_174"></a>                   174.   template&lt;bool>
+<a id="line_175"></a>                   175.     struct _Destroy_aux
+<a id="line_176"></a>                   176.     {
+<a id="line_177"></a>                   177.       template&lt;typename _ForwardIterator>
+<a id="line_178"></a>                   178. 	static _GLIBCXX20_CONSTEXPR void
+<a id="line_179"></a>                   179. 	__destroy(_ForwardIterator __first, _ForwardIterator __last)
+<a id="line_180"></a>                   180. 	{
+<a id="line_181"></a>                   181. 	  for (; __first != __last; ++__first)
+<a id="line_182"></a>                   182. 	    std::_Destroy(std::__addressof(*__first));
+<a id="line_183"></a>                   183. 	}
+<a id="line_184"></a>                   184. 
+<a id="line_185"></a>                   185.       template&lt;typename _ForwardIterator, typename _Size>
+<a id="line_186"></a>                   186. 	static _GLIBCXX20_CONSTEXPR _ForwardIterator
+<a id="line_187"></a>                   187. 	__destroy_n(_ForwardIterator __first, _Size __count)
+<a id="line_188"></a>                   188. 	{
+<a id="line_189"></a>                   189. 	  for (; __count > 0; (void)++__first, --__count)
+<a id="line_190"></a>                   190. 	    std::_Destroy(std::__addressof(*__first));
+<a id="line_191"></a>                   191. 	  return __first;
+<a id="line_192"></a>                   192. 	}
+<a id="line_193"></a>                   193.     };
+<a id="line_194"></a>                   194. 
+<a id="line_195"></a>                   195.   template&lt;>
+<a id="line_196"></a>                   196.     struct _Destroy_aux&lt;true>
+<a id="line_197"></a>                   197.     {
+<a id="line_198"></a>                   198.       template&lt;typename _ForwardIterator>
+<a id="line_199"></a>                   199.         static void
+<a id="line_200"></a>                   200.         __destroy(_ForwardIterator, _ForwardIterator) { }
+<a id="line_201"></a>                   201. 
+<a id="line_202"></a>                   202.       template&lt;typename _ForwardIterator, typename _Size>
+<a id="line_203"></a>                   203. 	static _ForwardIterator
+<a id="line_204"></a>                   204. 	__destroy_n(_ForwardIterator __first, _Size __count)
+<a id="line_205"></a>                   205. 	{
+<a id="line_206"></a>                   206. 	  std::advance(__first, __count);
+<a id="line_207"></a>                   207. 	  return __first;
+<a id="line_208"></a>                   208. 	}
+<a id="line_209"></a>                   209.     };
+<a id="line_210"></a>                   210. #endif
+<a id="line_211"></a>                   211. 
+<a id="line_212"></a>                   212.   /**
+<a id="line_213"></a>                   213.    * Destroy a range of objects.  If the value_type of the object has
+<a id="line_214"></a>                   214.    * a trivial destructor, the compiler should optimize all of this
+<a id="line_215"></a>                   215.    * away, otherwise the objects' destructors must be invoked.
+<a id="line_216"></a>                   216.    */
+<a id="line_217"></a>                   217.   template&lt;typename _ForwardIterator>
+<a id="line_218"></a>                   218.     _GLIBCXX20_CONSTEXPR inline void
+<a id="function_tag_18"></a>                        <i><font color='Red'><b>&lt;Function: std::__detail::_Adaptor&lt;std::mersenne_twister_engine&lt;unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>, double>::_Adaptor(std::mersenne_twister_engine&lt;unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&)></b></font></i>
+<span style='background-color: PeachPuff'>## 0.010           219.     _Destroy(_ForwardIterator __first, _ForwardIterator __last)</span>
+<a id="line_220"></a>                   220.     {
+<a id="line_221"></a>                   221.       typedef typename iterator_traits&lt;_ForwardIterator>::value_type
+<a id="line_222"></a>                   222.                        _Value_type;
+<a id="line_223"></a>                   223. #if __cplusplus >= 201103L
+<a id="line_224"></a>                   224.       if constexpr (!is_trivially_destructible&lt;_Value_type>::value)
+<a id="line_225"></a>                   225. 	for (; __first != __last; ++__first)
+<a id="line_226"></a>                   226. 	  std::_Destroy(std::__addressof(*__first));
+<a id="line_227"></a>                   227. #if __cpp_constexpr_dynamic_alloc // >= C++20
+<a id="line_228"></a>                   228.       else if (std::__is_constant_evaluated())
+<a id="line_229"></a>                   229. 	for (; __first != __last; ++__first)
+<a id="line_230"></a>                   230. 	  std::destroy_at(std::__addressof(*__first));
+<a id="line_231"></a>                   231. #endif
+<a id="line_232"></a>                   232. #else
+<a id="line_233"></a>                   233.       std::_Destroy_aux&lt;__has_trivial_destructor(_Value_type)>::
+<a id="line_234"></a>                   234. 	__destroy(__first, __last);
+<a id="line_235"></a>                   235. #endif
+<a id="line_236"></a>                   236.     }
+<a id="line_237"></a>                   237. 
+<a id="line_238"></a>                   238.   /**
+<a id="line_239"></a>                   239.    * Destroy a range of objects.  If the value_type of the object has
+<a id="line_240"></a>                   240.    * a trivial destructor, the compiler should optimize all of this
+<a id="line_241"></a>                   241.    * away, otherwise the objects' destructors must be invoked.
+<a id="line_242"></a>                   242.    */
+<a id="line_243"></a>                   243.   template&lt;typename _ForwardIterator, typename _Size>
+<a id="line_244"></a>                   244.     _GLIBCXX20_CONSTEXPR inline _ForwardIterator
+<a id="line_245"></a>                   245.     _Destroy_n(_ForwardIterator __first, _Size __count)
+<a id="line_246"></a>                   246.     {
+<a id="line_247"></a>                   247.       typedef typename iterator_traits&lt;_ForwardIterator>::value_type
+<a id="line_248"></a>                   248.                        _Value_type;
+<a id="line_249"></a>                   249. #if __cplusplus >= 201103L
+<a id="line_250"></a>                   250.       if constexpr (!is_trivially_destructible&lt;_Value_type>::value)
+<a id="line_251"></a>                   251. 	for (; __count > 0; (void)++__first, --__count)
+<a id="line_252"></a>                   252. 	  std::_Destroy(std::__addressof(*__first));
+<a id="line_253"></a>                   253. #if __cpp_constexpr_dynamic_alloc // >= C++20
+<a id="line_254"></a>                   254.       else if (std::__is_constant_evaluated())
+<a id="line_255"></a>                   255. 	for (; __count > 0; (void)++__first, --__count)
+<a id="line_256"></a>                   256. 	  std::destroy_at(std::__addressof(*__first));
+<a id="line_257"></a>                   257. #endif
+<a id="line_258"></a>                   258.       else
+<a id="line_259"></a>                   259. 	std::advance(__first, __count);
+<a id="line_260"></a>                   260.       return __first;
+<a id="line_261"></a>                   261. #else
+<a id="line_262"></a>                   262.       return std::_Destroy_aux&lt;__has_trivial_destructor(_Value_type)>::
+<a id="line_263"></a>                   263. 	__destroy_n(__first, __count);
+<a id="line_264"></a>                   264. #endif
+<a id="line_265"></a>                   265.     }
+<a id="line_266"></a>                   266. #pragma GCC diagnostic pop
+<a id="line_267"></a>                   267. 
+<a id="line_268"></a>                   268. #if __glibcxx_raw_memory_algorithms // >= C++17
+<a id="line_269"></a>                   269.   template &lt;typename _ForwardIterator>
+<a id="line_270"></a>                   270.     _GLIBCXX20_CONSTEXPR inline void
+<a id="line_271"></a>                   271.     destroy(_ForwardIterator __first, _ForwardIterator __last)
+<a id="line_272"></a>                   272.     {
+<a id="line_273"></a>                   273.       std::_Destroy(__first, __last);
+<a id="line_274"></a>                   274.     }
+<a id="line_275"></a>                   275. 
+<a id="line_276"></a>                   276.   template &lt;typename _ForwardIterator, typename _Size>
+<a id="line_277"></a>                   277.     _GLIBCXX20_CONSTEXPR inline _ForwardIterator
+<a id="line_278"></a>                   278.     destroy_n(_ForwardIterator __first, _Size __count)
+<a id="line_279"></a>                   279.     {
+<a id="line_280"></a>                   280.       return std::_Destroy_n(__first, __count);
+<a id="line_281"></a>                   281.     }
+<a id="line_282"></a>                   282. #endif // C++17
+<a id="line_283"></a>                   283. 
+<a id="line_284"></a>                   284. _GLIBCXX_END_NAMESPACE_VERSION
+<a id="line_285"></a>                   285. } // namespace std
+<a id="line_286"></a>                   286. 
+<a id="line_287"></a>                   287. #endif /* _STL_CONSTRUCT_H */
+</pre>
+<br>
+<i>The setting for the highlight percentage (--highlight-percentage) option: 90.0 (%)</i>
+<div class="left"><br><a href='index.html' style='background-color:Lavender'><b>Return to main view</b></a></div>
+<br>
+<i>
+Output generated by the gprofng display html command on August 22, 2026 (GNU binutils version 2.43.0)
+</i>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html public "-//w3c//dtd html 3.2//en">
+<html lang="en_IN.UTF-8">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+<title>Disassembly __libc_start_main (unknown)</title>
+</head>
+<body lang="en_IN.UTF-8" bgcolor=White>
+<style>
+div.left {
+text-align: left;
+}
+div.right {
+text-align: right;
+}
+div.center {
+text-align: center;
+}
+div.justify {
+text-align: justify;
+}
+</style>
+<div class="right"><br><a href='index.html' style='background-color:Lavender'><b>Return to main view</b></a></div>
+<pre>
+<i>Source file: (unknown)</i>
+<i>Object file: libc.so.6 (found as test.2.er/archives/libc.so.6_OCEC1bthLm2)</i>
+<i>Load Object: libc.so.6 (found as test.2.er/archives/libc.so.6_OCEC1bthLm2)</i>
+<i></i>
+<i>   Excl.</i>
+<i>   Total</i>
+<i>   CPU sec.</i>
+   0.                    [?] 35e4: push %rbp
+   0.                    [?] 35e5: mov %rsp,%rbp
+   0.                    [?] 35e8: push %r15
+   0.                    [?] 35ea: push %r14
+   0.                    [?] 35ec: mov %rcx,%r14
+   0.                    [?] 35ef: push %r13
+   0.                    [?] 35f1: mov %esi,%r13d
+   0.                    [?] 35f4: push %r12
+   0.                    [?] 35f6: mov %rdx,%r12
+   0.                    [?] 35f9: push %rbx
+   0.                    [?] 35fa: sub $0x28,%rsp
+   0.                    [?] 35fe: mov %rdi,-0x40(%rbp)
+   0.                    [?] 3602: test %r9,%r9
+   0.                    [?] 3605: <font color='Brown'><b>je</b></font> .+0xe [ 0x3613 ] [ <a href='#6c18' style='color:Crimson'>6c18</a> ]
+<br>
+   0.                    [?] 3607: xor %edx,%edx
+   0.                    [?] 3609: xor %esi,%esi
+   0.                    [?] 360b: mov %r9,%rdi
+   0.                    [?] 360e: <font color='Brown'><b>call</b></font> __cxa_atexit [ 0x1c210, .+0x18c02]
+<br>
+   0.                    [?] 3613: mov 0x1e5896(%rip),%rax        # 0x1e589d
+   0.                    [?] 361a: mov (%rax),%eax
+   0.                    [?] 361c: mov %eax,%ebx
+   0.                    [?] 361e: mov %eax,-0x38(%rbp)
+   0.                    [?] 3621: and $0x2,%ebx
+   0.                    [?] 3624: <font color='Brown'><b>jne</b></font> .+0xed [ 0x3711 ] [ <a href='#6d35' style='color:Crimson'>6d35</a> ]
+<br>
+   0.                    [?] 362a: mov 0x1e5977(%rip),%rax        # 0x1e597e
+   0.                    [?] 3631: mov (%rax),%rdx
+   0.                    [?] 3634: test %r14,%r14
+   0.                    [?] 3637: <font color='Brown'><b>je</b></font> .+0x31 [ 0x3668 ] [ <a href='#6c9f' style='color:Crimson'>6c9f</a> ]
+<br>
+   0.                    [?] 3639: mov %r12,%rsi
+   0.                    [?] 363c: mov %r13d,%edi
+   0.                    [?] 363f: <font color='Brown'><b>call</b></font> *%r14
+<br>
+   0.                    [?] 3642: mov 0x1e5947(%rip),%r14        # 0x1e594e
+   0.                    [?] 3649: mov (%r14),%rdi
+   0.                    [?] 364c: <font color='Brown'><b>call</b></font> .-0x2b1c [ 0xb30 ]  // Unable to determine target symbol
+<br>
+   0.                    [?] 3651: test %ebx,%ebx
+   0.                    [?] 3653: <font color='Brown'><b>jne</b></font> .+0x9f [ 0x36f2 ] [ <a href='#6d45' style='color:Crimson'>6d45</a> ]
+<br>
+   0.                    [?] 3659: mov -0x40(%rbp),%rdi
+   0.                    [?] 365d: mov %r12,%rdx
+   0.                    [?] 3660: mov %r13d,%esi
+   0.                    [?] 3663: <font color='Brown'><b>call</b></font> __libc_start_call_main [ 0x3540, .-0x123]
+<br>
+   0.                    [?] 3668: mov 0x1e5921(%rip),%r14        # 0x1e5928
+   0.                    [?] 366f: mov (%r14),%r15
+   0.                    [?] 3672: mov 0xa0(%r15),%rax
+   0.                    [?] 3679: test %rax,%rax
+   0.                    [?] 367c: <font color='Brown'><b>je</b></font> .+0x19 [ 0x3695 ] [ <a href='#6d11' style='color:Crimson'>6d11</a> ]
+<br>
+   0.                    [?] 367e: mov %rdx,-0x38(%rbp)
+   0.                    [?] 3682: mov 0x8(%rax),%rax
+   0.                    [?] 3686: mov %r12,%rsi
+   0.                    [?] 3689: mov %r13d,%edi
+   0.                    [?] 368c: add (%r15),%rax
+   0.                    [?] 368f: <font color='Brown'><b>call</b></font> *%rax
+<br>
+   0.                    [?] 3691: mov -0x38(%rbp),%rdx
+   0.                    [?] 3695: mov 0x108(%r15),%rsi
+   0.                    [?] 369c: test %rsi,%rsi
+   0.                    [?] 369f: <font color='Brown'><b>je</b></font> .-0x56 [ 0x3649 ] [ <a href='#6ce8' style='color:Crimson'>6ce8</a> ]
+<br>
+   0.                    [?] 36a1: mov 0x118(%r15),%rax
+   0.                    [?] 36a8: mov 0x8(%rax),%rax
+   0.                    [?] 36ac: shr $0x3,%rax
+   0.                    [?] 36b0: test %eax,%eax
+   0.                    [?] 36b2: <font color='Brown'><b>je</b></font> .-0x69 [ 0x3649 ] [ <a href='#6cfb' style='color:Crimson'>6cfb</a> ]
+<br>
+   0.                    [?] 36b4: mov (%r15),%rcx
+   0.                    [?] 36b7: add 0x8(%rsi),%rcx
+   0.                    [?] 36bb: lea -0x1(%rax),%esi
+   0.                    [?] 36be: lea 0x8(%rcx),%r15
+   0.                    [?] 36c2: lea (%r15,%rsi,8),%rax
+   0.                    [?] 36c6: mov %rax,-0x48(%rbp)
+   0.                    [?] 36ca: <font color='Brown'><b>jmp</b></font> .+0xe [ 0x36d8 ] [ <a href='#6da2' style='color:Crimson'>6da2</a> ]
+<br>
+   0.                    [?] 36cc: nopl 0x0(%rax)
+   0.                    [?] 36d0: mov -0x38(%rbp),%rdx
+   0.                    [?] 36d4: add $0x8,%r15
+   0.                    [?] 36d8: mov %rdx,-0x38(%rbp)
+   0.                    [?] 36dc: mov %r12,%rsi
+   0.                    [?] 36df: mov %r13d,%edi
+   0.                    [?] 36e2: <font color='Brown'><b>call</b></font> *(%rcx)
+<br>
+   0.                    [?] 36e4: mov %r15,%rcx
+   0.                    [?] 36e7: cmp -0x48(%rbp),%r15
+   0.                    [?] 36eb: <font color='Brown'><b>jne</b></font> .-0x1b [ 0x36d0 ] [ <a href='#6dbb' style='color:Crimson'>6dbb</a> ]
+<br>
+   0.                    [?] 36ed: <font color='Brown'><b>jmp</b></font> .-0xa4 [ 0x3649 ] [ <a href='#6d36' style='color:Crimson'>6d36</a> ]
+<br>
+   0.                    [?] 36f2: mov 0x1e57b7(%rip),%rcx        # 0x1e57be
+   0.                    [?] 36f9: mov (%r12),%rsi
+   0.                    [?] 36fd: lea 0x1ad4ea(%rip),%rdi        # 0x1ad4f1
+   0.                    [?] 3704: xor %eax,%eax
+   0.                    [?] 3706: <font color='Brown'><b>call</b></font> *0x330(%rcx)
+<br>
+   0.                    [?] 370c: <font color='Brown'><b>jmp</b></font> .-0xb3 [ 0x3659 ] [ <a href='#6d65' style='color:Crimson'>6d65</a> ]
+<br>
+   0.                    [?] 3711: mov 0x1e5798(%rip),%rcx        # 0x1e579f
+   0.                    [?] 3718: mov (%r12),%rsi
+   0.                    [?] 371c: lea 0x1ad4b1(%rip),%rdi        # 0x1ad4b8
+   0.                    [?] 3723: xor %eax,%eax
+   0.                    [?] 3725: <font color='Brown'><b>call</b></font> *0x330(%rcx)
+<br>
+   0.                    [?] 372b: <font color='Brown'><b>jmp</b></font> .-0x101 [ 0x362a ] [ <a href='#6d55' style='color:Crimson'>6d55</a> ]
+</pre>
+<br>
+<i>The setting for the highlight percentage (--highlight-percentage) option: 90.0 (%)</i>
+<div class="left"><br><a href='index.html' style='background-color:Lavender'><b>Return to main view</b></a></div>
+<br>
+<i>
+Output generated by the gprofng display html command on August 22, 2026 (GNU binutils version 2.43.0)
+</i>
+</body>
+</html>

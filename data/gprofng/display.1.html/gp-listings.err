@@ -1,0 +1,98 @@
+Print limit set to 1000000
+Viewmode set to machine
+# limit 1000000
+Print limit set to 1000000
+# thread_select all
+# metrics e.totalcpu
+# outfile display.1.html/file.1.dis
+# disasm "<static>@0x341d6 (<libm.so.6>)" 0x000341d6
+Error: <static>@0x341d6 (<libm.so.6>) is not a real function; no source or disassembly available.
+# outfile display.1.html/file.1.src.txt
+# source "<static>@0x341d6 (<libm.so.6>)" 0x000341d6
+Error: <static>@0x341d6 (<libm.so.6>) is not a real function; no source or disassembly available.
+# outfile display.1.html/file.2.dis
+# disasm "double std::generate_canonical<double, 53ul, std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&)" 0x00002e05
+# outfile display.1.html/file.2.src.txt
+# source "double std::generate_canonical<double, 53ul, std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&)" 0x00002e05
+# outfile display.1.html/file.3.dis
+# disasm "std::log(long double)" 0x000012de
+# outfile display.1.html/file.3.src.txt
+# source "std::log(long double)" 0x000012de
+# outfile display.1.html/file.4.dis
+# disasm "std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand()" 0x000034d2
+# outfile display.1.html/file.4.src.txt
+# source "std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::_M_gen_rand()" 0x000034d2
+# outfile display.1.html/file.5.dis
+# disasm "logl" 0x00002450
+# outfile display.1.html/file.5.src.txt
+# source "logl" 0x00002450
+Error: Source location not recorded in experiment
+# outfile display.1.html/file.6.dis
+# disasm "std::vector<std::vector<CellState, std::allocator<CellState> >, std::allocator<std::vector<CellState, std::allocator<CellState> > > >::operator[](unsigned long)" 0x000019e8
+# outfile display.1.html/file.6.src.txt
+# source "std::vector<std::vector<CellState, std::allocator<CellState> >, std::allocator<std::vector<CellState, std::allocator<CellState> > > >::operator[](unsigned long)" 0x000019e8
+# outfile display.1.html/file.7.dis
+# disasm "main" 0x00000806
+# outfile display.1.html/file.7.src.txt
+# source "main" 0x00000806
+Error: Source file `/home/aryan/sync/obsidian/UQ/SEM 2 2026/COSC3500/forest-fire-sim/main.cpp' not readable
+# outfile display.1.html/file.8.dis
+# disasm "std::vector<CellState, std::allocator<CellState> >::operator[](unsigned long)" 0x00001a4e
+# outfile display.1.html/file.8.src.txt
+# source "std::vector<CellState, std::allocator<CellState> >::operator[](unsigned long)" 0x00001a4e
+# outfile display.1.html/file.9.dis
+# disasm "std::vector<CellState, std::allocator<CellState> >::size() const" 0x000024c2
+# outfile display.1.html/file.9.src.txt
+# source "std::vector<CellState, std::allocator<CellState> >::size() const" 0x000024c2
+# outfile display.1.html/file.10.dis
+# disasm "std::vector<std::vector<CellState, std::allocator<CellState> >, std::allocator<std::vector<CellState, std::allocator<CellState> > > >::size() const" 0x00002486
+# outfile display.1.html/file.10.src.txt
+# source "std::vector<std::vector<CellState, std::allocator<CellState> >, std::allocator<std::vector<CellState, std::allocator<CellState> > > >::size() const" 0x00002486
+# outfile display.1.html/file.11.dis
+# disasm "double std::uniform_real_distribution<double>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_real_distribution<double>::param_type const&)" 0x00002406
+# outfile display.1.html/file.11.src.txt
+# source "double std::uniform_real_distribution<double>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&, std::uniform_real_distribution<double>::param_type const&)" 0x00002406
+# outfile display.1.html/file.12.dis
+# disasm "std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()()" 0x000031e8
+# outfile display.1.html/file.12.src.txt
+# source "std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()()" 0x000031e8
+# outfile display.1.html/file.13.dis
+# disasm "unsigned long const& std::max<unsigned long>(unsigned long const&, unsigned long const&)" 0x00002dda
+# outfile display.1.html/file.13.src.txt
+# source "unsigned long const& std::max<unsigned long>(unsigned long const&, unsigned long const&)" 0x00002dda
+# outfile display.1.html/file.14.dis
+# disasm "std::uniform_real_distribution<double>::param_type::b() const" 0x00002b02
+# outfile display.1.html/file.14.src.txt
+# source "std::uniform_real_distribution<double>::param_type::b() const" 0x00002b02
+# outfile display.1.html/file.15.dis
+# disasm "std::__detail::_Adaptor<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>, double>::operator()()" 0x00002ae4
+# outfile display.1.html/file.15.src.txt
+# source "std::__detail::_Adaptor<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>, double>::operator()()" 0x00002ae4
+# outfile display.1.html/file.16.dis
+# disasm "std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::min()" 0x00002dcf
+# outfile display.1.html/file.16.src.txt
+# source "std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::min()" 0x00002dcf
+# outfile display.1.html/file.17.dis
+# disasm "double std::uniform_real_distribution<double>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&)" 0x000019be
+# outfile display.1.html/file.17.src.txt
+# source "double std::uniform_real_distribution<double>::operator()<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul> >(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&)" 0x000019be
+# outfile display.1.html/file.18.dis
+# disasm "std::__detail::_Adaptor<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>, double>::_Adaptor(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&)" 0x00002aca
+Default selection "1" made
+# outfile display.1.html/file.18.src.txt
+# source "std::__detail::_Adaptor<std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>, double>::_Adaptor(std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>&)" 0x00002aca
+Default selection "1" made
+# outfile display.1.html/file.19.dis
+# disasm "std::uniform_real_distribution<double>::param_type::a() const" 0x00002b16
+# outfile display.1.html/file.19.src.txt
+# source "std::uniform_real_distribution<double>::param_type::a() const" 0x00002b16
+# outfile display.1.html/file.20.dis
+# disasm "__libc_start_call_main" 0x00003540
+# outfile display.1.html/file.20.src.txt
+# source "__libc_start_call_main" 0x00003540
+Error: Source location not recorded in experiment
+# outfile display.1.html/file.21.dis
+# disasm "__libc_start_main" 0x000035e0
+# outfile display.1.html/file.21.src.txt
+# source "__libc_start_main" 0x000035e0
+Error: Source location not recorded in experiment

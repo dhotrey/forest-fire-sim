@@ -1,0 +1,10 @@
+# Number of metric fields
+2
+# Header regex
+^\s*(Excl\..*)(Name.*)
+# href Header regex
+^\s*(<a.*>)(Excl\.)(</a>)([^<]+)(Name.*)
+# src Header regex
+^(\s+|<i>\s+)(Excl\..*)
+# Metrics and Name regex
+^\s*(\S+)\s+(.*)$
