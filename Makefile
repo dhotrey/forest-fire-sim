@@ -4,6 +4,7 @@ TARGET     ?= bin/fire
 O1_TARGET  ?= $(TARGET)-o1timised
 O2_TARGET  ?= $(TARGET)-o2timised
 O3_TARGET  ?= $(TARGET)-o3timised
+DEBUG_TARGET ?= $(TARGET)-debug
 SOURCES    := main.cpp build_info.cpp save_file.cpp
 
 .DEFAULT_GOAL := $(TARGET)
@@ -26,6 +27,9 @@ OPT_VISUALISE_FLAGS :=
 else
 OPT_VISUALISE_FLAGS := -DNO_VISUALIZATION
 endif
+
+# Debug builds omit visualisation unless it is explicitly requested.
+DEBUG_VISUALISE_FLAGS := $(OPT_VISUALISE_FLAGS)
 
 BUILD_DEFINES = \
 	-DBUILD_TARGET_NAME=\"$(BUILD_TARGET_NAME)\" \
@@ -70,12 +74,13 @@ o3timised: BUILD_PROFILE = O3timised
 o3timised: OPTIMISATION = -O3
 o3timised: $(O3_TARGET)
 
-debug: BUILD_TARGET_NAME = $(TARGET)
+debug: BUILD_TARGET_NAME = $(DEBUG_TARGET)
 debug: BUILD_PROFILE = Debug
 debug: OPTIMISATION = -O0
+debug: $(SOURCES) FORCE
 debug:
 	@mkdir -p $(dir $(TARGET))
-	$(CXX) $(STANDARD) $(WARNINGS) $(BUILD_DEFINES) $(CXXFLAGS) -O0 -g3 -DDEBUG $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $(TARGET)
+	$(CXX) $(STANDARD) $(WARNINGS) $(BUILD_DEFINES) $(DEBUG_VISUALISE_FLAGS) $(CXXFLAGS) -O0 -g -DDEBUG $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $(DEBUG_TARGET)
 
 SAVE_FILE ?= $(shell find out -maxdepth 1 -type f -name 'fire-*.bin' -printf '%T@ %p\n' 2>/dev/null | sort -nr | sed -n '1s/^[^ ]* //p')
 
@@ -96,5 +101,6 @@ help:
 	@echo "make o3timised               Build with -O3"
 	@echo "make o3timised VISUALISE=1  Include visualisation in an optimised build"
 	@echo "make debug                   Build the default binary with debug symbols"
+	@echo "make debug VISUALISE=1       Include visualisation in the debug build"
 	@echo "make anim                    Visualise the newest save file"
 	@echo "make clean                   Delete binaries and out/"
