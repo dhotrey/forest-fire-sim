@@ -1,7 +1,0 @@
-rm forest-fire
-g++ main.cpp -std=c++2a  -o forest-fire -O2
-Cellular automata based forest fire model
-
-real	0m0.003s
-user	0m0.000s
-sys	0m0.002s
