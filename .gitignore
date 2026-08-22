@@ -69,3 +69,5 @@ Testing/
 bin/
 out/
 .venv/
+
+dev-plan.md
