@@ -71,3 +71,4 @@ out/
 .venv/
 
 dev-plan.md
+spec/

@@ -70,11 +70,13 @@ int main(int argc, char *argv[]) {
   std::mt19937 gen(80085);
   std::uniform_real_distribution<double> dist(0.0, 1.0);
 
+  // TODO : compute the hash of this data structure
   std::vector<std::vector<CellState>> grid(grid_size,
                                            std::vector<CellState>(grid_size));
 
   std::vector<std::vector<CellState>> next(grid_size,
                                            std::vector<CellState>(grid_size));
+  // TODO : change this to fix the cache access patterns
   for (int t = 0; t < timesteps; ++t) {
     for (int y = 1; y < grid_size - 1; ++y) {
       for (int x = 1; x < grid_size - 1; ++x) {
