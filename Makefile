@@ -1,8 +1,8 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 0.2
-VERSION_NAME ?= cache-locality
+VERSION ?= 0.3
+VERSION_NAME ?= easy-wins
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 
