@@ -3,8 +3,9 @@
 
 Each input CSV must contain the columns ``version``, ``opt_flag``,
 ``grid_size``, and ``total_s``. Repeated benchmark runs are averaged before
-plotting. One stacked line chart is written for every grid size present in the
-input files.
+plotting. One two-panel performance chart is written for every grid size
+present in the input files. The first panel shows absolute runtimes and the
+second highlights the percentage change from each preceding version.
 
 Example:
 
@@ -29,10 +30,17 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.ticker import AutoMinorLocator, FuncFormatter, MaxNLocator
 
 
 REQUIRED_COLUMNS = {"version", "opt_flag", "grid_size", "total_s"}
 VERSION_PATTERN = re.compile(r"^v?(\d+(?:\.\d+)*)$")
+SERIES_COLOURS = ("#2563EB", "#F97316", "#16A34A", "#9333EA")
+BACKGROUND_COLOUR = "#F8FAFC"
+GRID_COLOUR = "#CBD5E1"
+TEXT_COLOUR = "#0F172A"
+MUTED_TEXT_COLOUR = "#64748B"
 
 # Runtime data is stored as:
 # grid size -> version -> optimisation -> individual run times
@@ -103,7 +111,7 @@ def plot_grid(
     optimisation_runs: dict[str, dict[str, list[float]]],
     output_dir: Path,
 ) -> Path:
-    """Create and save the stacked runtime chart for one grid size."""
+    """Create and save the runtime and version-change chart for one grid size."""
     optimisations = sorted(
         {
             opt_flag
@@ -112,52 +120,236 @@ def plot_grid(
         }
     )
     x_positions = list(range(len(versions)))
-    series: list[list[float]] = []
+    mean_series = {
+        opt_flag: [
+            (
+                fmean(optimisation_runs[version][opt_flag])
+                if opt_flag in optimisation_runs[version]
+                else math.nan
+            )
+            for version in versions
+        ]
+        for opt_flag in optimisations
+    }
+    maximum_runtime = max(
+        runtime
+        for runtimes in mean_series.values()
+        for runtime in runtimes
+        if math.isfinite(runtime)
+    )
+    runtime_precision = 3 if maximum_runtime < 1 else 2
 
-    for opt_flag in optimisations:
-        series.append(
-            [
-                fmean(optimisation_runs[version].get(opt_flag, [0.0]))
-                for version in versions
-            ]
+    figure, (runtime_axes, change_axes) = plt.subplots(
+        1,
+        2,
+        figsize=(13, 6.8),
+        gridspec_kw={"width_ratios": (1.45, 1)},
+    )
+    figure.patch.set_facecolor(BACKGROUND_COLOUR)
+
+    for series_index, opt_flag in enumerate(optimisations):
+        colour = SERIES_COLOURS[series_index % len(SERIES_COLOURS)]
+        runtimes = mean_series[opt_flag]
+        lower_bounds = [
+            (
+                min(optimisation_runs[version][opt_flag])
+                if opt_flag in optimisation_runs[version]
+                else math.nan
+            )
+            for version in versions
+        ]
+        upper_bounds = [
+            (
+                max(optimisation_runs[version][opt_flag])
+                if opt_flag in optimisation_runs[version]
+                else math.nan
+            )
+            for version in versions
+        ]
+
+        runtime_axes.fill_between(
+            x_positions,
+            lower_bounds,
+            upper_bounds,
+            color=colour,
+            alpha=0.12,
+            linewidth=0,
         )
+        runtime_axes.plot(
+            x_positions,
+            runtimes,
+            color=colour,
+            label=opt_flag,
+            linewidth=2.5,
+            marker="o",
+            markersize=7,
+            markeredgecolor="white",
+            markeredgewidth=1.5,
+            zorder=3,
+        )
+        label_offset = 10 if series_index % 2 == 0 else -16
+        for x_position, runtime in zip(x_positions, runtimes):
+            if math.isfinite(runtime):
+                runtime_axes.annotate(
+                    f"{runtime:.{runtime_precision}f}s",
+                    (x_position, runtime),
+                    xytext=(0, label_offset),
+                    textcoords="offset points",
+                    ha="center",
+                    va="bottom" if label_offset > 0 else "top",
+                    color=colour,
+                    fontsize=8,
+                    fontweight="bold",
+                )
 
-    figure, axes = plt.subplots(figsize=(10, 6))
-    axes.stackplot(
-        x_positions,
-        *series,
-        labels=optimisations,
-        alpha=0.8,
-        edgecolor="white",
-        linewidth=0.8,
+    _style_axes(runtime_axes)
+    runtime_axes.set_xticks(x_positions, versions)
+    runtime_axes.set_xlabel("Program version")
+    runtime_axes.set_ylabel("Mean runtime (seconds)")
+    runtime_axes.set_title("Absolute runtime", loc="left", fontweight="bold")
+    runtime_axes.set_ylim(bottom=0)
+    runtime_axes.yaxis.set_major_locator(MaxNLocator(nbins=10, min_n_ticks=6))
+    runtime_axes.yaxis.set_minor_locator(AutoMinorLocator(2))
+    runtime_axes.yaxis.set_major_formatter(
+        FuncFormatter(lambda value, _: f"{value:.{runtime_precision}f}")
+    )
+    runtime_axes.grid(axis="y", which="minor", color=GRID_COLOUR, alpha=0.2)
+    runtime_axes.legend(
+        title="Optimisation",
+        frameon=False,
+        ncols=min(len(optimisations), 4),
+        loc="upper right",
     )
 
-    # Draw the cumulative boundaries explicitly so the stacked series remain
-    # legible when printed or viewed without the filled regions.
-    cumulative = [0.0] * len(versions)
-    for runtime_series in series:
-        cumulative = [
-            current + runtime for current, runtime in zip(cumulative, runtime_series)
-        ]
-        axes.plot(x_positions, cumulative, color="#333333", linewidth=1.0)
+    transition_labels = [
+        f"{previous} → {current}"
+        for previous, current in zip(versions, versions[1:])
+    ]
+    transition_positions = list(range(len(transition_labels)))
+    bar_width = 0.72 / max(len(optimisations), 1)
+    all_changes: list[float] = []
+    for series_index, opt_flag in enumerate(optimisations):
+        colour = SERIES_COLOURS[series_index % len(SERIES_COLOURS)]
+        offset = (series_index - (len(optimisations) - 1) / 2) * bar_width
+        bar_positions = [position + offset for position in transition_positions]
+        changes = []
+        for previous, current in zip(
+            mean_series[opt_flag], mean_series[opt_flag][1:]
+        ):
+            if math.isfinite(previous) and math.isfinite(current) and previous > 0:
+                changes.append((current / previous - 1) * 100)
+            else:
+                changes.append(math.nan)
+        all_changes.extend(change for change in changes if math.isfinite(change))
 
-    axes.set_xticks(x_positions, versions)
-    axes.set_xlabel("Program version")
-    axes.set_ylabel("Mean runtime (s)")
-    axes.set_title(f"Benchmark runtime by version ({grid_size}x{grid_size})")
-    axes.grid(axis="y", alpha=0.3)
-    axes.legend(title="Optimisation", loc="upper left")
-    figure.tight_layout()
+        bars = change_axes.bar(
+            bar_positions,
+            changes,
+            width=bar_width * 0.88,
+            color=colour,
+            alpha=0.9,
+            label=opt_flag,
+            zorder=3,
+        )
+        change_axes.bar_label(
+            bars,
+            labels=[
+                f"{change:+.1f}%" if math.isfinite(change) else ""
+                for change in changes
+            ],
+            padding=3,
+            fontsize=8,
+            color=TEXT_COLOUR,
+            fontweight="bold",
+        )
+
+    _style_axes(change_axes)
+    change_axes.axhline(0, color=TEXT_COLOUR, linewidth=1.1, zorder=2)
+    change_axes.set_xticks(transition_positions, transition_labels, rotation=12)
+    change_axes.set_xlabel("Version transition")
+    change_axes.set_ylabel("Runtime change (%)")
+    change_axes.set_title(
+        "Change from previous version", loc="left", fontweight="bold"
+    )
+    change_axes.yaxis.set_major_locator(MaxNLocator(nbins=10, min_n_ticks=6))
+    change_axes.yaxis.set_minor_locator(AutoMinorLocator(2))
+    change_axes.yaxis.set_major_formatter(
+        FuncFormatter(lambda value, _: f"{value:.1f}%")
+    )
+    change_axes.grid(axis="y", which="minor", color=GRID_COLOUR, alpha=0.2)
+    if all_changes:
+        change_span = max(max(all_changes) - min(all_changes), 10)
+        change_axes.set_ylim(
+            min(min(all_changes) - change_span * 0.12, -5),
+            max(max(all_changes) + change_span * 0.18, 5),
+        )
+    change_axes.text(
+        0.02,
+        0.98,
+        "↑ slower",
+        transform=change_axes.transAxes,
+        va="top",
+        color=MUTED_TEXT_COLOUR,
+        fontsize=9,
+    )
+    change_axes.text(
+        0.02,
+        0.02,
+        "↓ faster",
+        transform=change_axes.transAxes,
+        va="bottom",
+        color=MUTED_TEXT_COLOUR,
+        fontsize=9,
+    )
+
+    figure.suptitle(
+        f"{grid_size} × {grid_size} grid performance",
+        x=0.06,
+        y=0.98,
+        ha="left",
+        color=TEXT_COLOUR,
+        fontsize=18,
+        fontweight="bold",
+    )
+    figure.text(
+        0.06,
+        0.93,
+        "Lower is better · shaded bands show the range across repeated runs",
+        ha="left",
+        color=MUTED_TEXT_COLOUR,
+        fontsize=10,
+    )
+    figure.tight_layout(rect=(0.03, 0.02, 0.98, 0.91))
 
     output_path = output_dir / f"benchmark-{grid_size}x{grid_size}.png"
-    figure.savefig(output_path, dpi=180)
+    figure.savefig(
+        output_path,
+        dpi=200,
+        facecolor=figure.get_facecolor(),
+        bbox_inches="tight",
+    )
     plt.close(figure)
     return output_path
 
 
+def _style_axes(axes: Axes) -> None:
+    """Apply shared styling to a benchmark chart panel."""
+    axes.set_facecolor("white")
+    axes.set_axisbelow(True)
+    axes.grid(axis="y", color=GRID_COLOUR, alpha=0.55, linewidth=0.8)
+    axes.tick_params(colors=MUTED_TEXT_COLOUR, labelsize=9)
+    axes.xaxis.label.set_color(MUTED_TEXT_COLOUR)
+    axes.yaxis.label.set_color(MUTED_TEXT_COLOUR)
+    axes.title.set_color(TEXT_COLOUR)
+    axes.spines["top"].set_visible(False)
+    axes.spines["right"].set_visible(False)
+    axes.spines["left"].set_color(GRID_COLOUR)
+    axes.spines["bottom"].set_color(GRID_COLOUR)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Create one stacked runtime chart per benchmark grid size."
+        description="Create one performance chart per benchmark grid size."
     )
     parser.add_argument(
         "csv_files",
