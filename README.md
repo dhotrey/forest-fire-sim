@@ -55,6 +55,21 @@ argument displays every Nth saved frame; `10` therefore displays frames 0, 10,
 python3 animation/visualise.py out/fire-0.0-YYYY-MM-DD-HH-MM-SS-mmm.bin 10
 ```
 
+## Plotting benchmarks
+
+Combine any number of benchmark CSV files and write one stacked runtime chart
+per grid size:
+
+```sh
+uv run --project tools/animation python tools/plot_benchmarks.py \
+  data/v0.0/benchmarking/benchmarks-o1-o2.csv \
+  data/v0.1/benchmarking/benchmarks-o1-o2.csv \
+  --output-dir plots/benchmarks
+```
+
+The script averages repeated runs and writes files such as
+`plots/benchmarks/benchmark-100x100.png`.
+
 ## Binary save-file format
 
 `fire-{version}-{date}-{time}.bin` is self-describing and does not require the
