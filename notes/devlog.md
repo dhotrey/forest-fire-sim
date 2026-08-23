@@ -30,3 +30,37 @@ found this library to generate prng https://github.com/wjakob/pcg32, it has an o
 After switching out the heavy rng library to the pcg32 one v0.1 at o1 optimisation runs in 3.28s for 1000x1000 grid. for comparison in v0.0 this was at 6.10s so this one change has almost slashed the runtime in half.
 
 # v0.2
+
+This was an easy one, i was accessing the cpu cache NOT in a spacial and temporally favourable manner
+I changed this from
+
+```cpp
+  for (int y = 1; y < grid_size - 1; ++y) {
+    for (int x = 1; x < grid_size - 1; ++x) {
+        auto r = rng.nextFloat();
+        switch (grid[x][y]) {
+```
+
+to
+
+```cpp
+for (int x = 1; x < grid_size - 1; ++x) {
+  for (int y = 1; y < grid_size - 1; ++y) {
+        auto r = rng.nextFloat();
+        switch (grid[x][y]) {
+```
+
+this little change took my solution from 2.78s to 1.86s for 1000x1000 grid at o2 optimisation level
+
+D1 miss rate collapsed from 32.7% → 0.4%
+
+the loop-order fix (x,y → y,x) workied exactly as hoped:
+
+| Metric          |                        v0.1 |                     v0.2 |      Change |
+| --------------- | --------------------------: | -----------------------: | ----------: |
+| D1 miss rate    | 32.7% (27.3% rd / 50.0% wr) | 0.4% (0.3% rd / 0.8% wr) | ~80× better |
+| D1 misses (raw) |               1,380,045,198 |               16,451,695 |  ~84× fewer |
+| Read misses     |                 880,009,705 |                8,416,206 | ~105× fewer |
+| Write misses    |                 500,035,493 |                8,035,489 |  ~62× fewer |
+
+more data at data/cachegrind/cache-test-v0.1-v0.2
