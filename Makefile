@@ -1,7 +1,7 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 0.1
+VERSION ?= 0.2
 VERSION_NAME ?= better-random
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
