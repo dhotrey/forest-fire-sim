@@ -1,8 +1,8 @@
+#include "pcg32.h"
 #include <cstdint>
 #include <filesystem>
 #include <iostream>
 #include <memory>
-#include <random>
 #include <string>
 #include <utility>
 #include <vector>
@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
   double p = std::stod(argv[3]);
   double f = std::stod(argv[4]);
 
-  build_info::print_startup_banner(argv[0], grid_size, timesteps, p, f,
-                                   VERSION, VERSION_NAME);
+  build_info::print_startup_banner(argv[0], grid_size, timesteps, p, f, VERSION,
+                                   VERSION_NAME);
 #ifndef NO_VISUALIZATION
   std::unique_ptr<SaveFile> save_file;
   if (visualise) {
@@ -69,22 +69,18 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
-  // std::random_device randominator;
-  // std::mt19937 gen(randominator());
-  std::mt19937 gen(80085);
-  std::uniform_real_distribution<double> dist(0.0, 1.0);
-
   // TODO : compute the hash of this data structure
   std::vector<std::vector<CellState>> grid(grid_size,
                                            std::vector<CellState>(grid_size));
 
   std::vector<std::vector<CellState>> next(grid_size,
                                            std::vector<CellState>(grid_size));
+  pcg32 rng(80085);
   // TODO : change this to fix the cache access patterns
   for (int t = 0; t < timesteps; ++t) {
     for (int y = 1; y < grid_size - 1; ++y) {
       for (int x = 1; x < grid_size - 1; ++x) {
-        auto r = dist(gen);
+        auto r = rng.nextFloat();
         switch (grid[x][y]) {
         case CellState::Empty:
           if (r < p) {

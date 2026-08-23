@@ -1,8 +1,8 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 0.0
-VERSION_NAME ?= baseline
+VERSION ?= 0.1
+VERSION_NAME ?= better-random
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 
@@ -70,7 +70,7 @@ SAVE_FILE ?= $(shell find out -maxdepth 1 -type f -name 'fire-*.bin' -printf '%T
 
 anim:
 	@test -n "$(SAVE_FILE)" || (echo "No save file found; use SAVE_FILE=out/fire-....bin"; exit 1)
-	uv run --project animation python animation/visualise.py "$(SAVE_FILE)"
+	uv run --project tools/animation python tools/animation/visualise.py "$(SAVE_FILE)"
 
 FORCE:
 

@@ -24,3 +24,5 @@ CPU           CPU
 This is unacceptable. in the next version im going to fix the rng.
 
 # v0.1
+
+found this library to generate prng https://github.com/wjakob/pcg32, it has an optimised SIMD / AVX version as well that i can use for milesone 2.
