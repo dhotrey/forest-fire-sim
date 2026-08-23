@@ -10,8 +10,12 @@
 #include "build_info.hpp"
 #include "save_file.hpp"
 
-const std::string VERSION = "0.0";
-const std::string VERSION_NAME = "baseline";
+#ifndef PROGRAM_VERSION
+#error "PROGRAM_VERSION must be defined by the build system"
+#endif
+
+const std::string VERSION = PROGRAM_VERSION;
+const std::string VERSION_NAME = PROGRAM_VERSION_NAME;
 
 int main(int argc, char *argv[]) {
 #ifndef NO_VISUALIZATION

@@ -1,86 +1,66 @@
 CXX ?= g++
 
-TARGET     ?= bin/fire
-O1_TARGET  ?= $(TARGET)-o1timised
-O2_TARGET  ?= $(TARGET)-o2timised
-O3_TARGET  ?= $(TARGET)-o3timised
-DEBUG_TARGET ?= $(TARGET)-debug
-SOURCES    := main.cpp build_info.cpp save_file.cpp
+# Program version is set here and compiled into the binary.
+VERSION ?= 0.0
+VERSION_NAME ?= baseline
 
-.DEFAULT_GOAL := $(TARGET)
+SOURCES := main.cpp build_info.cpp save_file.cpp
 
-# These values are compiled into the startup banner so it describes the
-# binary that is actually being run, rather than relying on runtime guesses.
-COMPILER_TARGET  ?= $(shell $(CXX) -dumpmachine 2>/dev/null || echo unknown)
-BUILD_TARGET_NAME ?= $(TARGET)
-BUILD_PROFILE     ?= Standard
-OPTIMISATION     ?= compiler-default
+BIN_DIR := bin
 
 STANDARD := -std=c++17
 WARNINGS := -Wall -Wextra -Wpedantic -Werror
-LDLIBS ?= -lstdc++fs
+LDLIBS   ?= -lstdc++fs
 
-# Optimised binaries omit visualisation unless it is explicitly requested.
+COMMON_FLAGS := $(STANDARD) $(WARNINGS) -g -fno-omit-frame-pointer
+
 VISUALISE ?= 0
 ifeq ($(VISUALISE),1)
-OPT_VISUALISE_FLAGS :=
+VIS_FLAGS :=
+VIZ_SUFFIX := -viz
 else
-OPT_VISUALISE_FLAGS := -DNO_VISUALIZATION
+VIS_FLAGS := -DNO_VISUALIZATION
+VIZ_SUFFIX :=
 endif
 
-# Debug builds omit visualisation unless it is explicitly requested.
-DEBUG_VISUALISE_FLAGS := $(OPT_VISUALISE_FLAGS)
-
 BUILD_DEFINES = \
-	-DBUILD_TARGET_NAME=\"$(BUILD_TARGET_NAME)\" \
-	-DBUILD_COMPILER_TARGET=\"$(COMPILER_TARGET)\" \
-	-DBUILD_PROFILE=\"$(BUILD_PROFILE)\" \
-	-DBUILD_OPTIMISATION=\"$(OPTIMISATION)\"
+	-DPROGRAM_VERSION=\"$(VERSION)\" \
+	-DPROGRAM_VERSION_NAME=\"$(VERSION_NAME)\"
 
-.PHONY: all o1timised o2timised o3timised debug anim clean help FORCE
+DEV_BIN := $(BIN_DIR)/fire-v$(VERSION)-dev$(VIZ_SUFFIX)
+O1_BIN  := $(BIN_DIR)/fire-v$(VERSION)-o1$(VIZ_SUFFIX)
+O2_BIN  := $(BIN_DIR)/fire-v$(VERSION)-o2$(VIZ_SUFFIX)
+O3_BIN  := $(BIN_DIR)/fire-v$(VERSION)-o3$(VIZ_SUFFIX)
 
-all: $(TARGET) o1timised o2timised o3timised
+.DEFAULT_GOAL := dev
 
-$(TARGET): $(SOURCES)
-	@mkdir -p $(dir $@)
-	$(CXX) $(STANDARD) $(WARNINGS) $(BUILD_DEFINES) $(CXXFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
+.PHONY: all dev o1 o2 o3 anim clean help FORCE
 
-# The FORCE prerequisite makes `make o1timised VISUALISE=1` rebuild the
-# binary even when an earlier non-visualisation build already exists.
-$(O1_TARGET): $(SOURCES) FORCE
-	@mkdir -p $(dir $@)
-	$(CXX) $(STANDARD) $(WARNINGS) $(BUILD_DEFINES) $(OPT_VISUALISE_FLAGS) $(CXXFLAGS) -O1 -DNDEBUG $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $@
+all: dev o1 o2 o3
 
-$(O2_TARGET): $(SOURCES) FORCE
-	@mkdir -p $(dir $@)
-	$(CXX) $(STANDARD) $(WARNINGS) $(BUILD_DEFINES) $(OPT_VISUALISE_FLAGS) $(CXXFLAGS) -O2 -DNDEBUG $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $@
+define compile
+	mkdir -p $(BIN_DIR)
+	$(CXX) $(COMMON_FLAGS) $(BUILD_DEFINES) $(VIS_FLAGS) $(CXXFLAGS) $(1) $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $(2)
+endef
 
-$(O3_TARGET): $(SOURCES) FORCE
-	@mkdir -p $(dir $@)
-	$(CXX) $(STANDARD) $(WARNINGS) $(BUILD_DEFINES) $(OPT_VISUALISE_FLAGS) $(CXXFLAGS) -O3 -DNDEBUG $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $@
+# FORCE prerequisites let `make o2 VISUALISE=1` rebuild even when a
+# non-visualisation binary with the same version already exists.
+$(DEV_BIN): $(SOURCES) FORCE
+	$(call compile,-O0 -DDEBUG,$@)
 
-o1timised: BUILD_TARGET_NAME = $(O1_TARGET)
-o1timised: BUILD_PROFILE = O1timised
-o1timised: OPTIMISATION = -O1
-o1timised: $(O1_TARGET)
+$(O1_BIN): $(SOURCES) FORCE
+	$(call compile,-O1 -DNDEBUG,$@)
 
-o2timised: BUILD_TARGET_NAME = $(O2_TARGET)
-o2timised: BUILD_PROFILE = O2timised
-o2timised: OPTIMISATION = -O2
-o2timised: $(O2_TARGET)
+$(O2_BIN): $(SOURCES) FORCE
+	$(call compile,-O2 -DNDEBUG,$@)
 
-o3timised: BUILD_TARGET_NAME = $(O3_TARGET)
-o3timised: BUILD_PROFILE = O3timised
-o3timised: OPTIMISATION = -O3
-o3timised: $(O3_TARGET)
+$(O3_BIN): $(SOURCES) FORCE
+	$(call compile,-O3 -DNDEBUG,$@)
 
-debug: BUILD_TARGET_NAME = $(DEBUG_TARGET)
-debug: BUILD_PROFILE = Debug
-debug: OPTIMISATION = -O0
-debug: $(SOURCES) FORCE
-debug:
-	@mkdir -p $(dir $(TARGET))
-	$(CXX) $(STANDARD) $(WARNINGS) $(BUILD_DEFINES) $(DEBUG_VISUALISE_FLAGS) $(CXXFLAGS) -O0 -g -DDEBUG $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $(DEBUG_TARGET)
+dev: $(DEV_BIN)
+o1:  $(O1_BIN)
+o2:  $(O2_BIN)
+o3:  $(O3_BIN)
 
 SAVE_FILE ?= $(shell find out -maxdepth 1 -type f -name 'fire-*.bin' -printf '%T@ %p\n' 2>/dev/null | sort -nr | sed -n '1s/^[^ ]* //p')
 
@@ -91,16 +71,14 @@ anim:
 FORCE:
 
 clean:
-	rm -f $(TARGET) $(O1_TARGET) $(O2_TARGET) $(O3_TARGET)
-	rm -rf out
+	rm -rf $(BIN_DIR) out
 
 help:
-	@echo "make                         Build the default and all optimised binaries"
-	@echo "make o1timised               Build with -O1"
-	@echo "make o2timised               Build with -O2"
-	@echo "make o3timised               Build with -O3"
-	@echo "make o3timised VISUALISE=1  Include visualisation in an optimised build"
-	@echo "make debug                   Build the default binary with debug symbols"
-	@echo "make debug VISUALISE=1       Include visualisation in the debug build"
+	@echo "make dev                     Build the -O0 debug binary"
+	@echo "make o1                      Build with -O1"
+	@echo "make o2                      Build with -O2"
+	@echo "make o3                      Build with -O3"
+	@echo "make <mode> VISUALISE=1      Include visualisation (adds -viz to the name)"
+	@echo "make VERSION=0.1 <mode>      Override the compiled-in program version"
 	@echo "make anim                    Visualise the newest save file"
 	@echo "make clean                   Delete binaries and out/"
