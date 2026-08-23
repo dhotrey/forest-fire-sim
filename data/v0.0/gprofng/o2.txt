@@ -1,0 +1,9 @@
+Functions sorted by metric: Exclusive Total CPU Time
+
+Excl. Total    Incl. Total     Name
+CPU            CPU
+  sec.      %    sec.      %
+10.287 100.00  10.287 100.00   <Total>
+10.287 100.00  10.287 100.00   main
+ 0.      0.    10.287 100.00   __libc_start_main
+

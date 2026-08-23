@@ -1,0 +1,10 @@
+Functions sorted by metric: Exclusive Total CPU Time
+
+Excl. Total   Incl. Total    Name
+CPU           CPU
+ sec.      %   sec.      %
+6.114 100.00  6.114 100.00   <Total>
+3.823  62.52  6.114 100.00   main
+2.292  37.48  2.292  37.48   std::mersenne_twister_engine<unsigned long, 32ul, 624ul, 397ul, 31ul, 2567483615ul, 11ul, 4294967295ul, 7ul, 2636928640ul, 15ul, 4022730752ul, 18ul, 1812433253ul>::operator()()
+0.      0.    6.114 100.00   __libc_start_main
+

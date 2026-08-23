@@ -1,0 +1,1321 @@
+=== execution environment ===
+opt flags: o1 o2
+job id:   563734
+job node: vcpu-2
+hostname: vcpu-2
+kernel:   4.18.0-553.150.1.el8_10.x86_64
+date:     2026-08-23T14:34:47+10:00
+working directory: /home/Student/s4985050/forest-fire-sim
+command: /var/slurm/d/job563734/slurm_script o1,o2 v0.0
+parameters: grids=100 500 1000 timesteps=500 warmups=2 reps=5 p=0.02 f=0.01
+slurm allocation: job_cpus_per_node=1 cpus_per_task=1 ntasks=1
+process affinity: 0
+load average: 0.05 0.01 0.06 1/310 360007
+uptime:  14:34:47 up 20 days,  4:35,  0 users,  load average: 0.05, 0.01, 0.06
+Architecture:        x86_64
+CPU(s):              8
+Thread(s) per core:  1
+Core(s) per socket:  1
+Socket(s):           8
+NUMA node(s):        1
+Model name:          AMD EPYC 7542 32-Core Processor
+Virtualization type: full
+NUMA node0 CPU(s):   0-7
+model name	: AMD EPYC 7542 32-Core Processor
+pinned core: 0
+cpufreq governor: n/a
+cpufreq current kHz: n/a
+compiler command: /usr/bin/g++
+g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-28)
+time command: time (GNU Time) UNKNOWN
+perf command: perf version 4.18.0-553.150.1.el8_10.x86_64
+JobId=563734 JobName=ff_o1-o2
+   UserId=s4985050(2962097) GroupId=uusers(10000) MCS_label=N/A
+   Priority=1 Nice=0 Account=s4985050 QOS=normal
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:01 TimeLimit=00:07:00 TimeMin=N/A
+   SubmitTime=2026-08-23T14:34:46 EligibleTime=2026-08-23T14:34:46
+   AccrueTime=2026-08-23T14:34:46
+   StartTime=2026-08-23T14:34:46 EndTime=2026-08-23T14:41:46 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-08-23T14:34:46 Scheduler=Main
+   Partition=cpu AllocNode:Sid=login0:780778
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=vcpu-2
+   BatchHost=vcpu-2
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=1,mem=1M,node=1,billing=1
+   AllocTRES=cpu=1,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=0 MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) LicensesAlloc=(null) Network=(null)
+   Command=/home/Student/s4985050/forest-fire-sim/run.slurm.sh
+   SubmitLine=sbatch --job-name=ff_o1-o2 --output=data/v0.0/slurm-logs/slurm-o1-o2.out run.slurm.sh o1,o2 v0.0
+   WorkDir=/home/Student/s4985050/forest-fire-sim
+   StdErr=
+   StdIn=/dev/null
+   StdOut=/home/Student/s4985050/forest-fire-sim/data/v0.0/slurm-logs/slurm-o1-o2.out
+   TresPerTask=cpu=1
+
+--- binary o1 ---
+-rwx------ 1 s4985050 uusers 844088 Aug 23 13:59 bin/fire-v0.0-o1
+bin/fire-v0.0-o1: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=137371fa6c044af033a89c5e747198ecfc57f770, with debug_info, not stripped
+   text	   data	    bss	    dec	    hex	filename
+  64256	   1952	    648	  66856	  10528	bin/fire-v0.0-o1
+	linux-vdso.so.1 (0x00007ffd1754e000)
+	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007ffb5243e000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007ffb520bc000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007ffb51ea4000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007ffb51ace000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007ffb527d3000)
+md5:    84a662939d1705646296661a014ece4c
+sha256: 0aa52b37f457bb8947ba61f95ece04b0cb7a4ab4b4d2413dcfd48a0db1092677
+--- binary o2 ---
+-rwx------ 1 s4985050 uusers 886000 Aug 23 13:59 bin/fire-v0.0-o2
+bin/fire-v0.0-o2: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=dd07a030e686478c3e7f8951dfd549580d6c56b3, with debug_info, not stripped
+   text	   data	    bss	    dec	    hex	filename
+  65314	   1952	    648	  67914	  1094a	bin/fire-v0.0-o2
+	linux-vdso.so.1 (0x00007ffe071d3000)
+	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f5baa1c9000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007f5ba9e47000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f5ba9c2f000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007f5ba9859000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007f5baa55e000)
+md5:    d1cde022144993f1023f6f70f3f6e04a
+sha256: d1fa54c357610e9e6275dd5874b8e19db0feb7d068ff86a75f9da02a8acb79fa
+=============================
+=== initial size-1 warm-up runs ===
+=== size-1 warm-up start: opt=o1 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       3
+  Time steps:      1
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== size-1 warm-up end: opt=o1 ===
+=== size-1 warm-up start: opt=o2 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       3
+  Time steps:      1
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== size-1 warm-up end: opt=o2 ===
+=== warm-up start: opt=o1 grid=100 rep=1 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o1 grid=100 rep=1 ===
+=== warm-up start: opt=o2 grid=100 rep=1 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o2 grid=100 rep=1 ===
+=== warm-up start: opt=o1 grid=100 rep=2 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o1 grid=100 rep=2 ===
+=== warm-up start: opt=o2 grid=100 rep=2 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o2 grid=100 rep=2 ===
+=== timed run start: opt=o1 grid=100 rep=1 ===
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 3/310 360065
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 1/310 360073
+cpu current kHz: n/a
+run=1 grid=100 user=0.05s sys=0.00s cpu=93% total=0.06s max_rss=3420KiB invol_ctx=2 vol_ctx=5 major_faults=0 minor_faults=130 [o1]
+=== timed run end: opt=o1 grid=100 rep=1 ===
+=== timed run start: opt=o2 grid=100 rep=1 ===
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 1/310 360079
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 1/310 360087
+cpu current kHz: n/a
+run=1 grid=100 user=0.09s sys=0.00s cpu=96% total=0.10s max_rss=3436KiB invol_ctx=2 vol_ctx=5 major_faults=0 minor_faults=130 [o2]
+=== timed run end: opt=o2 grid=100 rep=1 ===
+=== timed run start: opt=o2 grid=100 rep=2 ===
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 1/310 360093
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 4/310 360101
+cpu current kHz: n/a
+run=2 grid=100 user=0.10s sys=0.00s cpu=97% total=0.10s max_rss=3460KiB invol_ctx=2 vol_ctx=5 major_faults=0 minor_faults=132 [o2]
+=== timed run end: opt=o2 grid=100 rep=2 ===
+=== timed run start: opt=o1 grid=100 rep=2 ===
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 3/310 360107
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 1/310 360115
+cpu current kHz: n/a
+run=2 grid=100 user=0.05s sys=0.00s cpu=93% total=0.06s max_rss=3584KiB invol_ctx=2 vol_ctx=5 major_faults=0 minor_faults=133 [o1]
+=== timed run end: opt=o1 grid=100 rep=2 ===
+=== timed run start: opt=o1 grid=100 rep=3 ===
+date: 2026-08-23T14:34:47+10:00
+load average: 0.05 0.01 0.06 1/310 360121
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 1/310 360129
+cpu current kHz: n/a
+run=3 grid=100 user=0.05s sys=0.00s cpu=93% total=0.06s max_rss=3388KiB invol_ctx=2 vol_ctx=5 major_faults=0 minor_faults=129 [o1]
+=== timed run end: opt=o1 grid=100 rep=3 ===
+=== timed run start: opt=o2 grid=100 rep=3 ===
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 1/310 360135
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 3/310 360143
+cpu current kHz: n/a
+run=3 grid=100 user=0.09s sys=0.00s cpu=96% total=0.10s max_rss=3388KiB invol_ctx=3 vol_ctx=5 major_faults=0 minor_faults=130 [o2]
+=== timed run end: opt=o2 grid=100 rep=3 ===
+=== timed run start: opt=o2 grid=100 rep=4 ===
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 3/310 360149
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 1/310 360157
+cpu current kHz: n/a
+run=4 grid=100 user=0.10s sys=0.00s cpu=97% total=0.10s max_rss=3660KiB invol_ctx=3 vol_ctx=5 major_faults=0 minor_faults=134 [o2]
+=== timed run end: opt=o2 grid=100 rep=4 ===
+=== timed run start: opt=o1 grid=100 rep=4 ===
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 1/310 360163
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 1/310 360171
+cpu current kHz: n/a
+run=4 grid=100 user=0.05s sys=0.00s cpu=95% total=0.06s max_rss=3420KiB invol_ctx=3 vol_ctx=5 major_faults=0 minor_faults=131 [o1]
+=== timed run end: opt=o1 grid=100 rep=4 ===
+=== timed run start: opt=o1 grid=100 rep=5 ===
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 1/310 360177
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 3/310 360185
+cpu current kHz: n/a
+run=5 grid=100 user=0.05s sys=0.00s cpu=95% total=0.06s max_rss=3664KiB invol_ctx=3 vol_ctx=5 major_faults=0 minor_faults=135 [o1]
+=== timed run end: opt=o1 grid=100 rep=5 ===
+=== timed run start: opt=o2 grid=100 rep=5 ===
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 7/310 360191
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       102
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:48+10:00
+load average: 0.05 0.01 0.06 1/310 360199
+cpu current kHz: n/a
+run=5 grid=100 user=0.09s sys=0.00s cpu=96% total=0.10s max_rss=3488KiB invol_ctx=3 vol_ctx=5 major_faults=0 minor_faults=131 [o2]
+=== timed run end: opt=o2 grid=100 rep=5 ===
+=== warm-up start: opt=o1 grid=500 rep=1 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o1 grid=500 rep=1 ===
+=== warm-up start: opt=o2 grid=500 rep=1 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o2 grid=500 rep=1 ===
+=== warm-up start: opt=o1 grid=500 rep=2 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o1 grid=500 rep=2 ===
+=== warm-up start: opt=o2 grid=500 rep=2 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o2 grid=500 rep=2 ===
+=== timed run start: opt=o1 grid=500 rep=1 ===
+date: 2026-08-23T14:34:56+10:00
+load average: 0.19 0.05 0.07 1/310 360211
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:34:58+10:00
+load average: 0.19 0.05 0.07 1/310 360219
+cpu current kHz: n/a
+run=1 grid=500 user=1.46s sys=0.00s cpu=97% total=1.49s max_rss=3968KiB invol_ctx=9 vol_ctx=5 major_faults=0 minor_faults=260 [o1]
+=== timed run end: opt=o1 grid=500 rep=1 ===
+=== timed run start: opt=o2 grid=500 rep=1 ===
+date: 2026-08-23T14:34:58+10:00
+load average: 0.19 0.05 0.07 1/310 360225
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:00+10:00
+load average: 0.19 0.05 0.07 1/310 360233
+cpu current kHz: n/a
+run=1 grid=500 user=2.49s sys=0.00s cpu=97% total=2.54s max_rss=3760KiB invol_ctx=12 vol_ctx=5 major_faults=0 minor_faults=254 [o2]
+=== timed run end: opt=o2 grid=500 rep=1 ===
+=== timed run start: opt=o2 grid=500 rep=2 ===
+date: 2026-08-23T14:35:00+10:00
+load average: 0.19 0.05 0.07 1/310 360239
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:03+10:00
+load average: 0.26 0.06 0.07 1/310 360248
+cpu current kHz: n/a
+run=2 grid=500 user=2.49s sys=0.00s cpu=97% total=2.54s max_rss=3820KiB invol_ctx=14 vol_ctx=5 major_faults=0 minor_faults=256 [o2]
+=== timed run end: opt=o2 grid=500 rep=2 ===
+=== timed run start: opt=o1 grid=500 rep=2 ===
+date: 2026-08-23T14:35:03+10:00
+load average: 0.26 0.06 0.07 1/310 360254
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:04+10:00
+load average: 0.26 0.06 0.07 1/310 360262
+cpu current kHz: n/a
+run=2 grid=500 user=1.48s sys=0.00s cpu=97% total=1.51s max_rss=3944KiB invol_ctx=9 vol_ctx=5 major_faults=0 minor_faults=258 [o1]
+=== timed run end: opt=o1 grid=500 rep=2 ===
+=== timed run start: opt=o1 grid=500 rep=3 ===
+date: 2026-08-23T14:35:04+10:00
+load average: 0.26 0.06 0.07 1/310 360268
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:06+10:00
+load average: 0.26 0.06 0.07 2/310 360276
+cpu current kHz: n/a
+run=3 grid=500 user=1.47s sys=0.00s cpu=97% total=1.50s max_rss=3808KiB invol_ctx=9 vol_ctx=5 major_faults=0 minor_faults=256 [o1]
+=== timed run end: opt=o1 grid=500 rep=3 ===
+=== timed run start: opt=o2 grid=500 rep=3 ===
+date: 2026-08-23T14:35:06+10:00
+load average: 0.26 0.06 0.07 1/310 360282
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:08+10:00
+load average: 0.32 0.08 0.08 1/310 360290
+cpu current kHz: n/a
+run=3 grid=500 user=2.49s sys=0.00s cpu=97% total=2.55s max_rss=3872KiB invol_ctx=15 vol_ctx=5 major_faults=0 minor_faults=257 [o2]
+=== timed run end: opt=o2 grid=500 rep=3 ===
+=== timed run start: opt=o2 grid=500 rep=4 ===
+date: 2026-08-23T14:35:08+10:00
+load average: 0.32 0.08 0.08 1/310 360296
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:11+10:00
+load average: 0.32 0.08 0.08 1/310 360306
+cpu current kHz: n/a
+run=4 grid=500 user=2.50s sys=0.00s cpu=98% total=2.56s max_rss=3760KiB invol_ctx=14 vol_ctx=5 major_faults=0 minor_faults=255 [o2]
+=== timed run end: opt=o2 grid=500 rep=4 ===
+=== timed run start: opt=o1 grid=500 rep=4 ===
+date: 2026-08-23T14:35:11+10:00
+load average: 0.32 0.08 0.08 1/310 360312
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:13+10:00
+load average: 0.37 0.09 0.08 2/310 360321
+cpu current kHz: n/a
+run=4 grid=500 user=1.45s sys=0.00s cpu=97% total=1.48s max_rss=3884KiB invol_ctx=8 vol_ctx=4 major_faults=0 minor_faults=257 [o1]
+=== timed run end: opt=o1 grid=500 rep=4 ===
+=== timed run start: opt=o1 grid=500 rep=5 ===
+date: 2026-08-23T14:35:13+10:00
+load average: 0.37 0.09 0.08 1/310 360327
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:14+10:00
+load average: 0.37 0.09 0.08 1/310 360335
+cpu current kHz: n/a
+run=5 grid=500 user=1.45s sys=0.00s cpu=97% total=1.48s max_rss=3872KiB invol_ctx=11 vol_ctx=5 major_faults=0 minor_faults=257 [o1]
+=== timed run end: opt=o1 grid=500 rep=5 ===
+=== timed run start: opt=o2 grid=500 rep=5 ===
+date: 2026-08-23T14:35:14+10:00
+load average: 0.37 0.09 0.08 3/310 360341
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       502
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:17+10:00
+load average: 0.42 0.11 0.09 1/310 360349
+cpu current kHz: n/a
+run=5 grid=500 user=2.49s sys=0.00s cpu=97% total=2.54s max_rss=3852KiB invol_ctx=13 vol_ctx=5 major_faults=0 minor_faults=257 [o2]
+=== timed run end: opt=o2 grid=500 rep=5 ===
+=== warm-up start: opt=o1 grid=1000 rep=1 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o1 grid=1000 rep=1 ===
+=== warm-up start: opt=o2 grid=1000 rep=1 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o2 grid=1000 rep=1 ===
+=== warm-up start: opt=o1 grid=1000 rep=2 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o1 grid=1000 rep=2 ===
+=== warm-up start: opt=o2 grid=1000 rep=2 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== warm-up end: opt=o2 grid=1000 rep=2 ===
+=== timed run start: opt=o1 grid=1000 rep=1 ===
+date: 2026-08-23T14:35:50+10:00
+load average: 0.65 0.20 0.12 1/309 360363
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:35:56+10:00
+load average: 0.68 0.21 0.12 4/344 360434
+cpu current kHz: n/a
+run=1 grid=1000 user=6.06s sys=0.00s cpu=98% total=6.18s max_rss=5324KiB invol_ctx=30 vol_ctx=5 major_faults=0 minor_faults=639 [o1]
+=== timed run end: opt=o1 grid=1000 rep=1 ===
+=== timed run start: opt=o2 grid=1000 rep=1 ===
+date: 2026-08-23T14:35:56+10:00
+load average: 0.87 0.26 0.14 5/344 360440
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:36:07+10:00
+load average: 0.89 0.28 0.15 4/310 360469
+cpu current kHz: n/a
+run=1 grid=1000 user=10.24s sys=0.00s cpu=98% total=10.44s max_rss=5244KiB invol_ctx=50 vol_ctx=4 major_faults=0 minor_faults=637 [o2]
+=== timed run end: opt=o2 grid=1000 rep=1 ===
+=== timed run start: opt=o2 grid=1000 rep=2 ===
+date: 2026-08-23T14:36:07+10:00
+load average: 0.89 0.28 0.15 2/310 360475
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:36:17+10:00
+load average: 0.98 0.32 0.16 3/345 360548
+cpu current kHz: n/a
+run=2 grid=1000 user=10.23s sys=0.00s cpu=98% total=10.44s max_rss=5328KiB invol_ctx=50 vol_ctx=4 major_faults=0 minor_faults=640 [o2]
+=== timed run end: opt=o2 grid=1000 rep=2 ===
+=== timed run start: opt=o1 grid=1000 rep=2 ===
+date: 2026-08-23T14:36:17+10:00
+load average: 0.98 0.32 0.16 3/345 360554
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:36:23+10:00
+load average: 0.99 0.33 0.17 2/310 360582
+cpu current kHz: n/a
+run=2 grid=1000 user=6.06s sys=0.00s cpu=98% total=6.18s max_rss=5204KiB invol_ctx=29 vol_ctx=4 major_faults=0 minor_faults=637 [o1]
+=== timed run end: opt=o1 grid=1000 rep=2 ===
+=== timed run start: opt=o1 grid=1000 rep=3 ===
+date: 2026-08-23T14:36:23+10:00
+load average: 0.99 0.33 0.17 3/310 360588
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:36:29+10:00
+load average: 0.99 0.34 0.17 2/310 360596
+cpu current kHz: n/a
+run=3 grid=1000 user=6.04s sys=0.00s cpu=98% total=6.16s max_rss=5244KiB invol_ctx=31 vol_ctx=4 major_faults=0 minor_faults=636 [o1]
+=== timed run end: opt=o1 grid=1000 rep=3 ===
+=== timed run start: opt=o2 grid=1000 rep=3 ===
+date: 2026-08-23T14:36:29+10:00
+load average: 0.99 0.34 0.17 2/310 360602
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:36:40+10:00
+load average: 0.99 0.37 0.18 2/310 360610
+cpu current kHz: n/a
+run=3 grid=1000 user=10.22s sys=0.00s cpu=98% total=10.43s max_rss=5208KiB invol_ctx=47 vol_ctx=4 major_faults=0 minor_faults=635 [o2]
+=== timed run end: opt=o2 grid=1000 rep=3 ===
+=== timed run start: opt=o2 grid=1000 rep=4 ===
+date: 2026-08-23T14:36:40+10:00
+load average: 0.99 0.37 0.18 2/310 360616
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:36:50+10:00
+load average: 0.99 0.39 0.19 1/309 360625
+cpu current kHz: n/a
+run=4 grid=1000 user=10.24s sys=0.00s cpu=98% total=10.45s max_rss=5388KiB invol_ctx=54 vol_ctx=4 major_faults=0 minor_faults=640 [o2]
+=== timed run end: opt=o2 grid=1000 rep=4 ===
+=== timed run start: opt=o1 grid=1000 rep=4 ===
+date: 2026-08-23T14:36:50+10:00
+load average: 0.99 0.39 0.19 1/309 360631
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:36:57+10:00
+load average: 0.99 0.41 0.20 1/309 360640
+cpu current kHz: n/a
+run=4 grid=1000 user=6.12s sys=0.00s cpu=98% total=6.24s max_rss=5236KiB invol_ctx=30 vol_ctx=5 major_faults=0 minor_faults=636 [o1]
+=== timed run end: opt=o1 grid=1000 rep=4 ===
+=== timed run start: opt=o1 grid=1000 rep=5 ===
+date: 2026-08-23T14:36:57+10:00
+load average: 0.99 0.41 0.20 1/309 360646
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:37:03+10:00
+load average: 0.99 0.42 0.20 1/309 360654
+cpu current kHz: n/a
+run=5 grid=1000 user=6.10s sys=0.00s cpu=98% total=6.22s max_rss=5276KiB invol_ctx=27 vol_ctx=4 major_faults=0 minor_faults=637 [o1]
+=== timed run end: opt=o1 grid=1000 rep=5 ===
+=== timed run start: opt=o2 grid=1000 rep=5 ===
+date: 2026-08-23T14:37:03+10:00
+load average: 0.99 0.42 0.20 1/309 360660
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+date: 2026-08-23T14:37:13+10:00
+load average: 1.00 0.44 0.21 1/307 360670
+cpu current kHz: n/a
+run=5 grid=1000 user=10.24s sys=0.00s cpu=98% total=10.45s max_rss=5292KiB invol_ctx=48 vol_ctx=4 major_faults=0 minor_faults=637 [o2]
+=== timed run end: opt=o2 grid=1000 rep=5 ===
+=== perf stat start: opt=o1 grid=1000 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+
+ Performance counter stats for 'taskset -c 0 bin/fire-v0.0-o1 1000 500 0.02 0.01':
+
+          6,376.46 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+               692      page-faults:u             #  108.524 /sec                   
+     <not counted>      cycles:u                                                      (0.00%)
+     <not counted>      stalled-cycles-frontend:u                                     (0.00%)
+     <not counted>      stalled-cycles-backend:u                                      (0.00%)
+     <not counted>      instructions:u                                                (0.00%)
+     <not counted>      branches:u                                                    (0.00%)
+     <not counted>      branch-misses:u                                               (0.00%)
+     <not counted>      L1-dcache-loads:u                                             (0.00%)
+     <not counted>      L1-dcache-load-misses:u                                       (0.00%)
+   <not supported>      LLC-loads:u                                                 
+   <not supported>      LLC-load-misses:u                                           
+     <not counted>      L1-icache-loads:u                                             (0.00%)
+     <not counted>      L1-icache-load-misses:u                                       (0.00%)
+     <not counted>      dTLB-loads:u                                                  (0.00%)
+     <not counted>      dTLB-load-misses:u                                            (0.00%)
+     <not counted>      iTLB-loads:u                                                  (0.00%)
+     <not counted>      iTLB-load-misses:u                                            (0.00%)
+
+       6.378692031 seconds time elapsed
+
+       6.243464000 seconds user
+       0.000968000 seconds sys
+
+
+=== perf stat end: opt=o1 ===
+=== perf stat start: opt=o2 grid=1000 ===
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+
+ Performance counter stats for 'taskset -c 0 bin/fire-v0.0-o2 1000 500 0.02 0.01':
+
+         10,447.66 msec task-clock:u              #    1.000 CPUs utilized          
+                 0      context-switches:u        #    0.000 /sec                   
+                 0      cpu-migrations:u          #    0.000 /sec                   
+               692      page-faults:u             #   66.235 /sec                   
+     <not counted>      cycles:u                                                      (0.00%)
+     <not counted>      stalled-cycles-frontend:u                                     (0.00%)
+     <not counted>      stalled-cycles-backend:u                                      (0.00%)
+     <not counted>      instructions:u                                                (0.00%)
+     <not counted>      branches:u                                                    (0.00%)
+     <not counted>      branch-misses:u                                               (0.00%)
+     <not counted>      L1-dcache-loads:u                                             (0.00%)
+     <not counted>      L1-dcache-load-misses:u                                       (0.00%)
+   <not supported>      LLC-loads:u                                                 
+   <not supported>      LLC-load-misses:u                                           
+     <not counted>      L1-icache-loads:u                                             (0.00%)
+     <not counted>      L1-icache-load-misses:u                                       (0.00%)
+     <not counted>      dTLB-loads:u                                                  (0.00%)
+     <not counted>      dTLB-load-misses:u                                            (0.00%)
+     <not counted>      iTLB-loads:u                                                  (0.00%)
+     <not counted>      iTLB-load-misses:u                                            (0.00%)
+
+      10.449688300 seconds time elapsed
+
+      10.226873000 seconds user
+       0.002900000 seconds sys
+
+
+=== perf stat end: opt=o2 ===
+=== gprofng start: opt=o1 output=data/v0.0/gprofng/gprofng-o1-563734.er ===
+Creating experiment directory data/v0.0/gprofng/gprofng-o1-563734.er (Process ID: 360679) ...
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:37
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o1
+  Build flags:     O1 NDEBUG 
+  Optimisation:    enabled
+
+=== gprofng end: opt=o1 ===
+=== gprofng start: opt=o2 output=data/v0.0/gprofng/gprofng-o2-563734.er ===
+Creating experiment directory data/v0.0/gprofng/gprofng-o2-563734.er (Process ID: 360681) ...
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.0 baseline
+  Compiled:        Aug 23 2026 13:59:38
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v0.0-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+=== gprofng end: opt=o2 ===
+benchmark CSV: data/v0.0/benchmarking/benchmarks-o1-o2.csv
