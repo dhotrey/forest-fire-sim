@@ -8,6 +8,8 @@ SOURCES := main.cpp build_info.cpp save_file.cpp
 
 BIN_DIR := bin
 
+COMPILER_TARGET ?= $(shell $(CXX) -dumpmachine 2>/dev/null || echo unknown)
+
 STANDARD := -std=c++17
 WARNINGS := -Wall -Wextra -Wpedantic -Werror
 LDLIBS   ?= -lstdc++fs
@@ -18,6 +20,7 @@ VISUALISE ?= 0
 ifeq ($(VISUALISE),1)
 VIS_FLAGS :=
 VIZ_SUFFIX := -viz
+VISUALISE_NOTE := VISUALISE=1
 else
 VIS_FLAGS := -DNO_VISUALIZATION
 VIZ_SUFFIX :=
@@ -25,7 +28,8 @@ endif
 
 BUILD_DEFINES = \
 	-DPROGRAM_VERSION=\"$(VERSION)\" \
-	-DPROGRAM_VERSION_NAME=\"$(VERSION_NAME)\"
+	-DPROGRAM_VERSION_NAME=\"$(VERSION_NAME)\" \
+	-DBUILD_COMPILER_TARGET=\"$(COMPILER_TARGET)\"
 
 DEV_BIN := $(BIN_DIR)/fire-v$(VERSION)-dev$(VIZ_SUFFIX)
 O1_BIN  := $(BIN_DIR)/fire-v$(VERSION)-o1$(VIZ_SUFFIX)
@@ -40,22 +44,22 @@ all: dev o1 o2 o3
 
 define compile
 	mkdir -p $(BIN_DIR)
-	$(CXX) $(COMMON_FLAGS) $(BUILD_DEFINES) $(VIS_FLAGS) $(CXXFLAGS) $(1) $(LDFLAGS) $(SOURCES) $(LDLIBS) -o $(2)
+	$(CXX) $(COMMON_FLAGS) $(BUILD_DEFINES) $(VIS_FLAGS) $(CXXFLAGS) $(1) $(LDFLAGS) $(SOURCES) $(LDLIBS) '-DBUILD_FLAGS="$(2) $(VISUALISE_NOTE)"' -o $@
 endef
 
 # FORCE prerequisites let `make o2 VISUALISE=1` rebuild even when a
 # non-visualisation binary with the same version already exists.
 $(DEV_BIN): $(SOURCES) FORCE
-	$(call compile,-O0 -DDEBUG,$@)
+	$(call compile,-O0 -DDEBUG,O0 DEBUG)
 
 $(O1_BIN): $(SOURCES) FORCE
-	$(call compile,-O1 -DNDEBUG,$@)
+	$(call compile,-O1 -DNDEBUG,O1 NDEBUG)
 
 $(O2_BIN): $(SOURCES) FORCE
-	$(call compile,-O2 -DNDEBUG,$@)
+	$(call compile,-O2 -DNDEBUG,O2 NDEBUG)
 
 $(O3_BIN): $(SOURCES) FORCE
-	$(call compile,-O3 -DNDEBUG,$@)
+	$(call compile,-O3 -DNDEBUG,O3 NDEBUG)
 
 dev: $(DEV_BIN)
 o1:  $(O1_BIN)

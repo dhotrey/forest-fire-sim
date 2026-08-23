@@ -55,8 +55,8 @@ int main(int argc, char *argv[]) {
   double p = std::stod(argv[3]);
   double f = std::stod(argv[4]);
 
-  build_info::print_startup_banner(grid_size, timesteps, p, f, VERSION,
-                                   VERSION_NAME);
+  build_info::print_startup_banner(argv[0], grid_size, timesteps, p, f,
+                                   VERSION, VERSION_NAME);
 #ifndef NO_VISUALIZATION
   std::unique_ptr<SaveFile> save_file;
   if (visualise) {

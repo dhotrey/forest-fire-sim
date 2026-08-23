@@ -3,20 +3,12 @@
 #include <iostream>
 #include <string>
 
-#ifndef BUILD_TARGET_NAME
-#define BUILD_TARGET_NAME "unspecified"
-#endif
-
 #ifndef BUILD_COMPILER_TARGET
 #define BUILD_COMPILER_TARGET "unspecified"
 #endif
 
-#ifndef BUILD_PROFILE
-#define BUILD_PROFILE "unspecified"
-#endif
-
-#ifndef BUILD_OPTIMISATION
-#define BUILD_OPTIMISATION "unspecified"
+#ifndef BUILD_FLAGS
+#define BUILD_FLAGS "unspecified"
 #endif
 
 namespace {
@@ -61,8 +53,9 @@ const char *optimisation_status() {
 
 namespace build_info {
 
-void print_startup_banner(int grid_size, int timesteps, double p, double f,
-                          std::string version, std::string version_name) {
+void print_startup_banner(const char *executable, int grid_size, int timesteps,
+                          double p, double f, std::string version,
+                          std::string version_name) {
   std::cout << "Cellular automata based forest fire model\n"
             << "--------------------------------------------------\n"
             << "Model configuration\n"
@@ -78,10 +71,9 @@ void print_startup_banner(int grid_size, int timesteps, double p, double f,
             << "  C++ standard:    " << cpp_standard()
             << " (__cplusplus=" << __cplusplus << ")\n"
             << "  Compiler target: " << BUILD_COMPILER_TARGET << '\n'
-            << "  Executable:      " << BUILD_TARGET_NAME << '\n'
-            << "  Build profile:   " << BUILD_PROFILE << '\n'
-            << "  Optimisation:    " << BUILD_OPTIMISATION << " ("
-            << optimisation_status() << ")\n"
+            << "  Executable:      " << executable << '\n'
+            << "  Build flags:     " << BUILD_FLAGS << '\n'
+            << "  Optimisation:    " << optimisation_status() << '\n'
             << std::endl;
 }
 

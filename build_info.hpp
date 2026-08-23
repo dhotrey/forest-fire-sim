@@ -4,8 +4,9 @@
 #include <string>
 namespace build_info {
 
-void print_startup_banner(int grid_size, int timesteps, double p, double f,
-                          std::string version, std::string version_name);
+void print_startup_banner(const char *executable, int grid_size, int timesteps,
+                          double p, double f, std::string version,
+                          std::string version_name);
 
 } // namespace build_info
 
