@@ -9,8 +9,8 @@
 
 set -euo pipefail
 
-if (( $# == 0 )); then
-    echo "Usage: sbatch $0 <build> [build ...]" >&2
+if (( $# == 0 || $# % 5 != 0 )); then
+    echo "Usage: sbatch $0 <build> <grid> <timesteps> <p> <f> [<build> <grid> <timesteps> <p> <f> ...]" >&2
     exit 1
 fi
 
@@ -19,7 +19,11 @@ if ! command -v valgrind >/dev/null 2>&1; then
     exit 1
 fi
 
-for build in "$@"; do
+ARGS=("$@")
+RUNS=$(( ${#ARGS[@]} / 5 ))
+
+for (( i = 0; i < ${#ARGS[@]}; i += 5 )); do
+    build="${ARGS[i]}"
     if [[ ! -x "$build" ]]; then
         echo "ERROR: missing or non-executable build: $build" >&2
         exit 1
@@ -28,11 +32,13 @@ done
 
 echo "hostname: $(hostname)"
 echo "job id:   ${SLURM_JOB_ID:-n/a}"
-echo "builds:   $#"
+echo "runs:     $RUNS"
 
-for build in "$@"; do
+for (( i = 0; i < ${#ARGS[@]}; i += 5 )); do
+    build="${ARGS[i]}"
     echo "=== cachegrind start: $build ==="
     valgrind --tool=cachegrind --cache-sim=yes \
-        "$build" 1000 500 0.02 0.01 2>&1
+        "$build" "${ARGS[i + 1]}" "${ARGS[i + 2]}" \
+        "${ARGS[i + 3]}" "${ARGS[i + 4]}" 2>&1
     echo "=== cachegrind end: $build ==="
 done
