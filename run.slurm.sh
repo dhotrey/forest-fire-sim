@@ -47,7 +47,7 @@ done
 
 CONFIG_LABEL=$(IFS=-; echo "${OPTS[*]}")
 CSV="${DATA}/benchmarking/benchmarks-${CONFIG_LABEL}.csv"
-echo "opt_flag,run_number,grid_size,user_s,system_s,cpu_pct,total_s,max_rss_kb,involuntary_ctx_switches,voluntary_ctx_switches,major_page_faults,minor_page_faults" > "$CSV"
+echo "version,opt_flag,run_number,grid_size,user_s,system_s,cpu_pct,total_s,max_rss_kb,involuntary_ctx_switches,voluntary_ctx_switches,major_page_faults,minor_page_faults" > "$CSV"
 
 AFFINITY=$(taskset -pc $$ 2>/dev/null | awk -F': ' '{print $2}' || true)
 CORE=${AFFINITY%%,*}
@@ -174,7 +174,7 @@ for GRID in "${GRIDS[@]}"; do
 
         for OPT in "${RUN_ORDER[@]}"; do
             run_timed "$OPT" "$GRID" "$REP"
-            echo "$OPT,$REP,$GRID,$TIME_USER,$TIME_SYS,$TIME_CPU,$TIME_TOTAL,$TIME_MAX_RSS,$TIME_INVOL_CTX,$TIME_VOL_CTX,$TIME_MAJOR_FAULTS,$TIME_MINOR_FAULTS" >> "$CSV"
+            echo "$VERSION,$OPT,$REP,$GRID,$TIME_USER,$TIME_SYS,$TIME_CPU,$TIME_TOTAL,$TIME_MAX_RSS,$TIME_INVOL_CTX,$TIME_VOL_CTX,$TIME_MAJOR_FAULTS,$TIME_MINOR_FAULTS" >> "$CSV"
         done
     done
 done
