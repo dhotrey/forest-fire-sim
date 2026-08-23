@@ -78,8 +78,8 @@ int main(int argc, char *argv[]) {
   pcg32 rng(80085);
   // TODO : change this to fix the cache access patterns
   for (int t = 0; t < timesteps; ++t) {
-    for (int y = 1; y < grid_size - 1; ++y) {
-      for (int x = 1; x < grid_size - 1; ++x) {
+    for (int x = 1; x < grid_size - 1; ++x) {
+      for (int y = 1; y < grid_size - 1; ++y) {
         auto r = rng.nextFloat();
         switch (grid[x][y]) {
         case CellState::Empty:
