@@ -10,7 +10,7 @@ VERSION="${2:-v0.0}"
 OPT="$1"
 
 BIN="bin/fire-${VERSION}-${OPT}"
-GPROFNG_BIN="tools/profiling/gprofng"
+GPROFNG_BIN="$HOME/gprofng/binutils-install/bin/gprofng"
 
 DATA="data/${VERSION}"
 CSV="${DATA}/benchmarking/benchmarks-${OPT}.csv"
@@ -29,8 +29,6 @@ if [[ ! -f "$CSV" ]]; then
 fi
 
 for GRID in "${GRIDS[@]}"; do
-    TIMES=()
-
     for REP in $(seq 1 "$REPS"); do
         RUN_NUMBER=$(
             awk -F',' -v grid="$GRID" '
@@ -50,24 +48,7 @@ for GRID in "${GRIDS[@]}"; do
         CPU=${CPU%\%}
 
         echo "$RUN_NUMBER,$GRID,$USER,$SYS,$CPU,$TOTAL" >> "$CSV"
-
-        TIMES+=("$TOTAL")
     done
-
-    MEAN=$(
-        printf '%s\n' "${TIMES[@]}" |
-        awk '{sum += $1} END {printf "%.6f", sum / NR}'
-    )
-
-    MIN=$(
-        printf '%s\n' "${TIMES[@]}" |
-        sort -n |
-        head -n1 |
-        awk '{printf "%.6f", $1}'
-    )
-
-    echo "${GRID}x${GRID}: mean = ${MEAN}s, min = ${MIN}s"
-    echo
 done
 
 "$GPROFNG_BIN" collect app \
