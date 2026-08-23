@@ -85,7 +85,9 @@ for GRID in "${GRIDS[@]}"; do
             ' "$CSV"
         )
 
-        read _ USER SYS CPU TOTAL <<< "$(run_timed "$GRID")"
+        IFS=',' read -r _ USER SYS CPU TOTAL <<< "$(run_timed "$GRID")"
+
+        [[ -z "$TOTAL" ]] && echo "ERROR: empty timing for grid=$GRID rep=$REP" >&2
 
         echo "run=$RUN_NUMBER grid=$GRID rep=$REP user=${USER}s sys=${SYS}s cpu=${CPU}% total=${TOTAL}s [${OPT}]"
         echo "$RUN_NUMBER,$GRID,$USER,$SYS,$CPU,$TOTAL" >> "$CSV"
