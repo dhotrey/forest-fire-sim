@@ -6,95 +6,204 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=00:07:00
 
-VERSION="${2:-v0.0}"
-OPT="$1"
+set -euo pipefail
 
-BIN="bin/fire-${VERSION}-${OPT}"
+VERSION="${2:-v0.0}"
+CONFIGS="${1:-o1,o2}"
 GPROFNG_BIN="$HOME/gprofng/binutils-install/bin/gprofng"
 
 DATA="data/${VERSION}"
-CSV="${DATA}/benchmarking/benchmarks-${OPT}.csv"
-GPROFNG="${DATA}/gprofng/gprofng-${OPT}.er"
 
 GRIDS=(100 500 1000)
 TIMESTEPS=500
 WARMUP_REPS=2
 REPS=5
-P=0.01
-F=0.001
+P=0.02
+F=0.01
 
 mkdir -p "${DATA}/benchmarking" "${DATA}/gprofng"
 
+if [[ "$CONFIGS" == "all" ]]; then
+    CONFIGS="o1,o2,o3"
+fi
+IFS=',' read -r -a OPTS <<< "$CONFIGS"
+if (( ${#OPTS[@]} == 0 )); then
+    echo "ERROR: no optimisation configurations supplied" >&2
+    exit 1
+fi
+
+for OPT in "${OPTS[@]}"; do
+    if [[ ! "$OPT" =~ ^o[123]$ ]]; then
+        echo "ERROR: unsupported optimisation configuration: $OPT" >&2
+        exit 1
+    fi
+
+    BIN="bin/fire-${VERSION}-${OPT}"
+    if [[ ! -x "$BIN" ]]; then
+        echo "ERROR: missing or non-executable binary: $BIN" >&2
+        exit 1
+    fi
+done
+
+CONFIG_LABEL=$(IFS=-; echo "${OPTS[*]}")
+CSV="${DATA}/benchmarking/benchmarks-${CONFIG_LABEL}.csv"
+echo "opt_flag,run_number,grid_size,user_s,system_s,cpu_pct,total_s,max_rss_kb,involuntary_ctx_switches,voluntary_ctx_switches,major_page_faults,minor_page_faults" > "$CSV"
+
+AFFINITY=$(taskset -pc $$ 2>/dev/null | awk -F': ' '{print $2}' || true)
+CORE=${AFFINITY%%,*}
+if [[ -z "$CORE" ]]; then
+    echo "WARNING: could not resolve pinned core; running unpinned"
+    PIN=()
+else
+    PIN=(taskset -c "$CORE")
+fi
+FIRST_CORE=${CORE%%-*}
+
 echo "=== execution environment ==="
-echo "opt flag: ${OPT}"
+echo "opt flags: ${OPTS[*]}"
 echo "job id:   ${SLURM_JOB_ID:-n/a}"
 echo "job node: ${SLURM_JOB_NODELIST:-n/a}"
 echo "hostname: $(hostname)"
 echo "kernel:   $(uname -r)"
 echo "date:     $(date -Iseconds)"
+echo "working directory: $(pwd)"
+echo "command: $0 $CONFIGS $VERSION"
+echo "parameters: grids=${GRIDS[*]} timesteps=$TIMESTEPS warmups=$WARMUP_REPS reps=$REPS p=$P f=$F"
+echo "slurm allocation: job_cpus_per_node=${SLURM_JOB_CPUS_PER_NODE:-n/a} cpus_per_task=${SLURM_CPUS_PER_TASK:-n/a} ntasks=${SLURM_NTASKS:-n/a}"
+echo "process affinity: ${AFFINITY:-unknown}"
+echo "load average: $(cat /proc/loadavg 2>/dev/null || echo n/a)"
+echo "uptime: $(uptime 2>/dev/null || echo n/a)"
 lscpu | grep -E '^(Model name|Architecture|CPU\(s\)|Thread|Core|Socket|CPU max MHz|CPU min MHz|NUMA|Virtualization)' || true
 grep -m1 'model name' /proc/cpuinfo || true
-echo "cpufreq governor: $(cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor 2>/dev/null || echo 'n/a')"
-echo "binary:   $(ls -la "$BIN" 2>/dev/null || echo "MISSING: $BIN")"
-echo "md5:      $(md5sum "$BIN" 2>/dev/null | cut -d' ' -f1)"
-CORE=$(taskset -pc $$ 2>/dev/null | awk -F': ' '{print $2}' | cut -d',' -f1)
-if [[ -z "$CORE" ]]; then
-    echo "WARNING: could not resolve pinned core; running unpinned"
-    PIN=""
-else
-    PIN="taskset -c $CORE"
+echo "pinned core: ${CORE:-none}"
+echo "cpufreq governor: $(cat "/sys/devices/system/cpu/cpu${FIRST_CORE}/cpufreq/scaling_governor" 2>/dev/null || echo n/a)"
+echo "cpufreq current kHz: $(cat "/sys/devices/system/cpu/cpu${FIRST_CORE}/cpufreq/scaling_cur_freq" 2>/dev/null || echo n/a)"
+echo "compiler command: $(command -v g++ 2>/dev/null || echo n/a)"
+g++ --version 2>/dev/null | sed -n '1p' || true
+echo "time command: $(/usr/bin/time --version 2>/dev/null | sed -n '1p' || echo n/a)"
+echo "perf command: $(perf --version 2>/dev/null || echo n/a)"
+if command -v scontrol >/dev/null 2>&1 && [[ -n "${SLURM_JOB_ID:-}" ]]; then
+    scontrol show job "$SLURM_JOB_ID" || true
 fi
-echo "pinned core: ${CORE:-none} (allowed cpus: $(taskset -pc $$ 2>/dev/null | awk -F': ' '{print $2}' || echo unknown))"
-if [[ -x "$BIN" ]]; then
-    "$BIN" 1 1 "$P" "$F" 2>&1 | grep -v '^$'
-fi
+
+for OPT in "${OPTS[@]}"; do
+    BIN="bin/fire-${VERSION}-${OPT}"
+    echo "--- binary $OPT ---"
+    ls -la "$BIN"
+    file "$BIN" 2>/dev/null || true
+    size "$BIN" 2>/dev/null || true
+    ldd "$BIN" 2>/dev/null || true
+    echo "md5:    $(md5sum "$BIN" | cut -d' ' -f1)"
+    echo "sha256: $(sha256sum "$BIN" | cut -d' ' -f1)"
+done
 echo "============================="
 
-if [[ ! -f "$CSV" ]]; then
-    echo "run_number,grid_size,user_s,system_s,cpu_pct,total_s" > "$CSV"
-fi
+print_run_context() {
+    echo "date: $(date -Iseconds)"
+    echo "load average: $(cat /proc/loadavg 2>/dev/null || echo n/a)"
+    echo "cpu current kHz: $(cat "/sys/devices/system/cpu/cpu${FIRST_CORE}/cpufreq/scaling_cur_freq" 2>/dev/null || echo n/a)"
+}
 
 run_timed() {
-    local grid="$1"
+    local opt="$1"
+    local grid="$2"
+    local rep="$3"
+    local bin="bin/fire-${VERSION}-${opt}"
     local time_file
     time_file=$(mktemp)
 
-    $PIN /usr/bin/time -f "%U,%S,%P,%e" -o "$time_file" \
-        "$BIN" "$grid" "$TIMESTEPS" "$P" "$F" >/dev/null
+    echo "=== timed run start: opt=$opt grid=$grid rep=$rep ==="
+    print_run_context
 
-    local USER SYS CPU TOTAL
-    IFS=',' read USER SYS CPU TOTAL < "$time_file"
+    local status=0
+    "${PIN[@]}" /usr/bin/time -f "%U,%S,%P,%e,%M,%c,%w,%F,%R" -o "$time_file" \
+        "$bin" "$grid" "$TIMESTEPS" "$P" "$F" || status=$?
+
+    if (( status != 0 )); then
+        echo "ERROR: binary failed: opt=$opt grid=$grid rep=$rep status=$status" >&2
+        rm -f "$time_file"
+        return "$status"
+    fi
+
+    IFS=',' read -r TIME_USER TIME_SYS TIME_CPU TIME_TOTAL TIME_MAX_RSS \
+        TIME_INVOL_CTX TIME_VOL_CTX TIME_MAJOR_FAULTS TIME_MINOR_FAULTS < "$time_file"
     rm "$time_file"
 
-    CPU=${CPU%\%}
-    echo "$1,$USER,$SYS,$CPU,$TOTAL"
+    TIME_CPU=${TIME_CPU%\%}
+    if [[ -z "$TIME_TOTAL" ]]; then
+        echo "ERROR: empty timing: opt=$opt grid=$grid rep=$rep" >&2
+        return 1
+    fi
+
+    print_run_context
+    echo "run=$rep grid=$grid user=${TIME_USER}s sys=${TIME_SYS}s cpu=${TIME_CPU}% total=${TIME_TOTAL}s max_rss=${TIME_MAX_RSS}KiB invol_ctx=$TIME_INVOL_CTX vol_ctx=$TIME_VOL_CTX major_faults=$TIME_MAJOR_FAULTS minor_faults=$TIME_MINOR_FAULTS [$opt]"
+    echo "=== timed run end: opt=$opt grid=$grid rep=$rep ==="
 }
+
+echo "=== initial size-1 warm-up runs ==="
+for OPT in "${OPTS[@]}"; do
+    BIN="bin/fire-${VERSION}-${OPT}"
+    echo "=== size-1 warm-up start: opt=$OPT ==="
+    "${PIN[@]}" "$BIN" 1 1 "$P" "$F"
+    echo "=== size-1 warm-up end: opt=$OPT ==="
+done
 
 for GRID in "${GRIDS[@]}"; do
     # Warm-up runs (untimed): populate caches/branch predictors so timed
     # runs are comparable between binaries.
-    for _ in $(seq 1 "$WARMUP_REPS"); do
-        $PIN "$BIN" "$GRID" "$TIMESTEPS" "$P" "$F" >/dev/null
+    for WARMUP in $(seq 1 "$WARMUP_REPS"); do
+        for OPT in "${OPTS[@]}"; do
+            BIN="bin/fire-${VERSION}-${OPT}"
+            echo "=== warm-up start: opt=$OPT grid=$GRID rep=$WARMUP ==="
+            "${PIN[@]}" "$BIN" "$GRID" "$TIMESTEPS" "$P" "$F"
+            echo "=== warm-up end: opt=$OPT grid=$GRID rep=$WARMUP ==="
+        done
     done
 
     for REP in $(seq 1 "$REPS"); do
-        RUN_NUMBER=$(
-            awk -F',' -v grid="$GRID" '
-                $2 == grid { n++ }
-                END { print n + 1 }
-            ' "$CSV"
-        )
+        # Reverse the order every repetition to balance temperature, boost
+        # frequency, and other time-dependent effects between configurations.
+        if (( REP % 2 == 1 )); then
+            RUN_ORDER=("${OPTS[@]}")
+        else
+            RUN_ORDER=()
+            for (( INDEX=${#OPTS[@]} - 1; INDEX >= 0; --INDEX )); do
+                RUN_ORDER+=("${OPTS[INDEX]}")
+            done
+        fi
 
-        IFS=',' read -r _ USER SYS CPU TOTAL <<< "$(run_timed "$GRID")"
-
-        [[ -z "$TOTAL" ]] && echo "ERROR: empty timing for grid=$GRID rep=$REP" >&2
-
-        echo "run=$RUN_NUMBER grid=$GRID rep=$REP user=${USER}s sys=${SYS}s cpu=${CPU}% total=${TOTAL}s [${OPT}]"
-        echo "$RUN_NUMBER,$GRID,$USER,$SYS,$CPU,$TOTAL" >> "$CSV"
+        for OPT in "${RUN_ORDER[@]}"; do
+            run_timed "$OPT" "$GRID" "$REP"
+            echo "$OPT,$REP,$GRID,$TIME_USER,$TIME_SYS,$TIME_CPU,$TIME_TOTAL,$TIME_MAX_RSS,$TIME_INVOL_CTX,$TIME_VOL_CTX,$TIME_MAJOR_FAULTS,$TIME_MINOR_FAULTS" >> "$CSV"
+        done
     done
 done
 
-"$GPROFNG_BIN" collect app \
-    -o "$GPROFNG" \
-    "$BIN" 1000 "$TIMESTEPS" "$P" "$F" \
-    >/dev/null || echo "WARNING: gprofng collection failed (exit $?)"
+if command -v perf >/dev/null 2>&1; then
+    for OPT in "${OPTS[@]}"; do
+        BIN="bin/fire-${VERSION}-${OPT}"
+        echo "=== perf stat start: opt=$OPT grid=1000 ==="
+        perf stat -d -d -- "${PIN[@]}" "$BIN" 1000 "$TIMESTEPS" "$P" "$F" \
+            || echo "WARNING: perf stat failed for $OPT (exit $?)"
+        echo "=== perf stat end: opt=$OPT ==="
+    done
+else
+    echo "WARNING: perf is not available"
+fi
+
+if [[ -x "$GPROFNG_BIN" ]]; then
+    for OPT in "${OPTS[@]}"; do
+        BIN="bin/fire-${VERSION}-${OPT}"
+        GPROFNG="${DATA}/gprofng/gprofng-${OPT}-${SLURM_JOB_ID:-manual}.er"
+        echo "=== gprofng start: opt=$OPT output=$GPROFNG ==="
+        "${PIN[@]}" "$GPROFNG_BIN" collect app \
+            -o "$GPROFNG" \
+            "$BIN" 1000 "$TIMESTEPS" "$P" "$F" \
+            || echo "WARNING: gprofng collection failed for $OPT (exit $?)"
+        echo "=== gprofng end: opt=$OPT ==="
+    done
+else
+    echo "WARNING: gprofng is not executable at $GPROFNG_BIN"
+fi
+
+echo "benchmark CSV: $CSV"
