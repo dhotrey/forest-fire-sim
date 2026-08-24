@@ -108,26 +108,26 @@ Therefore, this change:
 
 The mean user times from the Slurm benchmarks were:
 
-| Grid | Build | Mean user time | Change from v0.2 |
-| ---: | --- | ---: | ---: |
-| 500² | v0.2 `-O1` | 0.666 s | baseline |
-| 500² | v0.3 `-O1` | 0.630 s | 5.4% faster |
-| 500² | v0.2 `-O2` | 0.460 s | baseline |
-| 500² | v0.3 `-O2` | 0.542 s | 17.8% slower |
-| 1000² | v0.2 `-O1` | 2.688 s | baseline |
-| 1000² | v0.3 `-O1` | 2.518 s | 6.3% faster |
-| 1000² | v0.2 `-O2` | 1.860 s | baseline |
-| 1000² | v0.3 `-O2` | 2.178 s | 17.1% slower |
+|  Grid | Build      | Mean user time | Change from v0.2 |
+| ----: | ---------- | -------------: | ---------------: |
+|  500² | v0.2 `-O1` |        0.666 s |         baseline |
+|  500² | v0.3 `-O1` |        0.630 s |      5.4% faster |
+|  500² | v0.2 `-O2` |        0.460 s |         baseline |
+|  500² | v0.3 `-O2` |        0.542 s |     17.8% slower |
+| 1000² | v0.2 `-O1` |        2.688 s |         baseline |
+| 1000² | v0.3 `-O1` |        2.518 s |      6.3% faster |
+| 1000² | v0.2 `-O2` |        1.860 s |         baseline |
+| 1000² | v0.3 `-O2` |        2.178 s |     17.1% slower |
 
 Cachegrind branch simulation for the 1000² grid, 500 timesteps, `p=0.02`
 and `f=0.01` gave:
 
-| Metric | v0.2 `-O2` | v0.3 `-O2` | Change |
-| --- | ---: | ---: | ---: |
-| Instruction references | 15,306,357,873 | 16,221,531,044 | +6.0% |
-| Branches | 1,872,193,132 | 2,359,083,727 | +26.0% |
-| Mispredictions | 159,425,716 | 168,173,217 | +5.5% |
-| Misprediction rate | 8.5% | 7.1% | -1.4 percentage points |
+| Metric                 |     v0.2 `-O2` |     v0.3 `-O2` |                 Change |
+| ---------------------- | -------------: | -------------: | ---------------------: |
+| Instruction references | 15,306,357,873 | 16,221,531,044 |                  +6.0% |
+| Branches               |  1,872,193,132 |  2,359,083,727 |                 +26.0% |
+| Mispredictions         |    159,425,716 |    168,173,217 |                  +5.5% |
+| Misprediction rate     |           8.5% |           7.1% | -1.4 percentage points |
 
 The lower misprediction rate in v0.3 is misleading because it executes many
 more branches: there are 486,890,595 additional branches and 8,747,501
@@ -155,10 +155,26 @@ more direct optimisations rather than investigating this compiler interaction
 further. Full results and methodology are in
 [`data/v0.3/branch-predition.md`](../data/v0.3/branch-predition.md).
 
-
 # v0.4
-Since the previous change resulted in a perf deg. 0.4 will roll this back. Along with that. Also i'll do an  integer threshold compare instead of float. 
 
+Since the previous change resulted in a perf deg. 0.4 will roll this back. Along with that. Also i'll do an integer threshold compare instead of float.
+The change has been rolled back and performance has been restored to #v0.2 levels.
+Next I'm going to work port the rng to output an int32 instead of a float32. basically precompute `p_threshold`/`f_threshold`, compare against `nextUInt32()` directly. I believe this will save me time because nextfloat function internally calls nextint32 anyways. So I can just save on that.
+
+The latest v0.4 benchmark used 500 timesteps, two warm-up runs, and five timed repetitions for each grid size. The 100² runs are too short to be meaningful: both builds complete in about 0.02 seconds, so timer and system noise dominate. The utility doesn't provide enough resolution for a sample size this small.
+
+For the larger grids, the mean user times were:
+
+|  Grid | v0.2 `-O1` | v0.4 `-O1` |       Change | v0.2 `-O2` | v0.4 `-O2` |      Change |
+| ----: | ---------: | ---------: | -----------: | ---------: | ---------: | ----------: |
+|  500² |    0.666 s |    0.560 s | 15.9% faster |    0.460 s |    0.426 s | 7.4% faster |
+| 1000² |    2.688 s |    2.248 s | 16.4% faster |    1.860 s |    1.710 s | 8.1% faster |
+
+The v0.4 `-O2` build is still about 24% faster than its `-O1` build at both
+larger grid sizes. The improvement over v0.2 is consistent with the two v0.4
+changes: rolling back the conditional-RNG change restores the simpler hot loop,
+and comparing `nextUInt()` directly against precomputed integer thresholds
+avoids the float construction and conversion work in `nextFloat()`.
 
 # v0.5
 
