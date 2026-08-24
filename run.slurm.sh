@@ -10,7 +10,6 @@ set -euo pipefail
 
 VERSION="${2:-v0.0}"
 CONFIGS="${1:-o1,o2}"
-GPROFNG_BIN="$HOME/gprofng/binutils-install/bin/gprofng"
 
 DATA="data/${VERSION}"
 
@@ -21,7 +20,7 @@ REPS=5
 P=0.02
 F=0.01
 
-mkdir -p "${DATA}/benchmarking" "${DATA}/gprofng"
+mkdir -p "${DATA}/benchmarking"
 
 if [[ "$CONFIGS" == "all" ]]; then
     CONFIGS="o1,o2,o3"
@@ -81,7 +80,6 @@ echo "cpufreq current kHz: $(cat "/sys/devices/system/cpu/cpu${FIRST_CORE}/cpufr
 echo "compiler command: $(command -v g++ 2>/dev/null || echo n/a)"
 g++ --version 2>/dev/null | sed -n '1p' || true
 echo "time command: $(/usr/bin/time --version 2>/dev/null | sed -n '1p' || echo n/a)"
-echo "perf command: $(perf --version 2>/dev/null || echo n/a)"
 if command -v scontrol >/dev/null 2>&1 && [[ -n "${SLURM_JOB_ID:-}" ]]; then
     scontrol show job "$SLURM_JOB_ID" || true
 fi
@@ -178,32 +176,5 @@ for GRID in "${GRIDS[@]}"; do
         done
     done
 done
-
-if command -v perf >/dev/null 2>&1; then
-    for OPT in "${OPTS[@]}"; do
-        BIN="bin/fire-${VERSION}-${OPT}"
-        echo "=== perf stat start: opt=$OPT grid=1000 ==="
-        perf stat -d -d -- "${PIN[@]}" "$BIN" 1000 "$TIMESTEPS" "$P" "$F" \
-            || echo "WARNING: perf stat failed for $OPT (exit $?)"
-        echo "=== perf stat end: opt=$OPT ==="
-    done
-else
-    echo "WARNING: perf is not available"
-fi
-
-if [[ -x "$GPROFNG_BIN" ]]; then
-    for OPT in "${OPTS[@]}"; do
-        BIN="bin/fire-${VERSION}-${OPT}"
-        GPROFNG="${DATA}/gprofng/gprofng-${OPT}-${SLURM_JOB_ID:-manual}.er"
-        echo "=== gprofng start: opt=$OPT output=$GPROFNG ==="
-        "${PIN[@]}" "$GPROFNG_BIN" collect app \
-            -o "$GPROFNG" \
-            "$BIN" 1000 "$TIMESTEPS" "$P" "$F" \
-            || echo "WARNING: gprofng collection failed for $OPT (exit $?)"
-        echo "=== gprofng end: opt=$OPT ==="
-    done
-else
-    echo "WARNING: gprofng is not executable at $GPROFNG_BIN"
-fi
 
 echo "benchmark CSV: $CSV"
