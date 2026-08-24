@@ -1,0 +1,45 @@
+hostname: a100-0
+job id:   565223
+runs:     1
+=== cachegrind start: ./bin/fire-v0.5-o2 ===
+==825093== Cachegrind, a high-precision tracing profiler
+==825093== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==825093== Using Valgrind-3.22.0 and LibVEX; rerun with -h for copyright info
+==825093== Command: ./bin/fire-v0.5-o2 1000 500 0.02 0.01
+==825093== 
+--825093-- warning: L3 cache found, using its data for the LL simulation.
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       1002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          0.5 1d-grid
+  Compiled:        Aug 24 2026 15:58:16
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      ./bin/fire-v0.5-o2
+  Build flags:     O2 NDEBUG 
+  Optimisation:    enabled
+
+==825093== 
+==825093== I refs:        12,080,391,259
+==825093== I1  misses:             2,316
+==825093== LLi misses:             2,121
+==825093== I1  miss rate:           0.00%
+==825093== LLi miss rate:           0.00%
+==825093== 
+==825093== D refs:         1,731,465,834  (1,229,190,102 rd   + 502,275,732 wr)
+==825093== D1  misses:        15,726,269  (    7,863,302 rd   +   7,862,967 wr)
+==825093== LLd misses:            42,102  (        9,034 rd   +      33,068 wr)
+==825093== D1  miss rate:            0.9% (          0.6%     +         1.6%  )
+==825093== LLd miss rate:            0.0% (          0.0%     +         0.0%  )
+==825093== 
+==825093== LL refs:           15,728,585  (    7,865,618 rd   +   7,862,967 wr)
+==825093== LL misses:             44,223  (       11,155 rd   +      33,068 wr)
+==825093== LL miss rate:             0.0% (          0.0%     +         0.0%  )
+=== cachegrind end: ./bin/fire-v0.5-o2 ===

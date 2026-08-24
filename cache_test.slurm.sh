@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --job-name=cache-test
-#SBATCH --partition=cpu
+#SBATCH --partition=a100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=00:30:00
+#SBATCH --time=00:05:00
 #SBATCH --output=cache-test-%j.out
 
 set -euo pipefail
