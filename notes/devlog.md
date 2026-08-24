@@ -221,3 +221,40 @@ from 3.72 billion to 1.73 billion (53% fewer), while D1 misses fell only from
 the speedup comes mainly from removing vector indirection and allocation
 overhead, rather than a major improvement in cache locality. Full results are
 in [`data/v0.5/cachegrind/`](../data/v0.5/cachegrind/).
+
+# v0.6
+
+For this version I applied induction-variable simplification to the flattened grid traversal. Instead of calculating `x * grid_size + y` in the inner loop, the loop calculates the start and end of each row once and increments a single `index` variable through the contiguous interior cells. I applied the same
+indexing to `hash1d_grid`.
+
+The 1D grid hash was checked against the known reference case of a 1000² grid, 500 timesteps, `p=0.02`, and `f=0.01`. The resulting hash was `15213144908148633160`, so the rewrite preserved correctness.
+
+The benchmark was run with the same setup as v0.5: five timed repetitions, 500 timesteps, one pinned CPU, GCC 8.5.0, and an AMD EPYC 7542 node. The results did not show a speedup:
+
+|  Grid | Build | v0.5 mean user time | v0.6 mean user time |     Change |
+| ----: | :---: | ------------------: | ------------------: | ---------: |
+|  500² |  O1   |             0.500 s |             0.520 s | ~4% slower |
+|  500² |  O2   |             0.418 s |             0.418 s |  unchanged |
+| 1000² |  O1   |             2.016 s |             2.136 s | ~6% slower |
+| 1000² |  O2   |             1.668 s |             1.688 s | ~1% slower |
+
+
+The surprising result is explained by the difference between source-level
+operations and generated machine instructions. Although the original source
+spelled out a multiplication and addition for every cell, GCC can recognize
+that `x * grid_size` is invariant within the inner loop and reduce the
+expression automatically. The original loop was therefore likely already
+using an induction variable in the optimized executable. The manual rewrite
+expresses the same optimization, but changes register allocation, loop
+comparison, branch layout, and instruction scheduling. GCC 8.5 generated
+slightly worse `O1` code for the new loop. At `O2`, both binaries had the same
+text size, which is consistent with the compiler optimizing both versions to
+essentially the same result.
+
+This change did not alter the memory access order or neighbor access pattern,
+so it was a CPU instruction/code-generation experiment rather than a cache
+locality optimization. Conclusion: induction-variable simplification did not
+produce a measurable benefit for this workload and should not be counted as a
+successful optimization without further assembly or performance-counter
+evidence. Full benchmark data is in
+[`data/v0.6/benchmarking/`](../data/v0.6/benchmarking/).
