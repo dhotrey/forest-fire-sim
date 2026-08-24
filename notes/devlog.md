@@ -157,6 +157,10 @@ further. Full results and methodology are in
 
 
 # v0.4
+Since the previous change resulted in a perf deg. 0.4 will roll this back. Along with that. Also i'll do an  integer threshold compare instead of float. 
+
+
+# v0.5
 
 for this one i think im going to change the implementation of the CA grid from a 2d grid to a 1d grid and will access it as such. The hopes is that this would eliminate 1 for loop from my program. reduce the data that's being fetched from RAM to cache? improve cache locality ?
 
