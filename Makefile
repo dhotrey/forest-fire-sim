@@ -1,10 +1,11 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 0.4
-VERSION_NAME ?= rollbacks-and-int-compares
+VERSION ?= 0.5
+VERSION_NAME ?= 1d-grid
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
+DEV_SOURCES := $(SOURCES) hash_grid.cpp
 
 BIN_DIR := bin
 
@@ -44,22 +45,22 @@ all: dev o1 o2 o3
 
 define compile
 	mkdir -p $(BIN_DIR)
-	$(CXX) $(COMMON_FLAGS) $(BUILD_DEFINES) $(VIS_FLAGS) $(CXXFLAGS) $(1) $(LDFLAGS) $(SOURCES) $(LDLIBS) '-DBUILD_FLAGS="$(2) $(VISUALISE_NOTE)"' -o $@
+	$(CXX) $(COMMON_FLAGS) $(BUILD_DEFINES) $(VIS_FLAGS) $(CXXFLAGS) $(1) $(LDFLAGS) $(3) $(LDLIBS) '-DBUILD_FLAGS="$(2) $(VISUALISE_NOTE)"' -o $@
 endef
 
 # FORCE prerequisites let `make o2 VISUALISE=1` rebuild even when a
 # non-visualisation binary with the same version already exists.
-$(DEV_BIN): $(SOURCES) FORCE
-	$(call compile,-O0 -DDEBUG,O0 DEBUG)
+$(DEV_BIN): $(DEV_SOURCES) hash_grid.hpp FORCE
+	$(call compile,-O0 -DDEBUG,O0 DEBUG,$(DEV_SOURCES))
 
 $(O1_BIN): $(SOURCES) FORCE
-	$(call compile,-O1 -DNDEBUG,O1 NDEBUG)
+	$(call compile,-O1 -DNDEBUG,O1 NDEBUG,$(SOURCES))
 
 $(O2_BIN): $(SOURCES) FORCE
-	$(call compile,-O2 -DNDEBUG,O2 NDEBUG)
+	$(call compile,-O2 -DNDEBUG,O2 NDEBUG,$(SOURCES))
 
 $(O3_BIN): $(SOURCES) FORCE
-	$(call compile,-O3 -DNDEBUG,O3 NDEBUG)
+	$(call compile,-O3 -DNDEBUG,O3 NDEBUG,$(SOURCES))
 
 dev: $(DEV_BIN)
 o1:  $(O1_BIN)

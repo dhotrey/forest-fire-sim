@@ -16,7 +16,7 @@ public:
            std::uint64_t frame_count,
            bool write_csv = false);
 
-  void write_frame(const std::vector<std::vector<CellState>> &grid);
+  void write_frame(const std::vector<CellState> &grid);
 
 private:
   std::ofstream binary_;

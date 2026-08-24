@@ -53,10 +53,11 @@ SaveFile::SaveFile(const std::string &binary_path, std::uint32_t grid_size,
   write_little_endian(binary_, 1, 1); // cell size
 }
 
-void SaveFile::write_frame(const std::vector<std::vector<CellState>> &grid) {
+void SaveFile::write_frame(const std::vector<CellState> &grid) {
   for (std::uint32_t y = 0; y < grid_size_; ++y) {
     for (std::uint32_t x = 0; x < grid_size_; ++x) {
-      const auto cell = static_cast<std::uint8_t>(grid[x][y]);
+      const auto cell =
+          static_cast<std::uint8_t>(grid[x * grid_size_ + y]);
       binary_.write(reinterpret_cast<const char *>(&cell), sizeof(cell));
 
       if (csv_.is_open()) {

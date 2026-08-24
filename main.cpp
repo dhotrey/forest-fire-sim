@@ -10,6 +10,9 @@
 
 #include "build_info.hpp"
 #include "save_file.hpp"
+#ifdef DEBUG
+#include "hash_grid.hpp"
+#endif
 
 #ifndef PROGRAM_VERSION
 #error "PROGRAM_VERSION must be defined by the build system"
@@ -76,45 +79,40 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
-  // TODO : compute the hash of this data structure
-  std::vector<std::vector<CellState>> grid(grid_size,
-                                           std::vector<CellState>(grid_size));
+  std::vector<CellState> grid(grid_size * grid_size);
 
-  std::vector<std::vector<CellState>> next(grid_size,
-                                           std::vector<CellState>(grid_size));
+  std::vector<CellState> next(grid_size * grid_size);
   pcg32 rng(80085);
-  // rng.nextUInt();
-  // TODO : change this to fix the cache access patterns
   for (int t = 0; t < timesteps; ++t) {
     for (int x = 1; x < grid_size - 1; ++x) {
       for (int y = 1; y < grid_size - 1; ++y) {
-        // auto r = rng.nextFloat();
         auto r = rng.nextUInt();
-        switch (grid[x][y]) {
+        const auto index = x * grid_size + y;
+        switch (grid[index]) {
         case CellState::Empty:
           if (r < p_threshold) {
-            next[x][y] = CellState::Tree;
+            next[index] = CellState::Tree;
           } else {
-            next[x][y] = CellState::Empty;
+            next[index] = CellState::Empty;
           }
           break;
         case CellState::Burning:
-          next[x][y] = CellState::Empty;
+          next[index] = CellState::Empty;
           break;
         case CellState::Tree:
-          const auto up = grid[x][y - 1];
-          const auto down = grid[x][y + 1];
-          const auto left = grid[x - 1][y];
-          const auto right = grid[x + 1][y];
+          const auto up = grid[index - 1];
+          const auto down = grid[index + 1];
+          const auto left = grid[index - grid_size];
+          const auto right = grid[index + grid_size];
 
           if (up == CellState::Burning || down == CellState::Burning ||
               left == CellState::Burning || right == CellState::Burning) {
-            next[x][y] = CellState::Burning;
+            next[index] = CellState::Burning;
           } else {
             if (r < f_threshold) {
-              next[x][y] = CellState::Burning;
+              next[index] = CellState::Burning;
             } else {
-              next[x][y] = CellState::Tree;
+              next[index] = CellState::Tree;
             }
           }
           break;
@@ -129,4 +127,9 @@ int main(int argc, char *argv[]) {
     }
 #endif
   }
+
+#ifdef DEBUG
+  std::cout << "1D grid hash: " << hash1d_grid(grid, grid_size)
+            << '\n'; // expected: 15213144908148633160
+#endif
 }
