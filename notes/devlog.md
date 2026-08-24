@@ -178,6 +178,46 @@ avoids the float construction and conversion work in `nextFloat()`.
 
 # v0.5
 
-for this one i think im going to change the implementation of the CA grid from a 2d grid to a 1d grid and will access it as such. The hopes is that this would eliminate 1 for loop from my program. reduce the data that's being fetched from RAM to cache? improve cache locality ?
+for this one i think im going to change the implementation of the CA grid from a 2d grid to a 1d grid and will access it as such. reduce the data that's being fetched from RAM to cache? improve cache locality ? also would reduce heap allocs as a now it's just a vec instead of a vec of vecs
 
 To do this properly i need to figure out a way to hash the final grid state so that i can perform a correctness check once the migration has been done.
+
+The 1D port produced the expected final-state hash for a 1000² grid after
+500 timesteps with `p=0.02` and `f=0.01`, so the migration preserved the
+simulation result:
+
+```text
+15213144908148633160
+```
+
+The benchmark used the same setup as v0.4: 500 timesteps, two warm-up runs,
+five timed repetitions, one pinned CPU, and GCC 8.5 on the same cluster node.
+The intended effect was to remove the indirection and allocation overhead of
+the vector-of-vectors representation. It achieved roughly a 10% speedup at
+`-O1` and roughly a 2% speedup at `-O2` for both the 500² and 1000² grids. The
+100² result was unchanged, but those runs are too short to compare reliably
+because the timing resolution is only 0.01 seconds.
+
+The original 2D layout stored the outer vector and each inner vector
+separately, requiring a separate heap allocation for each column's cell
+storage. The 1D layout uses one vector and therefore one contiguous heap
+allocation per grid, removing the outer-vector indirection and the many small
+allocations. The vector objects themselves are local to `main`, but their cell
+storage is still heap-allocated; this change does not move the grid onto the
+stack.
+
+The original layout was already reasonably cache-friendly because the inner
+`y` loop walked contiguous elements inside each inner vector. The 1D port
+therefore does not fundamentally change the neighbor access pattern. At
+`-O2`, the compiler can likely eliminate much of the nested-vector access
+overhead, leaving the neighbor loads, branches, RNG, and state updates as the
+dominant costs.
+
+Cachegrind confirmed that the 1D layout reduces memory traffic, but not the
+cache miss rate. For the 1000², 500-timestep `-O2` run, data references fell
+from 3.72 billion to 1.73 billion (53% fewer), while D1 misses fell only from
+16.45 million to 15.73 million (4.4% fewer). The D1 miss rate increased from
+0.4% to 0.9% because there were fewer total references. This suggests that
+the speedup comes mainly from removing vector indirection and allocation
+overhead, rather than a major improvement in cache locality. Full results are
+in [`data/v0.5/cachegrind/`](../data/v0.5/cachegrind/).
