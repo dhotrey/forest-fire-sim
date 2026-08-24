@@ -80,9 +80,10 @@ int main(int argc, char *argv[]) {
   for (int t = 0; t < timesteps; ++t) {
     for (int x = 1; x < grid_size - 1; ++x) {
       for (int y = 1; y < grid_size - 1; ++y) {
+        auto r = rng.nextFloat();
         switch (grid[x][y]) {
         case CellState::Empty:
-          if (rng.nextFloat() < p) {
+          if (r < p) {
             next[x][y] = CellState::Tree;
           } else {
             next[x][y] = CellState::Empty;
@@ -101,7 +102,7 @@ int main(int argc, char *argv[]) {
               left == CellState::Burning || right == CellState::Burning) {
             next[x][y] = CellState::Burning;
           } else {
-            if (rng.nextFloat() < f) {
+            if (r < f) {
               next[x][y] = CellState::Burning;
             } else {
               next[x][y] = CellState::Tree;
