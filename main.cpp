@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <iostream>
+#include <limits>
 #include <memory>
 #include <string>
 #include <utility>
@@ -55,6 +56,12 @@ int main(int argc, char *argv[]) {
   double p = std::stod(argv[3]);
   double f = std::stod(argv[4]);
 
+  const uint32_t p_threshold = static_cast<uint32_t>(
+      p * static_cast<double>(std::numeric_limits<uint32_t>::max()));
+
+  const uint32_t f_threshold = static_cast<uint32_t>(
+      f * static_cast<double>(std::numeric_limits<uint32_t>::max()));
+
   build_info::print_startup_banner(argv[0], grid_size, timesteps, p, f, VERSION,
                                    VERSION_NAME);
 #ifndef NO_VISUALIZATION
@@ -76,14 +83,16 @@ int main(int argc, char *argv[]) {
   std::vector<std::vector<CellState>> next(grid_size,
                                            std::vector<CellState>(grid_size));
   pcg32 rng(80085);
+  // rng.nextUInt();
   // TODO : change this to fix the cache access patterns
   for (int t = 0; t < timesteps; ++t) {
     for (int x = 1; x < grid_size - 1; ++x) {
       for (int y = 1; y < grid_size - 1; ++y) {
-        auto r = rng.nextFloat();
+        // auto r = rng.nextFloat();
+        auto r = rng.nextUInt();
         switch (grid[x][y]) {
         case CellState::Empty:
-          if (r < p) {
+          if (r < p_threshold) {
             next[x][y] = CellState::Tree;
           } else {
             next[x][y] = CellState::Empty;
@@ -102,7 +111,7 @@ int main(int argc, char *argv[]) {
               left == CellState::Burning || right == CellState::Burning) {
             next[x][y] = CellState::Burning;
           } else {
-            if (r < f) {
+            if (r < f_threshold) {
               next[x][y] = CellState::Burning;
             } else {
               next[x][y] = CellState::Tree;
