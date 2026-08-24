@@ -1,8 +1,8 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 0.5
-VERSION_NAME ?= 1d-grid
+VERSION ?= 0.6
+VERSION_NAME ?= induction-variable-simplification
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 DEV_SOURCES := $(SOURCES) hash_grid.cpp

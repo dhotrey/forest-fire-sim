@@ -52,9 +52,10 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
+  const int requested_grid_size = std::stoi(argv[1]);
   int grid_size =
-      std::stoi(argv[1]) + 2; // padding so that i don't have to check for
-                              // boundry conditions in the hot loop
+      requested_grid_size + 2; // padding so that i don't have to check for
+                               // boundry conditions in the hot loop
   int timesteps = std::stoi(argv[2]);
   double p = std::stod(argv[3]);
   double f = std::stod(argv[4]);
@@ -85,9 +86,10 @@ int main(int argc, char *argv[]) {
   pcg32 rng(80085);
   for (int t = 0; t < timesteps; ++t) {
     for (int x = 1; x < grid_size - 1; ++x) {
-      for (int y = 1; y < grid_size - 1; ++y) {
+      const int row_start = x * grid_size;
+      const int row_end = row_start + grid_size - 1;
+      for (int index = row_start + 1; index < row_end; ++index) {
         auto r = rng.nextUInt();
-        const auto index = x * grid_size + y;
         switch (grid[index]) {
         case CellState::Empty:
           if (r < p_threshold) {
@@ -129,7 +131,20 @@ int main(int argc, char *argv[]) {
   }
 
 #ifdef DEBUG
-  std::cout << "1D grid hash: " << hash1d_grid(grid, grid_size)
-            << '\n'; // expected: 15213144908148633160
+  const std::string final_hash = hash1d_grid(grid, grid_size);
+  const bool is_reference_case =
+      requested_grid_size == 1000 && timesteps == 500 && p == 0.02 && f == 0.01;
+
+  if (is_reference_case) {
+    if (final_hash == "15213144908148633160") {
+      std::cout << "Correctness check passed: 1D grid hash matches expected "
+                   "value.\n";
+    } else {
+      std::cout << "Correctness check failed: expected "
+                << "15213144908148633160, got " << final_hash << ".\n";
+    }
+  } else {
+    std::cout << "1D grid hash: " << final_hash << '\n';
+  }
 #endif
 }
