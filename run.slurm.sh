@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=forest-fire
-#SBATCH --partition=cpu
+#SBATCH --partition=a100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
