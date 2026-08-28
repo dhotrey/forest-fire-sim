@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
   }
 #endif
 
+//actual logic starts here
   int grid_size =
       std::stoi(argv[1]) + 2; // padding so that i don't have to check for
                               // boundry conditions in the hot loop
@@ -59,6 +60,7 @@ int main(int argc, char *argv[]) {
   double p = std::stod(argv[3]);
   double f = std::stod(argv[4]);
 
+  //computing probabality thresholds so i can do int compares in the hotloop instead of float compares
   const uint32_t p_threshold = static_cast<uint32_t>(
       p * static_cast<double>(std::numeric_limits<uint32_t>::max()));
 
@@ -67,7 +69,7 @@ int main(int argc, char *argv[]) {
 
   build_info::print_startup_banner(argv[0], grid_size, timesteps, p, f, VERSION,
                                    VERSION_NAME);
-#ifndef NO_VISUALIZATION
+#ifndef NO_VISUALIZATION // codeblock that's compiled if we want to visualise the output
   std::unique_ptr<SaveFile> save_file;
   if (visualise) {
     std::filesystem::create_directories("out");

@@ -1,81 +1,237 @@
-# COSC3500 - Forest fire sim
+# COSC3500 - Forest fire simulation
 
-## Running
+Run all commands below from the repository root.
 
-Build and run the model by supplying the grid size, number of time steps, and
-the `p` and `f` probabilities:
+## Requirements
+
+- A C++17 compiler (`g++` by default) and GNU Make
+- [`uv`](https://docs.astral.sh/uv/) for the animation and benchmark plots
+- Slurm and GNU `/usr/bin/time` for runtime benchmarking
+- Valgrind on the selected compute node for cache benchmarking
+
+## Building with Make
+
+The default target is `dev`, an `-O0` debug build:
 
 ```sh
 make
-./out/fire 100 500 0.01 0.001
+# Equivalent to: make dev
 ```
 
-The default `make` target builds the standard binary and the three
-optimisation builds. The optimisation targets are available individually:
+Build an individual optimised binary, or all four configurations, with:
 
 ```sh
-make o1timised
-make o2timised
-make o3timised
+make o1
+make o2
+make o3
+make all
 ```
 
-The optimisation builds omit visualisation support by default. Enable it when
-building one of them with `VISUALISE=1`, for example:
+With the current Makefile defaults (`VERSION=0.5`), these targets produce:
+
+```text
+bin/fire-v0.5-dev
+bin/fire-v0.5-o1
+bin/fire-v0.5-o2
+bin/fire-v0.5-o3
+```
+
+Override the version, version name, or compiler on the `make` command line:
 
 ```sh
-make o3timised VISUALISE=1
+make VERSION=0.6 VERSION_NAME=my-change o2
+make CXX=clang++ o2
 ```
 
-On startup, the program prints the model configuration and the build metadata:
-compile date/time, compiler and version, C++ standard, compiler target,
-executable target, build profile, and optimisation settings.
-
-Normal runs do not write simulation frames to disk. Add `--visualise` when a
-binary save file is wanted:
+All builds omit frame-saving support by default. Set `VISUALISE=1` when
+building to include it; this adds `-viz` to the executable name:
 
 ```sh
-./out/fire 100 500 0.01 0.001 --visualise
+make dev VISUALISE=1
+# Produces bin/fire-v0.5-dev-viz
 ```
 
-The program prints the generated path, which has the form
-`out/fire-{version}-{date}-{time}.bin`. The current version is `0.0`.
-The `--visualise` flag writes every completed timestep but does not create a
-CSV. Add `--v` (or `-v`) after it for verbose visualisation, which also writes
-the matching CSV:
+Use `make help` to list the main targets. `make clean` removes both `bin/` and
+`out/`, including generated simulation save files.
+
+## Running the simulation
+
+Pass the requested grid size, number of timesteps, tree-growth probability
+`p`, and lightning probability `f`:
 
 ```sh
-./out/fire 100 500 0.01 0.001 --visualise --v
+./bin/fire-v0.5-dev 100 500 0.01 0.001
 ```
 
-The animation script accepts the generated binary path. Its optional second
-argument displays every Nth saved frame; `10` therefore displays frames 0, 10,
-20, and so on:
+Optimised binaries use the same arguments:
 
 ```sh
-python3 animation/visualise.py out/fire-0.0-YYYY-MM-DD-HH-MM-SS-mmm.bin 10
+./bin/fire-v0.5-o2 100 500 0.01 0.001
 ```
 
-## Plotting benchmarks
+On startup, the program prints its model configuration and build metadata,
+including the compiler, target, version, build profile, and optimisation
+flags.
 
-Combine any number of benchmark CSV files and write one stacked runtime chart
-per grid size:
+## Saving and animating a simulation
+
+First build a visualisation-enabled binary, then pass `--visualise`:
+
+```sh
+make dev VISUALISE=1
+./bin/fire-v0.5-dev-viz 100 500 0.01 0.001 --visualise
+```
+
+The program prints the generated path. It has the form
+`out/fire-{version}-{date}-{time}.bin` (for example,
+`out/fire-0.5-2026-08-28-10-00-00-000.bin`). It contains every completed
+timestep.
+
+To also write a matching, human-readable CSV, add `--v` or `-v` after
+`--visualise`:
+
+```sh
+./bin/fire-v0.5-dev-viz 100 500 0.01 0.001 --visualise --v
+```
+
+Animate the newest `.bin` file in `out/`:
+
+```sh
+make anim
+```
+
+Select a particular save file with `SAVE_FILE`:
+
+```sh
+make anim SAVE_FILE=out/fire-0.5-YYYY-MM-DD-HH-MM-SS-mmm.bin
+```
+
+For more control, invoke the animation script directly. The optional second
+argument is a positive frame stride; `10` displays frames 0, 10, 20, and so
+on:
+
+```sh
+uv run --project tools/animation python tools/animation/visualise.py \
+  out/fire-0.5-YYYY-MM-DD-HH-MM-SS-mmm.bin 10
+```
+
+The animation opens an interactive Matplotlib window, so it needs a graphical
+display.
+
+## Runtime benchmarking on Slurm
+
+The runtime benchmark uses non-visualisation `o1`, `o2`, and/or `o3` binaries.
+The version passed to `bench.sh` must include the leading `v` and must match
+the version in the binary filenames:
+
+```sh
+make o1 o2
+bash bench.sh o1,o2 v0.5
+```
+
+To benchmark all optimised configurations:
+
+```sh
+make o1 o2 o3
+bash bench.sh all v0.5
+```
+
+For a different program version, pass the numeric value to Make and the
+corresponding `v`-prefixed value to the benchmark:
+
+```sh
+make VERSION=0.6 o1 o2
+bash bench.sh o1,o2 v0.6
+```
+
+`bench.sh [configurations] [version]` is the submission wrapper. Its
+configuration is either a comma-separated subset of `o1,o2,o3` or `all`; its
+defaults are `o1,o2` and `v0.1`. It submits `run.slurm.sh` and writes the Slurm
+log to:
+
+```text
+data/VERSION/slurm-logs/slurm-CONFIGURATIONS.out
+```
+
+The job writes its measurements to:
+
+```text
+data/VERSION/benchmarking/benchmarks-CONFIGURATIONS.csv
+```
+
+`run.slurm.sh` currently benchmarks grids `100`, `500`, and `1000` for 500
+timesteps, with two warm-ups and five measured repetitions at `p=0.02` and
+`f=0.01`. Change the constants near the top of that script to use a different
+benchmark matrix. Runs are pinned to an allocated CPU when possible, and the
+configuration order is reversed on alternating repetitions.
+
+The Slurm script can also be submitted directly, but this does not use the
+wrapper's organised log path:
+
+```sh
+sbatch run.slurm.sh o1,o2 v0.5
+```
+
+## Cache benchmarking on Slurm
+
+`cache_test.slurm.sh` runs Valgrind Cachegrind. Each run is a group of five
+arguments: executable, grid size, timesteps, `p`, and `f`.
+
+Run one configuration:
+
+```sh
+sbatch cache_test.slurm.sh \
+  bin/fire-v0.5-o2 1000 500 0.02 0.01
+```
+
+Compare multiple builds in one allocation by appending more five-argument
+groups:
+
+```sh
+sbatch cache_test.slurm.sh \
+  bin/fire-v0.5-o1 1000 500 0.02 0.01 \
+  bin/fire-v0.5-o2 1000 500 0.02 0.01
+```
+
+The submission directory receives `cache-test-JOB_ID.out` plus one
+`cachegrind.out.PROCESS_ID` file per run. The script checks that every binary
+is executable and that Valgrind is available on the compute node.
+
+## Plotting benchmark results
+
+`tools/plot_benchmarks.py` accepts one or more runtime benchmark CSV files. It
+requires the columns `version`, `opt_flag`, `grid_size`, and `total_s`.
+Repeated runs for the same version, optimisation, and grid size are averaged.
+
+Compare results across versions with:
 
 ```sh
 uv run --project tools/animation python tools/plot_benchmarks.py \
   data/v0.0/benchmarking/benchmarks-o1-o2.csv \
   data/v0.1/benchmarking/benchmarks-o1-o2.csv \
-  --output-dir plots/benchmarks
+  data/v0.2/benchmarking/benchmarks-o1-o2.csv
 ```
 
-The script averages repeated runs and writes files such as
-`plots/benchmarks/benchmark-100x100.png`.
+The default output directory is `plots/benchmarks`. Override it with `-o` or
+`--output-dir`:
+
+```sh
+uv run --project tools/animation python tools/plot_benchmarks.py \
+  data/v0.4/benchmarking/benchmarks-o1-o2.csv \
+  data/v0.5/benchmarking/benchmarks-o1-o2.csv \
+  --output-dir plots/v0.4-v0.5
+```
+
+The script writes one PNG per grid size, such as
+`benchmark-100x100.png`. Each image shows mean absolute runtime (with the
+repeated-run range shaded) and the percentage runtime change between
+successive versions.
 
 ## Binary save-file format
 
-`fire-{version}-{date}-{time}.bin` is self-describing and does not require the
-Python script to be told the grid size or number of timesteps. All integer
-fields are fixed-width and little-endian. The complete file is laid out like
-this:
+`fire-{version}-{date}-{time}.bin` is self-describing; the animation script
+does not need a grid size or timestep count. All integer fields are
+fixed-width and little-endian:
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -97,25 +253,22 @@ this:
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-The header fields are, in order: the magic bytes `FFCA`; format version
-`uint16` (currently `1`); square grid size `uint32`; saved-frame count
-`uint64`; frame interval `uint32` (currently `1`); and cell size `uint8`
-(currently `1`). Each frame contains `grid_size * grid_size` cells in display
-order: all x values for y = 0, then all x values for y = 1, and so on. Cell
-states are `0 = Empty`, `1 = Tree`, and `2 = Burning`. Frame 0 is the grid after
-the first completed update, so a run with `timesteps = N` contains exactly N
-frames.
+The header contains the magic bytes `FFCA`; format version `uint16`
+(currently `1`); stored grid size `uint32`; saved-frame count `uint64`; frame
+interval `uint32` (currently `1`); and cell size `uint8` (currently `1`). The
+stored grid includes the simulation's one-cell boundary padding, so its width
+is two cells larger than the grid size supplied on the command line.
 
-Use `make debug` for a debug build. The selected profile and optimisation flags
-are included in the startup banner.
+Each frame contains `grid_size * grid_size` cells in display order: all x
+values for y = 0, then all x values for y = 1, and so on. Cell states are
+`0 = Empty`, `1 = Tree`, and `2 = Burning`. Frame 0 is the grid after the first
+completed update, so a run with `timesteps = N` contains exactly N frames.
 
-# Random
+## Useful Slurm commands
 
-- `module avail` : to see what modules are available on cluster for linking
-
-# Slurm cheatsheet
-
-- `sinfo` : to see different nodes available on the cluster
-- `sinfo -p cosc3500 -N -l` : to see status of machines in the cosc3500 cluster. We get priority access on this partition. 
-- `squeue` : to see who is running jobs on the cluster at the moment
-- `sbatch <slurm_file.sh>` : to run the job on the cluster using the configuration in the <slurm_file.sh>
+- `module avail` lists modules available on the cluster.
+- `sinfo` lists available partitions and nodes.
+- `sinfo -p cosc3500 -N -l` shows detailed node status for the `cosc3500`
+  partition.
+- `squeue` lists queued and running jobs.
+- `sbatch SCRIPT [ARGUMENTS...]` submits a Slurm job.
