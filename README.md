@@ -1,8 +1,17 @@
 # COSC3500 - Forest fire sim
 
-# Milestones 
+![Forest-fire simulation animation](data/gifs/fire-0.7-2026-08-27-11-20-24-089.gif)
 
-## Milestone 1 - https://youtu.be/l-9ioKjfn4M
+## Milestones
+
+### Milestone 1
+
+[![Watch the milestone 1 presentation](https://img.youtube.com/vi/l-9ioKjfn4M/hqdefault.jpg)](https://youtu.be/l-9ioKjfn4M)
+
+[▶ Watch the milestone 1 presentation on YouTube](https://youtu.be/l-9ioKjfn4M).
+Click the preview to open the video for playback.
+
+Milestone 2 (parallel implementation) is in progress.
 
 ## Running
 
@@ -11,23 +20,30 @@ the `p` and `f` probabilities:
 
 ```sh
 make
-./out/fire 100 500 0.01 0.001
+./bin/fire-v1.1-dev 100 500 0.01 0.001
 ```
 
-The default `make` target builds the standard binary and the three
-optimisation builds. The optimisation targets are available individually:
+The default `make` target is `dev`: an `-O0` debug build that prints a final-grid
+hash. The optimisation targets are available individually, or together with
+the debug build through `all`:
 
 ```sh
-make o1timised
-make o2timised
-make o3timised
+make o1
+make o2
+make o3
+make all
 ```
 
-The optimisation builds omit visualisation support by default. Enable it when
-building one of them with `VISUALISE=1`, for example:
+Executables are written to `bin/fire-v{version}-{dev|o1|o2|o3}`. The version and
+version name are set in the Makefile; override them with, for example,
+`make o3 VERSION=1.1 VERSION_NAME=simd-random`. All builds include `-mavx2`;
+only `o3` also includes `-march=native`, targeting the build machine's CPU.
+
+All builds omit visualisation support by default. Enable it with `VISUALISE=1`;
+this adds `-viz` to the executable name:
 
 ```sh
-make o3timised VISUALISE=1
+make o3 VISUALISE=1
 ```
 
 On startup, the program prints the model configuration and the build metadata:
@@ -38,17 +54,17 @@ Normal runs do not write simulation frames to disk. Add `--visualise` when a
 binary save file is wanted:
 
 ```sh
-./out/fire 100 500 0.01 0.001 --visualise
+./bin/fire-v1.1-o3-viz 100 500 0.01 0.001 --visualise
 ```
 
 The program prints the generated path, which has the form
-`out/fire-{version}-{date}-{time}.bin`. The current version is `0.0`.
+`out/fire-{version}-{date}-{time}.bin`.
 The `--visualise` flag writes every completed timestep but does not create a
 CSV. Add `--v` (or `-v`) after it for verbose visualisation, which also writes
 the matching CSV:
 
 ```sh
-./out/fire 100 500 0.01 0.001 --visualise --v
+./bin/fire-v1.1-o3-viz 100 500 0.01 0.001 --visualise --v
 ```
 
 The animation script accepts the generated binary path. Its optional second
@@ -56,12 +72,50 @@ argument displays every Nth saved frame; `10` therefore displays frames 0, 10,
 20, and so on:
 
 ```sh
-python3 animation/visualise.py out/fire-0.0-YYYY-MM-DD-HH-MM-SS-mmm.bin 10
+uv run --project tools/animation python tools/animation/visualise.py \
+  out/fire-1.1-YYYY-MM-DD-HH-MM-SS-mmm.bin 10
 ```
+
+Alternatively, `make anim` opens the newest save file in `out/`. Select a specific
+file with `make anim SAVE_FILE=out/fire-1.1-YYYY-MM-DD-HH-MM-SS-mmm.bin`.
+
+## Running benchmarks
+
+Build the required optimisation binaries, then submit the benchmark from the
+repository root on the Slurm cluster:
+
+```sh
+make o1 o2 o3 VERSION=1.1
+bash bench.sh all v1.1
+```
+
+Use `bash bench.sh o3 v1.1` for just `-O3`, or `bash bench.sh o2,o3 v1.1` for
+`-O2` and `-O3` in the same job, running sequentially. The benchmark script does
+not compile binaries. Supply the
+version explicitly: Make uses `1.1`, while the benchmark script expects `v1.1`.
+
+`bench.sh` submits `run.slurm.sh`, which currently requests one node, one task,
+and one CPU on the `a100` partition. It runs 100², 500², and 1000² grids for 500
+timesteps with `p=0.02` and `f=0.01`. Each build gets a tiny initial warm-up,
+then two untimed warm-ups and five timed repetitions per grid size. Timed build
+order reverses on alternate repetitions. These settings live in `run.slurm.sh`;
+thread-count scaling is not implemented yet.
+
+GNU `/usr/bin/time` measures the whole process, including startup and allocation.
+Each run starts with empty grids and the fixed RNG seed `80085`. The CSV records
+wall time (`total_s`), user/system CPU time, CPU utilisation, peak memory, context
+switches, and page faults. Correctness hashes are printed by `dev` builds;
+the benchmark does not compare hashes automatically.
+
+For `all v1.1`, results are written to
+`data/v1.1/benchmarking/benchmarks-o1-o2-o3.csv`, with machine details, binary
+checksums, and run output in `data/v1.1/slurm-logs/slurm-o1-o2-o3.out`.
+Repeating the same version/configuration overwrites the CSV. The 100² runs can
+be too short for useful comparisons at the timer's 0.01-second output precision.
 
 ## Plotting benchmarks
 
-Combine any number of benchmark CSV files and write one stacked runtime chart
+Combine any number of benchmark CSV files and write one two-panel runtime chart
 per grid size:
 
 ```sh
@@ -71,8 +125,11 @@ uv run --project tools/animation python tools/plot_benchmarks.py \
   --output-dir plots/benchmarks
 ```
 
-The script averages repeated runs and writes files such as
-`plots/benchmarks/benchmark-100x100.png`.
+The script averages repeated wall times for each version/optimisation/grid
+combination and writes files such as `plots/benchmarks/benchmark-100x100.png`.
+The first panel shows mean runtime with the minimum-to-maximum range shaded;
+the second shows percentage runtime changes between adjacent versions
+(negative means faster).
 
 ## Binary save-file format
 
@@ -110,14 +167,15 @@ states are `0 = Empty`, `1 = Tree`, and `2 = Burning`. Frame 0 is the grid after
 the first completed update, so a run with `timesteps = N` contains exactly N
 frames.
 
-Use `make debug` for a debug build. The selected profile and optimisation flags
-are included in the startup banner.
+The stored grid size includes the one-cell border on every side: an input size
+of 100 produces a 102 × 102 stored grid. The startup banner also reports this
+padded size.
 
-# Random
+## Cluster environment
 
 - `module avail` : to see what modules are available on cluster for linking
 
-# Slurm cheatsheet
+## Slurm cheatsheet
 
 - `sinfo` : to see different nodes available on the cluster
 - `sinfo -p cosc3500 -N -l` : to see status of machines in the cosc3500 cluster. We get priority access on this partition. 
