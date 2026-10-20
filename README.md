@@ -1,5 +1,9 @@
 # COSC3500 - Forest fire sim
 
+# Milestones 
+
+## Milestone 1 - https://youtu.be/l-9ioKjfn4M
+
 ## Running
 
 Build and run the model by supplying the grid size, number of time steps, and
