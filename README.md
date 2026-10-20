@@ -85,21 +85,26 @@ Build the required optimisation binaries, then submit the benchmark from the
 repository root on the Slurm cluster:
 
 ```sh
-make o1 o2 o3 VERSION=1.1
-bash bench.sh all v1.1
+make o3 VERSION=1.1
+bash bench.sh o3 v1.1
 ```
 
-Use `bash bench.sh o3 v1.1` for just `-O3`, or `bash bench.sh o2,o3 v1.1` for
-`-O2` and `-O3` in the same job, running sequentially. The benchmark script does
-not compile binaries. Supply the
-version explicitly: Make uses `1.1`, while the benchmark script expects `v1.1`.
+O3 is the default build configuration. Other configurations remain available:
+`bash bench.sh o2,o3 v1.1` runs `-O2` and `-O3` sequentially in the same job,
+and `all` selects all three optimisation builds. Build each selected configuration
+first; the benchmark script does not compile binaries. Supply the version
+explicitly: Make uses `1.1`, while the benchmark script expects `v1.1`.
 
 `bench.sh` submits `run.slurm.sh`, which currently requests one node, one task,
-and one CPU on the `a100` partition. It runs 100², 500², and 1000² grids for 500
-timesteps with `p=0.02` and `f=0.01`. Each build gets a tiny initial warm-up,
-then two untimed warm-ups and five timed repetitions per grid size. Timed build
-order reverses on alternate repetitions. These settings live in `run.slurm.sh`;
+and one CPU on the `a100` partition, with a 15-minute time limit. It runs a 5000²
+grid for 500 timesteps with `p=0.02` and `f=0.01`, with three measured repetitions
+and no warm-ups. All three measurements are saved; the plotting script uses the
+lowest wall time. If multiple builds are selected, their order reverses on
+alternate repetitions. These settings live in `run.slurm.sh`;
 thread-count scaling is not implemented yet.
+
+The time limit covers all selected builds. Submit fewer builds per
+job if their combined runtime would exceed it.
 
 GNU `/usr/bin/time` measures the whole process, including startup and allocation.
 Each run starts with empty grids and the fixed RNG seed `80085`. The CSV records
@@ -107,11 +112,12 @@ wall time (`total_s`), user/system CPU time, CPU utilisation, peak memory, conte
 switches, and page faults. Correctness hashes are printed by `dev` builds;
 the benchmark does not compare hashes automatically.
 
-For `all v1.1`, results are written to
-`data/v1.1/benchmarking/benchmarks-o1-o2-o3.csv`, with machine details, binary
-checksums, and run output in `data/v1.1/slurm-logs/slurm-o1-o2-o3.out`.
-Repeating the same version/configuration overwrites the CSV. The 100² runs can
-be too short for useful comparisons at the timer's 0.01-second output precision.
+For `o3 v1.1`, results are written to
+`data/v1.1/benchmarking/benchmarks-o3.csv`, with machine details, binary
+checksums, and run output in `data/v1.1/slurm-logs/slurm-o3.out`.
+Repeating the same version/configuration overwrites the CSV. Earlier benchmarks
+also used 100², 500², and 1000² grids; the 100² runs were too short for useful comparisons
+at the timer's 0.01-second output precision.
 
 ## Plotting benchmarks
 
@@ -125,9 +131,9 @@ uv run --project tools/animation python tools/plot_benchmarks.py \
   --output-dir plots/benchmarks
 ```
 
-The script averages repeated wall times for each version/optimisation/grid
+The script takes the minimum repeated wall time for each version/optimisation/grid
 combination and writes files such as `plots/benchmarks/benchmark-100x100.png`.
-The first panel shows mean runtime with the minimum-to-maximum range shaded;
+The first panel shows minimum runtime with the minimum-to-maximum range shaded;
 the second shows percentage runtime changes between adjacent versions
 (negative means faster).
 

@@ -2,7 +2,7 @@
 """Plot benchmark CSV files.
 
 Each input CSV must contain the columns ``version``, ``opt_flag``,
-``grid_size``, and ``total_s``. Repeated benchmark runs are averaged before
+``grid_size``, and ``total_s``. The minimum repeated runtime is used for
 plotting. One two-panel performance chart is written for every grid size
 present in the input files. The first panel shows absolute runtimes and the
 second highlights the percentage change from each preceding version.
@@ -23,7 +23,6 @@ import math
 import re
 from collections import defaultdict
 from pathlib import Path
-from statistics import fmean
 from typing import DefaultDict
 
 import matplotlib
@@ -120,10 +119,10 @@ def plot_grid(
         }
     )
     x_positions = list(range(len(versions)))
-    mean_series = {
+    minimum_series = {
         opt_flag: [
             (
-                fmean(optimisation_runs[version][opt_flag])
+                min(optimisation_runs[version][opt_flag])
                 if opt_flag in optimisation_runs[version]
                 else math.nan
             )
@@ -133,7 +132,7 @@ def plot_grid(
     }
     maximum_runtime = max(
         runtime
-        for runtimes in mean_series.values()
+        for runtimes in minimum_series.values()
         for runtime in runtimes
         if math.isfinite(runtime)
     )
@@ -149,7 +148,7 @@ def plot_grid(
 
     for series_index, opt_flag in enumerate(optimisations):
         colour = SERIES_COLOURS[series_index % len(SERIES_COLOURS)]
-        runtimes = mean_series[opt_flag]
+        runtimes = minimum_series[opt_flag]
         lower_bounds = [
             (
                 min(optimisation_runs[version][opt_flag])
@@ -205,7 +204,7 @@ def plot_grid(
     _style_axes(runtime_axes)
     runtime_axes.set_xticks(x_positions, versions)
     runtime_axes.set_xlabel("Program version")
-    runtime_axes.set_ylabel("Mean runtime (seconds)")
+    runtime_axes.set_ylabel("Minimum runtime (seconds)")
     runtime_axes.set_title("Absolute runtime", loc="left", fontweight="bold")
     runtime_axes.set_ylim(bottom=0)
     runtime_axes.yaxis.set_major_locator(MaxNLocator(nbins=10, min_n_ticks=6))
@@ -234,7 +233,7 @@ def plot_grid(
         bar_positions = [position + offset for position in transition_positions]
         changes = []
         for previous, current in zip(
-            mean_series[opt_flag], mean_series[opt_flag][1:]
+            minimum_series[opt_flag], minimum_series[opt_flag][1:]
         ):
             if math.isfinite(previous) and math.isfinite(current) and previous > 0:
                 changes.append((current / previous - 1) * 100)

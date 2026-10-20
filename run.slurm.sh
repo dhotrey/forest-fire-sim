@@ -4,19 +4,18 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=00:07:00
+#SBATCH --time=00:15:00
 
 set -euo pipefail
 
 VERSION="${2:-v0.0}"
-CONFIGS="${1:-o1,o2}"
+CONFIGS="${1:-o3}"
 
 DATA="data/${VERSION}"
 
-GRIDS=(1000 5000 10000)
+GRIDS=(5000)
 TIMESTEPS=500
-WARMUP_REPS=2
-REPS=5
+REPS=3
 P=0.02
 F=0.01
 
@@ -67,7 +66,7 @@ echo "kernel:   $(uname -r)"
 echo "date:     $(date -Iseconds)"
 echo "working directory: $(pwd)"
 echo "command: $0 $CONFIGS $VERSION"
-echo "parameters: grids=${GRIDS[*]} timesteps=$TIMESTEPS warmups=$WARMUP_REPS reps=$REPS p=$P f=$F"
+echo "parameters: grids=${GRIDS[*]} timesteps=$TIMESTEPS warmups=0 reps=$REPS p=$P f=$F"
 echo "slurm allocation: job_cpus_per_node=${SLURM_JOB_CPUS_PER_NODE:-n/a} cpus_per_task=${SLURM_CPUS_PER_TASK:-n/a} ntasks=${SLURM_NTASKS:-n/a}"
 echo "process affinity: ${AFFINITY:-unknown}"
 echo "load average: $(cat /proc/loadavg 2>/dev/null || echo n/a)"
@@ -138,26 +137,7 @@ run_timed() {
     echo "=== timed run end: opt=$opt grid=$grid rep=$rep ==="
 }
 
-echo "=== initial size-1 warm-up runs ==="
-for OPT in "${OPTS[@]}"; do
-    BIN="bin/fire-${VERSION}-${OPT}"
-    echo "=== size-1 warm-up start: opt=$OPT ==="
-    "${PIN[@]}" "$BIN" 1 1 "$P" "$F"
-    echo "=== size-1 warm-up end: opt=$OPT ==="
-done
-
 for GRID in "${GRIDS[@]}"; do
-    # Warm-up runs (untimed): populate caches/branch predictors so timed
-    # runs are comparable between binaries.
-    for WARMUP in $(seq 1 "$WARMUP_REPS"); do
-        for OPT in "${OPTS[@]}"; do
-            BIN="bin/fire-${VERSION}-${OPT}"
-            echo "=== warm-up start: opt=$OPT grid=$GRID rep=$WARMUP ==="
-            "${PIN[@]}" "$BIN" "$GRID" "$TIMESTEPS" "$P" "$F"
-            echo "=== warm-up end: opt=$OPT grid=$GRID rep=$WARMUP ==="
-        done
-    done
-
     for REP in $(seq 1 "$REPS"); do
         # Reverse the order every repetition to balance temperature, boost
         # frequency, and other time-dependent effects between configurations.

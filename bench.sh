@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-CONFIGS="${1:-o1,o2,o3}"
+CONFIGS="${1:-o3}"
 VERSION="${2:-v0.1}"
 
 if [[ "$CONFIGS" == "all" ]]; then
