@@ -1,0 +1,155 @@
+=== execution environment ===
+opt flags: o3
+job id:   678300
+job node: a100-0
+hostname: a100-0
+kernel:   4.18.0-553.148.1.el8_10.x86_64
+date:     2026-10-20T15:00:57+10:00
+working directory: /home/Student/s4985050/forest-fire-sim
+command: /var/slurm/d/job678300/slurm_script o3 v1.1
+parameters: grids=5000 timesteps=500 warmups=0 reps=3 p=0.02 f=0.01
+slurm allocation: job_cpus_per_node=1 cpus_per_task=1 ntasks=1
+process affinity: 6
+load average: 1.12 1.13 1.17 2/507 2649668
+uptime:  15:00:57 up 79 days, 22:40,  0 users,  load average: 1.12, 1.13, 1.17
+Architecture:        x86_64
+CPU(s):              8
+Thread(s) per core:  1
+Core(s) per socket:  8
+Socket(s):           1
+NUMA node(s):        1
+Model name:          AMD EPYC 7542 32-Core Processor
+Virtualization type: full
+NUMA node0 CPU(s):   0-7
+model name	: AMD EPYC 7542 32-Core Processor
+pinned core: 6
+cpufreq governor: n/a
+cpufreq current kHz: n/a
+compiler command: /usr/bin/g++
+g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-28)
+time command: time (GNU Time) UNKNOWN
+JobId=678300 JobName=ff_o3
+   UserId=s4985050(2962097) GroupId=uusers(10000) MCS_label=N/A
+   Priority=1 Nice=0 Account=s4985050 QOS=normal
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:01 TimeLimit=00:15:00 TimeMin=N/A
+   SubmitTime=2026-10-20T15:00:56 EligibleTime=2026-10-20T15:00:56
+   AccrueTime=2026-10-20T15:00:56
+   StartTime=2026-10-20T15:00:56 EndTime=2026-10-20T15:15:56 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-20T15:00:56 Scheduler=Main
+   Partition=a100 AllocNode:Sid=login0:1458609
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=a100-0
+   BatchHost=a100-0
+   NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=1,mem=1M,node=1,billing=1
+   AllocTRES=cpu=1,node=1,billing=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=0 MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) LicensesAlloc=(null) Network=(null)
+   Command=/home/Student/s4985050/forest-fire-sim/run.slurm.sh
+   SubmitLine=sbatch --job-name=ff_o3 --output=data/v1.1/slurm-logs/slurm-o3.out run.slurm.sh o3 v1.1
+   WorkDir=/home/Student/s4985050/forest-fire-sim
+   StdErr=
+   StdIn=/dev/null
+   StdOut=/home/Student/s4985050/forest-fire-sim/data/v1.1/slurm-logs/slurm-o3.out
+   TresPerTask=cpu=1
+
+--- binary o3 ---
+-rwx------ 1 s4985050 uusers 848392 Oct 20 14:18 bin/fire-v1.1-o3
+bin/fire-v1.1-o3: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=5391cfdbf4fe248f06b62b74d43c641495698adb, with debug_info, not stripped
+   text	   data	    bss	    dec	    hex	filename
+  65134	   1944	    648	  67726	  1088e	bin/fire-v1.1-o3
+	linux-vdso.so.1 (0x00007ffcd2fde000)
+	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fc6d0f39000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007fc6d0bb7000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fc6d099f000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fc6d05c9000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fc6d12ce000)
+md5:    81103277700c8199c2ce5b1af48425c4
+sha256: c5775220e183f43aa9a3e3b70ac6ec7ac27b43ea983bad73c221448eb097a9bc
+=============================
+=== timed run start: opt=o3 grid=5000 rep=1 ===
+date: 2026-10-20T15:00:57+10:00
+load average: 1.12 1.13 1.17 2/507 2649703
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       5002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          1.1 simd-random
+  Compiled:        Oct 20 2026 14:18:00
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.1-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 
+  Optimisation:    enabled
+
+date: 2026-10-20T15:01:40+10:00
+load average: 1.60 1.26 1.21 2/507 2649736
+cpu current kHz: n/a
+run=1 grid=5000 user=42.17s sys=0.03s cpu=97% total=43.07s max_rss=52052KiB invol_ctx=108 vol_ctx=4 major_faults=0 minor_faults=12343 [o3]
+=== timed run end: opt=o3 grid=5000 rep=1 ===
+=== timed run start: opt=o3 grid=5000 rep=2 ===
+date: 2026-10-20T15:01:40+10:00
+load average: 1.60 1.26 1.21 2/507 2649742
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       5002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          1.1 simd-random
+  Compiled:        Oct 20 2026 14:18:00
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.1-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 
+  Optimisation:    enabled
+
+date: 2026-10-20T15:02:23+10:00
+load average: 1.81 1.36 1.25 2/507 2649761
+cpu current kHz: n/a
+run=2 grid=5000 user=41.96s sys=0.03s cpu=98% total=42.84s max_rss=52120KiB invol_ctx=112 vol_ctx=4 major_faults=0 minor_faults=12345 [o3]
+=== timed run end: opt=o3 grid=5000 rep=2 ===
+=== timed run start: opt=o3 grid=5000 rep=3 ===
+date: 2026-10-20T15:02:23+10:00
+load average: 1.81 1.36 1.25 2/507 2649767
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       5002
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Build information
+  Version          1.1 simd-random
+  Compiled:        Oct 20 2026 14:18:00
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.1-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 
+  Optimisation:    enabled
+
+date: 2026-10-20T15:03:06+10:00
+load average: 1.91 1.45 1.29 2/505 2649788
+cpu current kHz: n/a
+run=3 grid=5000 user=42.02s sys=0.02s cpu=97% total=43.03s max_rss=52116KiB invol_ctx=113 vol_ctx=5 major_faults=0 minor_faults=12345 [o3]
+=== timed run end: opt=o3 grid=5000 rep=3 ===
+benchmark CSV: data/v1.1/benchmarking/benchmarks-o3.csv
