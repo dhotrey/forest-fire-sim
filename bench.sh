@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-CONFIGS="${1:-o1,o2}"
+CONFIGS="${1:-o1,o2,o3}"
 VERSION="${2:-v0.1}"
 
 if [[ "$CONFIGS" == "all" ]]; then
@@ -11,7 +11,7 @@ fi
 
 IFS=',' read -r -a CONFIG_LIST <<< "$CONFIGS"
 if (( ${#CONFIG_LIST[@]} == 0 )); then
-    echo "Usage: $0 <o1,o2|all> [version]" >&2
+    echo "Usage: $0 <o1,o2,o3|all> [version]" >&2
     exit 1
 fi
 
