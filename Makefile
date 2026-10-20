@@ -15,7 +15,7 @@ STANDARD := -std=c++17
 WARNINGS := -Wall -Wextra -Wpedantic -Werror
 LDLIBS   ?= -lstdc++fs
 
-COMMON_FLAGS := $(STANDARD) $(WARNINGS) -g -fno-omit-frame-pointer -mavx2
+COMMON_FLAGS := $(STANDARD) $(WARNINGS) -g -fno-omit-frame-pointer
 
 VISUALISE ?= 0
 ifeq ($(VISUALISE),1)
@@ -60,7 +60,7 @@ $(O2_BIN): $(SOURCES) FORCE
 	$(call compile,-O2 -DNDEBUG,O2 NDEBUG,$(SOURCES))
 
 $(O3_BIN): $(SOURCES) FORCE
-	$(call compile,-O3 -DNDEBUG -march=native,O3 NDEBUG -march=native,$(SOURCES))
+	$(call compile,-O3 -DNDEBUG -march=native -mavx2,O3 NDEBUG -march=native -mavx2,$(SOURCES))
 
 dev: $(DEV_BIN)
 o1:  $(O1_BIN)

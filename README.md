@@ -36,8 +36,8 @@ make all
 
 Executables are written to `bin/fire-v{version}-{dev|o1|o2|o3}`. The version and
 version name are set in the Makefile; override them with, for example,
-`make o3 VERSION=1.1 VERSION_NAME=simd-random`. All builds include `-mavx2`;
-only `o3` also includes `-march=native`, targeting the build machine's CPU.
+`make o3 VERSION=1.1 VERSION_NAME=simd-random`. Only `o3` includes
+`-march=native -mavx2`, targeting the build machine's CPU.
 
 All builds omit visualisation support by default. Enable it with `VISUALISE=1`;
 this adds `-viz` to the executable name:
