@@ -1,8 +1,8 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 1.0
-VERSION_NAME ?= v1-auto-vec
+VERSION ?= 1.1
+VERSION_NAME ?= simd
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 DEV_SOURCES := $(SOURCES) hash_grid.cpp
@@ -12,7 +12,8 @@ BIN_DIR := bin
 COMPILER_TARGET ?= $(shell $(CXX) -dumpmachine 2>/dev/null || echo unknown)
 
 STANDARD := -std=c++17
-WARNINGS := -Wall -Wextra -Wpedantic -Werror
+# WARNINGS := -Wall -Wextra -Wpedantic -Werror
+WARNINGS := -Wall
 LDLIBS   ?= -lstdc++fs
 
 COMMON_FLAGS := $(STANDARD) $(WARNINGS) -g -fno-omit-frame-pointer
@@ -51,7 +52,7 @@ endef
 # FORCE prerequisites let `make o2 VISUALISE=1` rebuild even when a
 # non-visualisation binary with the same version already exists.
 $(DEV_BIN): $(DEV_SOURCES) hash_grid.hpp FORCE
-	$(call compile,-O0 -DDEBUG,O0 DEBUG,$(DEV_SOURCES))
+	$(call compile,-O0 -DDEBUG -march=native -mavx2,O3 DEBUG -march=native -mavx2,$(DEV_SOURCES))
 
 $(O1_BIN): $(SOURCES) FORCE
 	$(call compile,-O1 -DNDEBUG,O1 NDEBUG,$(SOURCES))
