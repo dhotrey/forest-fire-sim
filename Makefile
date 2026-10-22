@@ -6,6 +6,7 @@ VERSION_NAME ?= simd
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 DEV_SOURCES := $(SOURCES) hash_grid.cpp
+SERIAL_SOURCES := serial.cpp build_info.cpp save_file.cpp
 
 BIN_DIR := bin
 
@@ -37,10 +38,11 @@ DEV_BIN := $(BIN_DIR)/fire-v$(VERSION)-dev$(VIZ_SUFFIX)
 O1_BIN  := $(BIN_DIR)/fire-v$(VERSION)-o1$(VIZ_SUFFIX)
 O2_BIN  := $(BIN_DIR)/fire-v$(VERSION)-o2$(VIZ_SUFFIX)
 O3_BIN  := $(BIN_DIR)/fire-v$(VERSION)-o3$(VIZ_SUFFIX)
+SERIAL_BIN := $(BIN_DIR)/fire-v1.0-serial-baseline-o3$(VIZ_SUFFIX)
 
 .DEFAULT_GOAL := dev
 
-.PHONY: all dev o1 o2 o3 anim clean help FORCE
+.PHONY: all dev o1 o2 o3 serial anim clean help FORCE
 
 all: dev o1 o2 o3
 
@@ -63,10 +65,16 @@ $(O2_BIN): $(SOURCES) FORCE
 $(O3_BIN): $(SOURCES) FORCE
 	$(call compile,-O3 -DNDEBUG -march=native -mavx2,O3 NDEBUG -march=native -mavx2,$(SOURCES))
 
+$(SERIAL_BIN): override VERSION = 1.0
+$(SERIAL_BIN): override VERSION_NAME = serial-baseline
+$(SERIAL_BIN): $(SERIAL_SOURCES) FORCE
+	$(call compile,-O3 -DNDEBUG -march=native,O3 NDEBUG -march=native,$(SERIAL_SOURCES))
+
 dev: $(DEV_BIN)
 o1:  $(O1_BIN)
 o2:  $(O2_BIN)
 o3:  $(O3_BIN)
+serial: $(SERIAL_BIN)
 
 SAVE_FILE ?= $(shell find out -maxdepth 1 -type f -name 'fire-*.bin' -printf '%T@ %p\n' 2>/dev/null | sort -nr | sed -n '1s/^[^ ]* //p')
 
@@ -84,6 +92,7 @@ help:
 	@echo "make o1                      Build with -O1"
 	@echo "make o2                      Build with -O2"
 	@echo "make o3                      Build with -O3"
+	@echo "make serial                  Build v1.0 serial-baseline with -O3 -march=native"
 	@echo "make <mode> VISUALISE=1      Include visualisation (adds -viz to the name)"
 	@echo "make VERSION=0.1 <mode>      Override the compiled-in program version"
 	@echo "make anim                    Visualise the newest save file"
