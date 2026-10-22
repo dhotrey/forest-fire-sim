@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
         // either have a tree or fire neighbors contains the OR result rather
         // than a true or false so eg TREE OR fIRE would be (01 V 10) = 11
         __m256i neighbours = _mm256_or_si256(_mm256_or_si256(left, right),
-                                           _mm256_or_si256(up, down));
+                                             _mm256_or_si256(up, down));
 
         // here we single out only the burning cells from the neighbors
         // something like 11 AND 10 -> 10 or 10 AND 10 also -> 10 so we preserve
@@ -121,37 +121,14 @@ int main(int argc, char *argv[]) {
         __m256i fireChecks[4];
 
         // this is the loop for calling the rng 4 times
-        // #pragma GCC unroll 4
-        // for (int i = 0; i < 4; i++) {
-        //   __m256 randoms = rng.nextFloat(); // this gives us 8 randoms
-        //   // clang-format off
-        //   growthChecks[i] =_mm256_castps_si256(_mm256_cmp_ps(randoms, pVector, _CMP_LT_OQ));
-        //   fireChecks[i] = _mm256_castps_si256(_mm256_cmp_ps(randoms, fVector, _CMP_LT_OQ));
-        //   // clang-format on
-        // }
-
-        // Explicit manual unrolling maximizes ILP and pipelines the pcg32_8 math
-        {
-            // Block 0
-            __m256 r0 = rng.nextFloat();
-            growthChecks[0] = _mm256_castps_si256(_mm256_cmp_ps(r0, pVector, _CMP_LT_OQ));
-            fireChecks[0]   = _mm256_castps_si256(_mm256_cmp_ps(r0, fVector, _CMP_LT_OQ));
-        
-            // Block 1: CPU starts computing this RNG block while Block 0's _mm256_cmp_ps is in flight
-            __m256 r1 = rng.nextFloat();
-            growthChecks[1] = _mm256_castps_si256(_mm256_cmp_ps(r1, pVector, _CMP_LT_OQ));
-            fireChecks[1]   = _mm256_castps_si256(_mm256_cmp_ps(r1, fVector, _CMP_LT_OQ));
-        
-            // Block 2
-            __m256 r2 = rng.nextFloat();
-            growthChecks[2] = _mm256_castps_si256(_mm256_cmp_ps(r2, pVector, _CMP_LT_OQ));
-            fireChecks[2]   = _mm256_castps_si256(_mm256_cmp_ps(r2, fVector, _CMP_LT_OQ));
-        
-            // Block 3
-            __m256 r3 = rng.nextFloat();
-            growthChecks[3] = _mm256_castps_si256(_mm256_cmp_ps(r3, pVector, _CMP_LT_OQ));
-            fireChecks[3]   = _mm256_castps_si256(_mm256_cmp_ps(r3, fVector, _CMP_LT_OQ));
+        for (int i = 0; i < 4; i++) {
+          __m256 randoms = rng.nextFloat(); // this gives us 8 randoms
+          // clang-format off
+          growthChecks[i] =_mm256_castps_si256(_mm256_cmp_ps(randoms, pVector, _CMP_LT_OQ));
+          fireChecks[i] = _mm256_castps_si256(_mm256_cmp_ps(randoms, fVector, _CMP_LT_OQ));
+          // clang-format on
         }
+
         // packing all comparison results a single 256 bit vectors
 
         __m256i isGrowing = _mm256_packs_epi16(
