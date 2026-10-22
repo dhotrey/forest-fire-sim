@@ -1,17 +1,17 @@
 === execution environment ===
 opt flags: o3
-job id:   686592
-job node: a100-0
-hostname: a100-0
+job id:   686605
+job node: a100-1
+hostname: a100-1
 kernel:   4.18.0-553.148.1.el8_10.x86_64
-date:     2026-10-22T22:37:46+10:00
+date:     2026-10-22T22:41:46+10:00
 working directory: /home/Student/s4985050/forest-fire-sim
-command: /var/slurm/d/job686592/slurm_script o3 v1.2
+command: /var/slurm/d/job686605/slurm_script o3 v1.2
 parameters: grids=5120 timesteps=500 warmups=0 reps=3 p=0.02 f=0.01
 slurm allocation: job_cpus_per_node=1 cpus_per_task=1 ntasks=1
 process affinity: 6
-load average: 1.03 1.06 1.08 2/505 2691485
-uptime:  22:37:46 up 82 days,  6:17,  0 users,  load average: 1.03, 1.06, 1.08
+load average: 1.14 1.16 1.11 5/427 2103461
+uptime:  22:41:46 up 83 days,  6:23,  0 users,  load average: 1.14, 1.16, 1.11
 Architecture:        x86_64
 CPU(s):              8
 Thread(s) per core:  1
@@ -28,20 +28,20 @@ cpufreq current kHz: n/a
 compiler command: /usr/bin/g++
 g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-28)
 time command: time (GNU Time) UNKNOWN
-JobId=686592 JobName=ff_o3
+JobId=686605 JobName=ff_o3
    UserId=s4985050(2962097) GroupId=uusers(10000) MCS_label=N/A
    Priority=1 Nice=0 Account=s4985050 QOS=normal
    JobState=RUNNING Reason=None Dependency=(null)
    Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
    RunTime=00:00:00 TimeLimit=00:15:00 TimeMin=N/A
-   SubmitTime=2026-10-22T22:37:41 EligibleTime=2026-10-22T22:37:41
-   AccrueTime=2026-10-22T22:37:41
-   StartTime=2026-10-22T22:37:46 EndTime=2026-10-22T22:52:46 Deadline=N/A
-   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-22T22:37:46 Scheduler=Backfill
+   SubmitTime=2026-10-22T22:41:18 EligibleTime=2026-10-22T22:41:18
+   AccrueTime=2026-10-22T22:41:18
+   StartTime=2026-10-22T22:41:46 EndTime=2026-10-22T22:56:46 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-22T22:41:46 Scheduler=Backfill
    Partition=a100 AllocNode:Sid=login0:1918709
    ReqNodeList=(null) ExcNodeList=(null)
-   NodeList=a100-0
-   BatchHost=a100-0
+   NodeList=a100-1
+   BatchHost=a100-1
    NumNodes=1 NumCPUs=1 NumTasks=1 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
    ReqTRES=cpu=1,mem=1M,node=1,billing=1
    AllocTRES=cpu=1,node=1,billing=1
@@ -58,22 +58,22 @@ JobId=686592 JobName=ff_o3
    TresPerTask=cpu=1
 
 --- binary o3 ---
--rwx------ 1 s4985050 uusers 1050992 Oct 22 22:36 bin/fire-v1.2-o3
-bin/fire-v1.2-o3: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=64fd6f2a482068417b44280be5d7dcdcaff670a4, with debug_info, not stripped
+-rwx------ 1 s4985050 uusers 1050992 Oct 22 22:41 bin/fire-v1.2-o3
+bin/fire-v1.2-o3: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=1eaf3b65ed542aada67fd1507cd212072e88d1e2, with debug_info, not stripped
    text	   data	    bss	    dec	    hex	filename
   74734	   1944	    648	  77326	  12e0e	bin/fire-v1.2-o3
-	linux-vdso.so.1 (0x00007ffe5938e000)
-	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f157b73d000)
-	libm.so.6 => /lib64/libm.so.6 (0x00007f157b3bb000)
-	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f157b1a3000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007f157adcd000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007f157bad2000)
-md5:    dc351f0c41217ecd98068f132b70f6da
-sha256: f0da620cba6eb826fae55c40caa0a77bac073b7ecc73b8bec0e3dae6ea178ead
+	linux-vdso.so.1 (0x00007fff01b2c000)
+	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fa5c324e000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007fa5c2ecc000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fa5c2cb4000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fa5c28de000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fa5c35e3000)
+md5:    aa680b8a513c56250e17ded26cd18c1e
+sha256: 9f880f9a574076467e8badf91095253249142c7472feca65731970030ddd5e22
 =============================
 === timed run start: opt=o3 grid=5120 rep=1 ===
-date: 2026-10-22T22:37:46+10:00
-load average: 1.03 1.06 1.08 3/506 2691521
+date: 2026-10-22T22:41:46+10:00
+load average: 1.14 1.16 1.11 2/427 2103496
 cpu current kHz: n/a
 Cellular automata based forest fire model
 --------------------------------------------------
@@ -85,7 +85,7 @@ Model configuration
 --------------------------------------------------
 Build information
   Version          1.2 simdpp
-  Compiled:        Oct 22 2026 22:36:54
+  Compiled:        Oct 22 2026 22:41:04
   Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
   C++ standard:    C++17 (__cplusplus=201703)
   Compiler target: x86_64-redhat-linux
@@ -93,14 +93,14 @@ Build information
   Build flags:     O3 NDEBUG -march=native -mavx2 
   Optimisation:    enabled
 
-date: 2026-10-22T22:37:59+10:00
-load average: 1.18 1.09 1.09 2/506 2691529
+date: 2026-10-22T22:41:59+10:00
+load average: 1.27 1.19 1.12 2/427 2103510
 cpu current kHz: n/a
-run=1 grid=5120 user=11.96s sys=0.01s cpu=98% total=12.22s max_rss=54352KiB invol_ctx=37 vol_ctx=4 major_faults=0 minor_faults=7313 [o3]
+run=1 grid=5120 user=11.94s sys=0.00s cpu=98% total=12.18s max_rss=54516KiB invol_ctx=31 vol_ctx=4 major_faults=0 minor_faults=1184 [o3]
 === timed run end: opt=o3 grid=5120 rep=1 ===
 === timed run start: opt=o3 grid=5120 rep=2 ===
-date: 2026-10-22T22:37:59+10:00
-load average: 1.18 1.09 1.09 2/506 2691535
+date: 2026-10-22T22:41:59+10:00
+load average: 1.27 1.19 1.12 2/427 2103516
 cpu current kHz: n/a
 Cellular automata based forest fire model
 --------------------------------------------------
@@ -112,7 +112,7 @@ Model configuration
 --------------------------------------------------
 Build information
   Version          1.2 simdpp
-  Compiled:        Oct 22 2026 22:36:54
+  Compiled:        Oct 22 2026 22:41:04
   Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
   C++ standard:    C++17 (__cplusplus=201703)
   Compiler target: x86_64-redhat-linux
@@ -120,14 +120,14 @@ Build information
   Build flags:     O3 NDEBUG -march=native -mavx2 
   Optimisation:    enabled
 
-date: 2026-10-22T22:38:11+10:00
-load average: 1.36 1.14 1.11 2/507 2691553
+date: 2026-10-22T22:42:11+10:00
+load average: 1.43 1.23 1.14 2/427 2103525
 cpu current kHz: n/a
-run=2 grid=5120 user=11.94s sys=0.02s cpu=97% total=12.21s max_rss=54396KiB invol_ctx=36 vol_ctx=4 major_faults=0 minor_faults=7313 [o3]
+run=2 grid=5120 user=11.93s sys=0.01s cpu=98% total=12.18s max_rss=54372KiB invol_ctx=34 vol_ctx=4 major_faults=0 minor_faults=1180 [o3]
 === timed run end: opt=o3 grid=5120 rep=2 ===
 === timed run start: opt=o3 grid=5120 rep=3 ===
-date: 2026-10-22T22:38:11+10:00
-load average: 1.36 1.14 1.11 2/507 2691559
+date: 2026-10-22T22:42:11+10:00
+load average: 1.43 1.23 1.14 2/427 2103531
 cpu current kHz: n/a
 Cellular automata based forest fire model
 --------------------------------------------------
@@ -139,7 +139,7 @@ Model configuration
 --------------------------------------------------
 Build information
   Version          1.2 simdpp
-  Compiled:        Oct 22 2026 22:36:54
+  Compiled:        Oct 22 2026 22:41:04
   Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
   C++ standard:    C++17 (__cplusplus=201703)
   Compiler target: x86_64-redhat-linux
@@ -147,9 +147,9 @@ Build information
   Build flags:     O3 NDEBUG -march=native -mavx2 
   Optimisation:    enabled
 
-date: 2026-10-22T22:38:23+10:00
-load average: 1.46 1.16 1.12 6/507 2691573
+date: 2026-10-22T22:42:23+10:00
+load average: 1.52 1.26 1.15 2/427 2103540
 cpu current kHz: n/a
-run=3 grid=5120 user=11.95s sys=0.01s cpu=97% total=12.21s max_rss=54500KiB invol_ctx=39 vol_ctx=4 major_faults=0 minor_faults=7316 [o3]
+run=3 grid=5120 user=11.93s sys=0.01s cpu=97% total=12.19s max_rss=54512KiB invol_ctx=39 vol_ctx=4 major_faults=0 minor_faults=1186 [o3]
 === timed run end: opt=o3 grid=5120 rep=3 ===
 benchmark CSV: data/v1.2/benchmarking/benchmarks-o3.csv
