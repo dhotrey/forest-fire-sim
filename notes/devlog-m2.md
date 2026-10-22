@@ -2,15 +2,20 @@
 
 # v1.0 the baseline
 
-- The baseline is just me running it with o3 and turning on auto vectorise to observe what speedup that gives
+- The baseline is `serial.cpp` built with `-O3 -march=native` , allowing the compiler to auto vectorise. `make serial` always builds it as **v1.0 serial-baseline** in `bin/fire-v1.0-serial-baseline-o3`.
+- we're comparing the SIMD version against these same rules : empty cells can grow , trees catch fire from a neighbour or randomly , burning cells become empty. all updates read the old grid.
+- not permuting the SIMD growth/fire masks doesn't violate those rules. the RNG generates values , not values assigned to particular cells , so we're choosing the packing's natural assignment instead. growth and fire use the same assignment so each cell still gets one shared random value for its two checks. this doesn't add entropy , it just changes where draws are used.
+- the SIMD run won't have the same hash as this baseline : it uses different RNG streams/seeds and float probability checks instead of the scalar integer thresholds. the rules match , the exact random trajectory doesn't.
 
 # v1.1 - SIMD
 
 We're gonna have to turn our beautiful branching code into a branchless pain in the ass
 
+- the first kernel is now implemented in `main.cpp`. we're using floats for the probability checks to get it working first , integer comparisons can wait for v1.2.
 - we're keeping `grid` and `next` as `std::vector<CellState>` , each cell is already 1 byte.
+- the workload is **5120 x 5120 interior cells** , with padding on top of that. allocated width is 5122 , so we get exactly 160 batches per interior row and don't need a leftover-cell path for this workload.
 - a `__m256i` holds 256 bits , so we can load **32 cells at once** instead of 8. the instructions decide whether we're working with 32 byte lanes or 8 32-bit lanes.
-  - cell comparisons use `_mm256_cmpeq_epi8` , random comparisons use `_mm256_cmpgt_epi32`.
+  - cell comparisons use `_mm256_cmpeq_epi8` , random float comparisons use `_mm256_cmp_ps`.
   - 32 cells at once doesn't automatically mean 4x the speedup , we still have to generate and compare 32 random numbers.
 
 - for the 32 cells loaded we also need the 32 cells above , below , left and right of each cell.
@@ -25,7 +30,8 @@ right   : [i+1 : i+33]
 ```
 
 - that's 5 vectors , each holding 32 cells. lane 0 in each neighbour vector belongs to lane 0 in current , and so on.
-- use unaligned loads/stores to start with , the left and right vectors are shifted by a byte anyway.
+- load them with `_mm256_loadu_si256(reinterpret_cast<const __m256i*>(grid.data() + i))` and the matching neighbour offsets. that's a raw 32-byte read , no numeric conversion or unpacking.
+- use unaligned loads/stores to start with , the left and right vectors are shifted by a byte anyway. the overlapping loads don't allocate more grid memory , the CPU handles cache reuse.
 - create three vectors with 32 copies of EMPTY , TREE and FIRE. our cell values are `0` , `1` and `2` respectively.
 - once we have all 5 vectors loaded , OR the four neighbour vectors together , AND with FIRE , then compare the result with FIRE. call this mask isPropogating.
   - this works with our encoding because only FIRE has the `0b10` bit set.
@@ -36,58 +42,73 @@ right   : [i+1 : i+33]
   - current == TREE -> candidates for combusting , call it isTree
   - current == FIRE -> burning cells that must become empty , call it isToBeEmpty
 
-- now the slightly annoying bit. `pcg32_8.h` gives us **8 random numbers at once , each 32 bits**. so we call `nextfloat()` 4 times for our 32 cells:
+- now the slightly annoying bit. `pcg32_8.h` gives us **8 random floats in [0, 1) at once** through `nextFloat()`. each float takes 32 bits , so we call it 4 times inside each 32-cell update:
 
 ```text
-current : [ cells 0-7 | cells 8-15 | cells 16-23 | cells 24-31 ]
-randoms :     rng0        rng1          rng2           rng3
+call 0 : random results  0-7
+call 1 : random results  8-15
+call 2 : random results 16-23
+call 3 : random results 24-31
 
 32 cells   x  8 bits =  256 bits -> one __m256i
-32 randoms x 32 bits = 1024 bits -> four __m256i
+32 floats  x 32 bits = 1024 bits -> four __m256
 ```
 
-- we can do this in an inner loop running 4 times. each iteration gets 8 random numbers and compares them against both thresholds , using the same randoms for growth and fire.
-  - repeat `p_threshold` across 8 32-bit lanes , and do the same for `f_threshold`. these are the integer thresholds we already calculate from p(tree) and p(fire).
-  - for each batch , random < f_threshold gives us 8 masks for which spots can burn.
-  - random < p_threshold gives us 8 masks for which spots can grow.
-  - RNG values are unsigned 32-bit , but `_mm256_cmpgt_epi32` is signed. XOR both the randoms and threshold with `0x80000000` first , then compare **threshold > random** to get random < threshold.
+- broadcast p and f once before the timestep loop using `_mm256_set1_ps(static_cast<float>(p))` and the same for f. this gives us 8 copies of each probability.
+- the inner RNG loop runs 4 times. each iteration compares the same 8 random floats against both p and f using `_mm256_cmp_ps(randoms, pVector, _CMP_LT_OQ)` and the same for f.
+  - `_CMP_LT_OQ` is our less-than comparison. random < p gives growth checks , random < f gives fire checks.
+  - no integer thresholds or sign-bit XOR in this version. `nextFloat()` uses 23 random bits per value , so this has less probability resolution than the 32-bit integer version.
+  - save the results in `__m256i growthChecks[4]` and `fireChecks[4]`. these are arrays of 4 vectors , each containing 8 comparison masks , not arrays of the original random floats.
+  - the comparison returns `__m256` , so use `_mm256_castps_si256` when saving it. this preserves the bits for integer packing , no numeric conversion.
 
-- these comparisons give us **32-bit masks** , but our cell masks are **8-bit**. so we pack the comparison results down to bytes , then combine the 4 batches in cell order.
-  - true goes from `0xFFFFFFFF` to `0xFF` , false stays zero.
-  - we're packing the comparison results , not chopping the random numbers into bytes. that keeps the probability precision , especially for small p(fire).
+- these comparisons give us **32-bit masks** , but our cell masks are **8-bit**. so we pack the comparison results down to bytes.
+  - true goes from `0xFFFFFFFF` -> `0xFFFF` -> `0xFF` , false stays zero.
+  - we're shrinking the comparison results , not the random values , so packing doesn't lose any of the true/false information.
 
 ```text
-example for one batch , with an integer threshold of 100:
+example for one batch , with p = 0.02:
 
-randoms : [ 10 | 150 | 99 | 100 | 12 | 200 | 45 | 101 ]
-< 100   : [  T |   F |  T |   F |  T |   F |  T |   F ]
-as bytes: [ FF |  00 | FF |  00 | FF |  00 | FF |  00 ]
-
-combine the four batches:
-
-isGrowing : [ 8 byte masks | 8 byte masks | 8 byte masks | 8 byte masks ]
-isEmpty   : [                32 byte masks in cell order               ]
-
-now each byte in isGrowing lines up with the same cell in isEmpty.
+randoms : [ .001 | .03 | .019 | .02 | 0  | .5 | .01 | .99 ]
+< p     : [   T  |  F  |   T  |  F  | T  | F  |  T  |  F  ]
+as bytes: [  FF  | 00  |  FF  | 00  | FF | 00 | FF  | 00  ]
 ```
 
-- do this for both thresholds to get one 32-byte isGrowing vector and one 32-byte isBurning vector.
-  - `_mm256_packs_epi32` then `_mm256_packs_epi16` can shrink the masks from 32 -> 16 -> 8 bits. use signed packing so true stays all ones (`-1`).
-  - AVX2 packs within each 128-bit half , so the result needs rearranging into cells 0-31 order. don't assume the packs just concatenate the batches. [packing reference](https://clang.llvm.org/doxygen/avx2intrin_8h.html)
+- do this for both probabilities to get one 32-byte isGrowing vector and one isBurning vector.
+  - two `_mm256_packs_epi32` calls combine batches 0/1 and 2/3 into 16-bit masks. one outer `_mm256_packs_epi16` combines those into byte masks. use signed packing so true stays all ones (`-1`).
+  - AVX2 packs within each 128-bit half , so the random results don't come out in the original draw order. [packing reference](https://clang.llvm.org/doxygen/avx2intrin_8h.html)
+
+```text
+random result indices after packing:
+[ 0-3 | 8-11 | 16-19 | 24-27 | 4-7 | 12-15 | 20-23 | 28-31 ]
+
+the physical cells those byte masks are applied to:
+[ 0-3 | 4-7  | 8-11  | 12-15 | 16-19 | 20-23 | 24-27 | 28-31 ]
+```
+
+- we're keeping this natural packed order , no permutation for now. so cell 4 gets random result 8 rather than result 4 , for example. both growth and fire use the exact same packing so the two checks still share one random value per cell. the state/neighbour masks themselves stay in physical cell order.
 
 - We then do a couple bitwise ANDS
-  - isEmpty AND isGrowing -> all spots that will have tree growth , call it TreeGrowth
-  - (isPropogating OR isBurning) AND isTree -> all trees that will burn , call it TreeBurning
+  - isEmpty AND isGrowing -> all spots that will have tree growth , call it treeGrowing
+  - (isPropogating OR isBurning) AND isTree -> all trees that will burn , call it treeBurning. the isTree part matters , empty cells can't just catch fire.
 
 - finally we propagate it to the `next` grid state.
   - nextVector = current
-  - use TreeBurning to select FIRE in the matching lanes.
-  - use TreeGrowth to select TREE in the matching lanes.
+  - use treeGrowing to select TREE in the matching lanes.
+  - use treeBurning to select FIRE in the matching lanes.
   - use isToBeEmpty to select EMPTY in the matching lanes.
-  - `_mm256_blendv_epi8` can do these selections. the masks are `0xFF` / `0x00` , **not cell values** , so don't store the masks themselves as the next state.
-  - store the 32 updated cells into `next`.
+  - `_mm256_blendv_epi8(nextVector, treeVector, treeGrowing)` keeps the byte from nextVector when the mask is `0x00` , takes it from treeVector when the mask is `0xFF`. do the same for fire and empty.
+  - all masks come from the original current vector. a new tree doesn't burn in the same timestep , and a newly burning tree doesn't immediately become empty.
+  - the masks are **not cell values** , so don't store them as the next state. `_mm256_storeu_si256` writes the 32 updated cell values into `next` , the old `grid` stays untouched until the swap.
 
 - and then we load in the next 32 cells and do it again.
-  - x advances by **1 row** , y advances by **32 cells**. only process full batches inside the row , then handle any leftover interior cells separately so we don't overwrite the border.
+  - x advances by **1 row** , y advances by **32 cells**. the interior width must be divisible by 32 for this implementation , arbitrary leftover widths aren't handled.
   - swap `grid` and `next` once after the whole grid is done , then save the frame.
-  - `pcg32_8` uses 8 parallel RNG streams , so we shouldn't expect the same grid hash as the scalar RNG baseline.
+  - print the hash once after all timesteps , not after every row or timestep.
+
+- both debug builds compile. six deterministic runs passed on 32 / 64-cell interior widths : staying empty , growing and staying trees , and the tree -> fire -> empty sequence.
+- checked the saved three-frame sequence and empty borders too. i've also run and visualised the normal version and it looks alright , but mixed-pattern / same-random scalar checks are still on le-plan before calling the validation finished.
+- currently there's one default-seeded `pcg32_8` object for the whole grid. before OpenMP / MPI we still need RNG ownership tied to global rows/blocks , then save a repeatable reference hash for that mapping.
+
+# v1.2 - RNG + mask experiments
+
+We'll compare `nextFloat()` against 32-bit integer RNG checks , then try halving it to 2 RNG calls with 16 bits per cell and measure the speed / probability precision tradeoff. We'll also add the mask permutation and measure its overhead against the natural packed order , validating each changed RNG mapping with its own reference hash.
