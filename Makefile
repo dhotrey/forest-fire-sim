@@ -1,8 +1,8 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 1.1
-VERSION_NAME ?= simd
+VERSION ?= 1.2
+VERSION_NAME ?= simdpp
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 DEV_SOURCES := $(SOURCES) hash_grid.cpp

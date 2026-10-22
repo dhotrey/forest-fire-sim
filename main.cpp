@@ -121,6 +121,7 @@ int main(int argc, char *argv[]) {
         __m256i fireChecks[4];
 
         // this is the loop for calling the rng 4 times
+        #pragma GCC unroll 4
         for (int i = 0; i < 4; i++) {
           __m256 randoms = rng.nextFloat(); // this gives us 8 randoms
           // clang-format off

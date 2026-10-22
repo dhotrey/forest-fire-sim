@@ -111,4 +111,5 @@ the physical cells those byte masks are applied to:
 
 # v1.2 - RNG + mask experiments
 
+I'll try to unroll the rng loop, I'll also run gprof , valgrind , cachegrind , measuing branch predictions and what not
 We'll compare `nextFloat()` against 32-bit integer RNG checks , then try halving it to 2 RNG calls with 16 bits per cell and measure the speed / probability precision tradeoff. We'll also add the mask permutation and measure its overhead against the natural packed order , validating each changed RNG mapping with its own reference hash.
