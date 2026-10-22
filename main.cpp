@@ -170,10 +170,10 @@ int main(int argc, char *argv[]) {
       save_file->write_frame(grid);
     }
 #endif
+  }
 
 #ifdef DEBUG
-    std::cout << "1D grid hash: " << hash1d_grid(grid, grid_size)
-              << '\n'; // expected: ...
+  std::cout << "1D grid hash: " << hash1d_grid(grid, grid_size)
+            << '\n'; // expected: ...
 #endif
-  }
 }
