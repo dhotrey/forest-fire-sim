@@ -1,2 +1,6 @@
 CompileFlags:
-  Add: [-std=c++17, -mavx2]
+  Add:
+    - -std=c++17
+    - -mavx2
+    - '-DPROGRAM_VERSION="1.2"'
+    - '-DPROGRAM_VERSION_NAME="simdpp"'
