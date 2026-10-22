@@ -1,0 +1,81 @@
+--------------------------------------------------------------------------------
+-- Metadata
+--------------------------------------------------------------------------------
+Invocation:       /bin/cg_annotate data/v1.1/valgrind/cachegrind.out.2102452
+Command:          ./bin/fire-v1.1-o3 5120 500 0.02 0.01
+Events recorded:  Ir
+Events shown:     Ir
+Event sort order: Ir
+Threshold:        0.1%
+Annotation:       on
+
+--------------------------------------------------------------------------------
+-- Summary
+--------------------------------------------------------------------------------
+Ir_____________________ 
+
+91,007,236,272 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+-- File:function summary
+--------------------------------------------------------------------------------
+  Ir___________________________  file:function
+
+< 77,824,000,030 (85.5%, 85.5%)  /usr/lib/gcc/x86_64-redhat-linux/8/include/avx2intrin.h:
+  77,824,000,000 (85.5%)           main
+
+<  9,011,200,004  (9.9%, 95.4%)  /usr/lib/gcc/x86_64-redhat-linux/8/include/avxintrin.h:main
+
+<  2,478,088,092  (2.7%, 98.1%)  /home/Student/s4985050/forest-fire-sim/main.cpp:
+   2,478,088,075  (2.7%)           main
+
+<  1,638,400,024  (1.8%, 99.9%)  /home/Student/s4985050/forest-fire-sim/pcg32_8.h:
+   1,638,400,000  (1.8%)           main
+
+--------------------------------------------------------------------------------
+-- Function:file summary
+--------------------------------------------------------------------------------
+  Ir___________________________  function:file
+
+> 90,951,693,160 (99.9%, 99.9%)  main:
+  77,824,000,000 (85.5%)           /usr/lib/gcc/x86_64-redhat-linux/8/include/avx2intrin.h
+   9,011,200,004  (9.9%)           /usr/lib/gcc/x86_64-redhat-linux/8/include/avxintrin.h
+   2,478,088,075  (2.7%)           /home/Student/s4985050/forest-fire-sim/main.cpp
+   1,638,400,000  (1.8%)           /home/Student/s4985050/forest-fire-sim/pcg32_8.h
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /home/Student/s4985050/forest-fire-sim/main.cpp
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- /home/Student/s4985050/forest-fire-sim/main.cpp
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /home/Student/s4985050/forest-fire-sim/pcg32_8.h
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- /home/Student/s4985050/forest-fire-sim/pcg32_8.h
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /usr/lib/gcc/x86_64-redhat-linux/8/include/avx2intrin.h
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- /usr/lib/gcc/x86_64-redhat-linux/8/include/avx2intrin.h
+
+--------------------------------------------------------------------------------
+-- Annotated source file: /usr/lib/gcc/x86_64-redhat-linux/8/include/avxintrin.h
+--------------------------------------------------------------------------------
+Unannotated because one or more of these original files are unreadable:
+- /usr/lib/gcc/x86_64-redhat-linux/8/include/avxintrin.h
+
+--------------------------------------------------------------------------------
+-- Annotation summary
+--------------------------------------------------------------------------------
+Ir____________________ 
+
+             0            annotated: files known & above threshold & readable, line numbers known
+             0            annotated: files known & above threshold & readable, line numbers unknown
+             0          unannotated: files known & above threshold & two or more non-identical
+90,951,688,150 (99.9%)  unannotated: files known & above threshold & unreadable 
+     2,920,719  (0.0%)  unannotated: files known & below threshold
+    52,627,403  (0.1%)  unannotated: files unknown
+

@@ -1,0 +1,30 @@
+--------------------------------------------------------------------------------
+Profile data file 'data/v1.1/valgrind/callgrind.out.2102199' (creator: callgrind-3.22.0)
+--------------------------------------------------------------------------------
+I1 cache: 
+D1 cache: 
+LL cache: 
+Timerange: Basic block 0 - 1696491169
+Trigger: Program termination
+Profiled target:  ./bin/fire-v1.1-o3 5120 500 0.02 0.01 (PID 2102199, part 1)
+Events recorded:  Ir
+Events shown:     Ir
+Event sort order: Ir
+Thresholds:       99
+Include dirs:     
+User annotated:   
+Auto-annotation:  off
+
+--------------------------------------------------------------------------------
+Ir                      
+--------------------------------------------------------------------------------
+91,007,219,585 (100.0%)  PROGRAM TOTALS
+
+--------------------------------------------------------------------------------
+Ir                       file:function
+--------------------------------------------------------------------------------
+77,824,000,000 (85.51%)  /usr/lib/gcc/x86_64-redhat-linux/8/include/avx2intrin.h:main
+ 9,011,200,004 ( 9.90%)  /usr/lib/gcc/x86_64-redhat-linux/8/include/avxintrin.h:main
+ 2,478,088,075 ( 2.72%)  /home/Student/s4985050/forest-fire-sim/main.cpp:main [/home/Student/s4985050/forest-fire-sim/bin/fire-v1.1-o3]
+ 1,638,400,000 ( 1.80%)  /home/Student/s4985050/forest-fire-sim/pcg32_8.h:main
+
