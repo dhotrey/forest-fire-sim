@@ -81,6 +81,7 @@ int main(int argc, char *argv[]) {
 
   for (int t = 0; t < timesteps; ++t) {
     for (int x = 1; x < grid_size - 1; x++) {
+#pragma GCC unroll 4
       for (int y = 1; y < grid_size - 1; y += 32) {
         const auto idx = x * grid_size + y;
 
