@@ -36,7 +36,7 @@ right   : [i+1 : i+33]
   - current == TREE -> candidates for combusting , call it isTree
   - current == FIRE -> burning cells that must become empty , call it isToBeEmpty
 
-- now the slightly annoying bit. `pcg32_8.h` gives us **8 random numbers at once , each 32 bits**. so we call `nextUInt()` 4 times for our 32 cells:
+- now the slightly annoying bit. `pcg32_8.h` gives us **8 random numbers at once , each 32 bits**. so we call `nextfloat()` 4 times for our 32 cells:
 
 ```text
 current : [ cells 0-7 | cells 8-15 | cells 16-23 | cells 24-31 ]
