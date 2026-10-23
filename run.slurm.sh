@@ -3,7 +3,7 @@
 #SBATCH --partition=a100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=7
+#SBATCH --cpus-per-task=8
 #SBATCH --time=00:15:00
 
 set -euo pipefail
