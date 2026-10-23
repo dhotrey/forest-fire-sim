@@ -3,10 +3,16 @@
 #SBATCH --partition=a100
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=8
 #SBATCH --time=00:15:00
 
 set -euo pipefail
+
+# Match the OpenMP team to the CPUs allocated to this one process.
+export OMP_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
+export OMP_DYNAMIC=false
+export OMP_PLACES=cores
+export OMP_PROC_BIND=close
 
 VERSION="${2:-v0.0}"
 CONFIGS="${1:-o3}"
@@ -48,14 +54,14 @@ CSV="${DATA}/benchmarking/benchmarks-${CONFIG_LABEL}.csv"
 echo "version,opt_flag,run_number,grid_size,user_s,system_s,cpu_pct,total_s,max_rss_kb,involuntary_ctx_switches,voluntary_ctx_switches,major_page_faults,minor_page_faults" > "$CSV"
 
 AFFINITY=$(taskset -pc $$ 2>/dev/null | awk -F': ' '{print $2}' || true)
-CORE=${AFFINITY%%,*}
-if [[ -z "$CORE" ]]; then
-    echo "WARNING: could not resolve pinned core; running unpinned"
+if [[ -z "$AFFINITY" ]]; then
+    echo "WARNING: could not resolve CPU affinity; running unpinned"
     PIN=()
 else
-    PIN=(taskset -c "$CORE")
+    PIN=(taskset -c "$AFFINITY")
 fi
-FIRST_CORE=${CORE%%-*}
+FIRST_CORE=${AFFINITY%%,*}
+FIRST_CORE=${FIRST_CORE%%-*}
 
 echo "=== execution environment ==="
 echo "opt flags: ${OPTS[*]}"
@@ -68,12 +74,15 @@ echo "working directory: $(pwd)"
 echo "command: $0 $CONFIGS $VERSION"
 echo "parameters: grids=${GRIDS[*]} timesteps=$TIMESTEPS warmups=0 reps=$REPS p=$P f=$F"
 echo "slurm allocation: job_cpus_per_node=${SLURM_JOB_CPUS_PER_NODE:-n/a} cpus_per_task=${SLURM_CPUS_PER_TASK:-n/a} ntasks=${SLURM_NTASKS:-n/a}"
+echo "SLURM_CPUS_PER_TASK: ${SLURM_CPUS_PER_TASK:-n/a}"
+echo "OpenMP: threads=$OMP_NUM_THREADS dynamic=$OMP_DYNAMIC places=$OMP_PLACES proc_bind=$OMP_PROC_BIND"
 echo "process affinity: ${AFFINITY:-unknown}"
+taskset -pc "$$" || true
 echo "load average: $(cat /proc/loadavg 2>/dev/null || echo n/a)"
 echo "uptime: $(uptime 2>/dev/null || echo n/a)"
 lscpu | grep -E '^(Model name|Architecture|CPU\(s\)|Thread|Core|Socket|CPU max MHz|CPU min MHz|NUMA|Virtualization)' || true
 grep -m1 'model name' /proc/cpuinfo || true
-echo "pinned core: ${CORE:-none}"
+echo "pinned CPUs: ${AFFINITY:-none}"
 echo "cpufreq governor: $(cat "/sys/devices/system/cpu/cpu${FIRST_CORE}/cpufreq/scaling_governor" 2>/dev/null || echo n/a)"
 echo "cpufreq current kHz: $(cat "/sys/devices/system/cpu/cpu${FIRST_CORE}/cpufreq/scaling_cur_freq" 2>/dev/null || echo n/a)"
 echo "compiler command: $(command -v g++ 2>/dev/null || echo n/a)"

@@ -123,7 +123,7 @@ After doign the above i didn't see many useful findins
 # v1.3 - openmp
 
 - spread work across threads aha!
-- pargma omp for
+- going to run and record the speedup when ran across 2/4/6/8 threads
 
 # v1.x - better simd kernel?
 

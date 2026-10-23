@@ -1,8 +1,7 @@
 #include "build_info.hpp"
-
 #include <iostream>
 #include <string>
-
+#include <omp.h>
 #ifndef BUILD_COMPILER_TARGET
 #define BUILD_COMPILER_TARGET "unspecified"
 #endif
@@ -64,6 +63,13 @@ void print_startup_banner(const char *executable, int grid_size, int timesteps,
             << "  p (growth):      " << p << '\n'
             << "  f (lightning):   " << f << '\n'
             << "--------------------------------------------------\n"
+            << "Runtime information\n";
+#ifdef _OPENMP
+  std::cout << "  OpenMP threads:  " << omp_get_max_threads() << '\n';
+#else
+  std::cout << "  OpenMP threads:  1 (OpenMP disabled)\n";
+#endif
+  std::cout << "--------------------------------------------------\n"
             << "Build information\n"
             << "  Version          " << version << " " << version_name << '\n'
             << "  Compiled:        " << __DATE__ << ' ' << __TIME__ << '\n'

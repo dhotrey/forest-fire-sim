@@ -1,8 +1,8 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 1.2
-VERSION_NAME ?= loop-unroll
+VERSION ?= 1.3
+VERSION_NAME ?= threads
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 DEV_SOURCES := $(SOURCES) hash_grid.cpp
@@ -54,7 +54,7 @@ endef
 # FORCE prerequisites let `make o2 VISUALISE=1` rebuild even when a
 # non-visualisation binary with the same version already exists.
 $(DEV_BIN): $(DEV_SOURCES) hash_grid.hpp FORCE
-	$(call compile,-O0 -DDEBUG -march=native -mavx2,O3 DEBUG -march=native -mavx2,$(DEV_SOURCES))
+	$(call compile,-O0 -DDEBUG -fopenmp -march=native -mavx2,O3 DEBUG -march=native -mavx2 -fopenmp,$(DEV_SOURCES))
 
 $(O1_BIN): $(SOURCES) FORCE
 	$(call compile,-O1 -DNDEBUG,O1 NDEBUG,$(SOURCES))
@@ -63,7 +63,7 @@ $(O2_BIN): $(SOURCES) FORCE
 	$(call compile,-O2 -DNDEBUG,O2 NDEBUG,$(SOURCES))
 
 $(O3_BIN): $(SOURCES) FORCE
-	$(call compile,-O3 -DNDEBUG -march=native -mavx2,O3 NDEBUG -march=native -mavx2,$(SOURCES))
+	$(call compile,-O3 -DNDEBUG -fopenmp -march=native -mavx2,O3 NDEBUG -march=native -mavx2 -fopenmp,$(SOURCES))
 
 $(SERIAL_BIN): override VERSION = 1.0
 $(SERIAL_BIN): override VERSION_NAME = serial-baseline
