@@ -1,0 +1,230 @@
+=== execution environment ===
+opt flags: o3
+job id:   689315
+job node: a100-4
+hostname: a100-4
+kernel:   4.18.0-553.170.1.el8_10.x86_64
+date:     2026-10-23T19:45:55+10:00
+working directory: /home/Student/s4985050/forest-fire-sim
+command: /var/slurm/d/job689315/slurm_script o3 v1.3
+parameters: grids=8320 timesteps=500 warmups=0 reps=5 p=0.02 f=0.01
+slurm allocation: job_cpus_per_node=8 cpus_per_task=8 ntasks=1
+SLURM_CPUS_PER_TASK: 8
+OpenMP: threads=8 dynamic=false places=cores proc_bind=close
+process affinity: 0-7
+pid 482227's current affinity list: 0-7
+load average: 3.49 1.91 1.50 1/381 482240
+uptime:  19:45:55 up 17 days, 23 min,  0 users,  load average: 3.49, 1.91, 1.50
+Architecture:        x86_64
+CPU(s):              8
+Thread(s) per core:  1
+Core(s) per socket:  8
+Socket(s):           1
+NUMA node(s):        1
+Model name:          AMD EPYC 7542 32-Core Processor
+Virtualization type: full
+NUMA node0 CPU(s):   0-7
+model name	: AMD EPYC 7542 32-Core Processor
+pinned CPUs: 0-7
+cpufreq governor: n/a
+cpufreq current kHz: n/a
+compiler command: /usr/bin/g++
+g++ (GCC) 8.5.0 20210514 (Red Hat 8.5.0-28)
+time command: time (GNU Time) UNKNOWN
+JobId=689315 JobName=ff_o3
+   UserId=s4985050(2962097) GroupId=uusers(10000) MCS_label=N/A
+   Priority=1 Nice=0 Account=s4985050 QOS=normal
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:00 TimeLimit=00:15:00 TimeMin=N/A
+   SubmitTime=2026-10-23T18:37:22 EligibleTime=2026-10-23T18:37:22
+   AccrueTime=2026-10-23T18:37:22
+   StartTime=2026-10-23T19:45:55 EndTime=2026-10-23T20:00:55 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-23T19:45:55 Scheduler=Main
+   Partition=a100 AllocNode:Sid=login0:1918709
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=a100-4
+   BatchHost=a100-4
+   NumNodes=1 NumCPUs=8 NumTasks=1 CPUs/Task=8 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=8,mem=1M,node=1,billing=8
+   AllocTRES=cpu=8,node=1,billing=8
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=8 MinMemoryNode=0 MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) LicensesAlloc=(null) Network=(null)
+   Command=/home/Student/s4985050/forest-fire-sim/run.slurm.sh
+   SubmitLine=sbatch --job-name=ff_o3 --output=data/v1.3/slurm-logs/slurm-o3.out run.slurm.sh o3 v1.3
+   WorkDir=/home/Student/s4985050/forest-fire-sim
+   StdErr=
+   StdIn=/dev/null
+   StdOut=/home/Student/s4985050/forest-fire-sim/data/v1.3/slurm-logs/slurm-o3.out
+   TresPerTask=cpu=8
+
+--- binary o3 ---
+-rwx------ 1 s4985050 uusers 903576 Oct 23 17:11 bin/fire-v1.3-o3
+bin/fire-v1.3-o3: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=7c31011c1ace4a585832e64b0fad8a85510e21cc, with debug_info, not stripped
+   text	   data	    bss	    dec	    hex	filename
+  68361	   2024	    648	  71033	  11579	bin/fire-v1.3-o3
+	linux-vdso.so.1 (0x00007ffc989ef000)
+	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fd2445c6000)
+	libm.so.6 => /lib64/libm.so.6 (0x00007fd244244000)
+	libgomp.so.1 => /lib64/libgomp.so.1 (0x00007fd24400c000)
+	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fd243df4000)
+	libpthread.so.0 => /lib64/libpthread.so.0 (0x00007fd243bd4000)
+	libc.so.6 => /lib64/libc.so.6 (0x00007fd2437fe000)
+	/lib64/ld-linux-x86-64.so.2 (0x00007fd24495b000)
+	libdl.so.2 => /lib64/libdl.so.2 (0x00007fd2435fa000)
+md5:    2a504c5d3fa0addf2f6bedd02104f230
+sha256: b4d98ee6565786debd11aca893446de4e73d3aba80c7214afa68a11a1c90cc20
+=============================
+=== timed run start: opt=o3 grid=8320 rep=1 ===
+date: 2026-10-23T19:45:55+10:00
+load average: 3.49 1.91 1.50 1/381 482275
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       8322
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Runtime information
+  OpenMP threads:  8
+--------------------------------------------------
+Build information
+  Version          1.3 threads
+  Compiled:        Oct 23 2026 17:11:40
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.3-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 -fopenmp 
+  Optimisation:    enabled
+
+date: 2026-10-23T19:45:59+10:00
+load average: 4.01 2.04 1.54 5/381 482290
+cpu current kHz: n/a
+run=1 grid=8320 user=31.58s sys=0.03s cpu=769% total=4.10s max_rss=138932KiB invol_ctx=1262 vol_ctx=19 major_faults=0 minor_faults=1271 [o3]
+=== timed run end: opt=o3 grid=8320 rep=1 ===
+=== timed run start: opt=o3 grid=8320 rep=2 ===
+date: 2026-10-23T19:45:59+10:00
+load average: 4.01 2.04 1.54 1/381 482296
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       8322
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Runtime information
+  OpenMP threads:  8
+--------------------------------------------------
+Build information
+  Version          1.3 threads
+  Compiled:        Oct 23 2026 17:11:40
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.3-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 -fopenmp 
+  Optimisation:    enabled
+
+date: 2026-10-23T19:46:04+10:00
+load average: 5.21 2.32 1.64 1/381 482311
+cpu current kHz: n/a
+run=2 grid=8320 user=32.76s sys=0.03s cpu=750% total=4.36s max_rss=138836KiB invol_ctx=1528 vol_ctx=98 major_faults=0 minor_faults=1270 [o3]
+=== timed run end: opt=o3 grid=8320 rep=2 ===
+=== timed run start: opt=o3 grid=8320 rep=3 ===
+date: 2026-10-23T19:46:04+10:00
+load average: 5.21 2.32 1.64 2/381 482317
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       8322
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Runtime information
+  OpenMP threads:  8
+--------------------------------------------------
+Build information
+  Version          1.3 threads
+  Compiled:        Oct 23 2026 17:11:40
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.3-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 -fopenmp 
+  Optimisation:    enabled
+
+date: 2026-10-23T19:46:08+10:00
+load average: 5.60 2.45 1.68 1/381 482332
+cpu current kHz: n/a
+run=3 grid=8320 user=31.31s sys=0.03s cpu=774% total=4.04s max_rss=138808KiB invol_ctx=1206 vol_ctx=4 major_faults=0 minor_faults=1268 [o3]
+=== timed run end: opt=o3 grid=8320 rep=3 ===
+=== timed run start: opt=o3 grid=8320 rep=4 ===
+date: 2026-10-23T19:46:08+10:00
+load average: 5.60 2.45 1.68 1/381 482338
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       8322
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Runtime information
+  OpenMP threads:  8
+--------------------------------------------------
+Build information
+  Version          1.3 threads
+  Compiled:        Oct 23 2026 17:11:40
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.3-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 -fopenmp 
+  Optimisation:    enabled
+
+date: 2026-10-23T19:46:12+10:00
+load average: 5.95 2.58 1.73 1/381 482353
+cpu current kHz: n/a
+run=4 grid=8320 user=31.25s sys=0.02s cpu=774% total=4.04s max_rss=139028KiB invol_ctx=1226 vol_ctx=4 major_faults=0 minor_faults=1271 [o3]
+=== timed run end: opt=o3 grid=8320 rep=4 ===
+=== timed run start: opt=o3 grid=8320 rep=5 ===
+date: 2026-10-23T19:46:12+10:00
+load average: 5.95 2.58 1.73 1/381 482359
+cpu current kHz: n/a
+Cellular automata based forest fire model
+--------------------------------------------------
+Model configuration
+  Grid size:       8322
+  Time steps:      500
+  p (growth):      0.02
+  f (lightning):   0.01
+--------------------------------------------------
+Runtime information
+  OpenMP threads:  8
+--------------------------------------------------
+Build information
+  Version          1.3 threads
+  Compiled:        Oct 23 2026 17:11:40
+  Compiler:        GCC 8.5.0 20210514 (Red Hat 8.5.0-28)
+  C++ standard:    C++17 (__cplusplus=201703)
+  Compiler target: x86_64-redhat-linux
+  Executable:      bin/fire-v1.3-o3
+  Build flags:     O3 NDEBUG -march=native -mavx2 -fopenmp 
+  Optimisation:    enabled
+
+date: 2026-10-23T19:46:18+10:00
+load average: 6.35 2.72 1.78 1/381 482374
+cpu current kHz: n/a
+run=5 grid=8320 user=47.15s sys=0.03s cpu=775% total=6.08s max_rss=138808KiB invol_ctx=1847 vol_ctx=4 major_faults=0 minor_faults=1268 [o3]
+=== timed run end: opt=o3 grid=8320 rep=5 ===
+benchmark CSV: data/v1.3/benchmarking/benchmarks-o3.csv

@@ -1,8 +1,8 @@
 CXX ?= g++
 
 # Program version is set here and compiled into the binary.
-VERSION ?= 1.3
-VERSION_NAME ?= threads
+VERSION ?= 1.4
+VERSION_NAME ?= oops
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 DEV_SOURCES := $(SOURCES) hash_grid.cpp
