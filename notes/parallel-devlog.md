@@ -111,19 +111,25 @@ the physical cells those byte masks are applied to:
 
 # v1.2 - RNG + mask experiments
 
-I'll try to unroll the rng loop, I'll also run gprof , valgrind , cachegrind , measuing branch predictions and what not. 
+I'll try to unroll the rng loop, I'll also run gprof , valgrind , cachegrind , measuing branch predictions and what not.
 After doign the above i didn't see many useful findins
-- loop unroll does basically nothing so i think the compiler does it better - not gonna include in the presentation
+
+- loop unroll does basically nothing (0.6% improvement) so i think the compiler does it better - not gonna include in the presentation
 - valgrind/cachegrind/callgrind also show very little to help
 
 - gonna try and unroll the y loop to process 64 elements in one go to see how that goes for me
   - unrolled the loop 4 times and got a 1% speedup , nice - idt worth speaking about. moving onto next version.
 
+# v1.3 - openmp
 
-# v1.3 - better simd kernel?
+- spread work across threads aha!
+- pargma omp for
 
-Will try to improve the simd kernel i have here. 
+# v1.x - better simd kernel?
 
-# v1.x
+Will try to improve the simd kernel i have here.
 
-We'll compare `nextFloat()` against 32-bit integer RNG checks , then try halving it to 2 RNG calls with 16 bits per cell and measure the speed / probability precision tradeoff. We'll also add the mask permutation and measure its overhead against the natural packed order , validating each changed RNG mapping with its own reference hash.
+- Detect burning neighbours with one comparison
+- Construct the output directly instead of blending three times
+- We'll compare `nextFloat()` against 32-bit integer RNG checks ,
+- then try halving it to 2 RNG calls with 16 bits per cell and measure the speed / probability precision tradeoff.
