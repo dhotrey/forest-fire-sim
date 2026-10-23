@@ -1,0 +1,6 @@
+version,opt_flag,run_number,grid_size,user_s,system_s,cpu_pct,total_s,max_rss_kb,involuntary_ctx_switches,voluntary_ctx_switches,major_page_faults,minor_page_faults
+v1.3,o3,1,8320,31.24,0.06,482,6.49,138848,113,16,0,30392
+v1.3,o3,2,8320,31.08,0.07,484,6.42,138920,98,8,0,30392
+v1.3,o3,3,8320,31.14,0.07,484,6.43,138876,41,8,0,30393
+v1.3,o3,4,8320,31.21,0.08,484,6.45,138936,55,8,0,30392
+v1.3,o3,5,8320,31.33,0.09,484,6.49,138920,60,7,0,30392
