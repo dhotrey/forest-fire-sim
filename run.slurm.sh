@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=forest-fire
-#SBATCH --partition=a100
+#SBATCH --partition=cosc3500
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 #SBATCH --time=00:15:00
 
 set -euo pipefail
