@@ -93,9 +93,11 @@ int main(int argc, char *argv[]) {
     for (int t = 0; t < timesteps; ++t) {
 #pragma omp for schedule(static)
       for (int x = 1; x < grid_size - 1; x++) {
-        // this loop unroll provides a massive speedup of 0.6% on a single thread
-        // let's see how much this slows down when i get rid of it but when running on 8 threads
-//#pragma GCC unroll 4
+        // this loop unroll provides a massive speedup of 0.6% on a single
+        // thread let's see how much this slows down when i get rid of it but
+        // when running on 8 threads
+        // #pragma GCC unroll 4 -> not having this slowed down my code by 0.4%
+
         for (int y = 1; y < grid_size - 1; y += 32) {
           const auto idx = x * grid_size + y;
           // read 256 bits of memory starting from idx
