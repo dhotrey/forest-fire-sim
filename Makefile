@@ -2,7 +2,7 @@ CXX ?= g++
 
 # Program version is set here and compiled into the binary.
 VERSION ?= 1.4
-VERSION_NAME ?= oops
+VERSION_NAME ?= avx+omp-final
 
 SOURCES := main.cpp build_info.cpp save_file.cpp
 DEV_SOURCES := $(SOURCES) hash_grid.cpp
@@ -57,10 +57,10 @@ $(DEV_BIN): $(DEV_SOURCES) hash_grid.hpp FORCE
 	$(call compile,-O0 -DDEBUG -fopenmp -march=native -mavx2,O3 DEBUG -march=native -mavx2 -fopenmp,$(DEV_SOURCES))
 
 $(O1_BIN): $(SOURCES) FORCE
-	$(call compile,-O1 -DNDEBUG,O1 NDEBUG,$(SOURCES))
+	$(call compile,-O1 -DNDEBUG -fopenmp -march=native -mavx2,O1 NDEBUG -march=native -mavx2 -fopenmp,$(SOURCES))
 
 $(O2_BIN): $(SOURCES) FORCE
-	$(call compile,-O2 -DNDEBUG,O2 NDEBUG,$(SOURCES))
+	$(call compile,-O2 -DNDEBUG -fopenmp -march=native -mavx2,O2 NDEBUG -march=native -mavx2 -fopenmp,$(SOURCES))
 
 $(O3_BIN): $(SOURCES) FORCE
 	$(call compile,-O3 -DNDEBUG -fopenmp -march=native -mavx2,O3 NDEBUG -march=native -mavx2 -fopenmp,$(SOURCES))
