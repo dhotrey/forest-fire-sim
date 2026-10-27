@@ -1,0 +1,10 @@
+prefix=/usr
+includedir=${prefix}/include
+libdir=${prefix}/lib64
+
+Name: harfbuzz-gobject
+Description: HarfBuzz text shaping library GObject integration
+Version: 11.5.1
+Requires: harfbuzz =  11.5.1, glib-2.0 >=  2.30.0, gobject-2.0 >=  2.30.0
+Libs: -L${libdir} -lharfbuzz-gobject
+Cflags: -I${includedir}/harfbuzz

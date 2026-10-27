@@ -1,0 +1,51 @@
+{
+  "slides": [
+    {
+      "file": "assets/intro/slide-1.png",
+      "rev_file": "assets/intro/slide-1.png",
+      "type": "image",
+      "loop": false,
+      "auto_next": false
+    },
+    {
+      "file": "assets/intro/slide-2.png",
+      "rev_file": "assets/intro/slide-2.png",
+      "type": "image",
+      "loop": false,
+      "auto_next": false
+    },
+    {
+      "file": "assets/intro/slide-3.png",
+      "rev_file": "assets/intro/slide-3.png",
+      "type": "image",
+      "loop": false,
+      "auto_next": false
+    },
+    {
+      "file": "assets/intro/slide-4.png",
+      "rev_file": "assets/intro/slide-4.png",
+      "type": "image",
+      "loop": false,
+      "auto_next": false
+    },
+    {
+      "file": "assets/intro/slide-5.png",
+      "rev_file": "assets/intro/slide-5.png",
+      "type": "image",
+      "loop": false,
+      "auto_next": false
+    },
+    {
+      "file": "assets/intro/slide-6.png",
+      "rev_file": "assets/intro/slide-6.png",
+      "type": "image",
+      "loop": false,
+      "auto_next": false
+    }
+  ],
+  "resolution": [
+    1920,
+    1080
+  ],
+  "background_color": "white"
+}
