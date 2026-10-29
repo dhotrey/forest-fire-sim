@@ -139,10 +139,10 @@ int main(int argc, char *argv[]) {
           // this is the loop for calling the rng 4 times
           for (int i = 0; i < 4; i++) {
             __m256 randoms = rng.nextFloat(); // this gives us 8 randoms
-            // clang-format off
-          growthChecks[i] =_mm256_castps_si256(_mm256_cmp_ps(randoms, pVector, _CMP_LT_OQ));
-          fireChecks[i] = _mm256_castps_si256(_mm256_cmp_ps(randoms, fVector, _CMP_LT_OQ));
-            // clang-format on
+            growthChecks[i] = _mm256_castps_si256(
+                _mm256_cmp_ps(randoms, pVector, _CMP_LT_OQ));
+            fireChecks[i] = _mm256_castps_si256(
+                _mm256_cmp_ps(randoms, fVector, _CMP_LT_OQ));
           }
 
           // packing all comparison results a single 256 bit vectors

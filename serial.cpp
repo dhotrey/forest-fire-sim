@@ -76,7 +76,6 @@ int main(int argc, char *argv[]) {
 #endif
 
   std::vector<CellState> grid(grid_size * grid_size);
-
   std::vector<CellState> next(grid_size * grid_size);
   pcg32 rng(80085);
   for (int t = 0; t < timesteps; ++t) {
@@ -100,22 +99,19 @@ int main(int argc, char *argv[]) {
           const auto down = grid[index + 1];
           const auto left = grid[index - grid_size];
           const auto right = grid[index + grid_size];
-
           if (up == CellState::Burning || down == CellState::Burning ||
               left == CellState::Burning || right == CellState::Burning) {
             next[index] = CellState::Burning;
           } else {
             if (r < f_threshold) {
               next[index] = CellState::Burning;
-            } else {
+            } else
               next[index] = CellState::Tree;
-            }
           }
           break;
         }
       }
     }
-
     std::swap(grid, next);
 #ifndef NO_VISUALIZATION
     if (visualise) {

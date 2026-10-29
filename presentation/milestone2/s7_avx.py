@@ -1,4 +1,4 @@
-"""S7: a 256-bit load, eight 32-bit lanes, then thirty-two byte cells."""
+"""S7: a 256-bit load directly divided into thirty-two one-byte cells."""
 
 from manim import (
     DOWN,
@@ -89,50 +89,6 @@ class S7AVX(Slide):
         self.play(FadeIn(capacity), FadeIn(equation), FadeIn(caption), run_time=0.7)
         self.wait(1.5)
 
-        self.next_slide(
-            notes="For 32-bit integers, the same 256-bit register holds eight lanes."
-        )
-        wide_dividers = VGroup(
-            *[
-                Line(
-                    register.get_left() + RIGHT * register.width * i / 8 + DOWN * 0.45,
-                    register.get_left() + RIGHT * register.width * i / 8 + UP * 0.45,
-                    color=BLUE,
-                    stroke_width=2,
-                )
-                for i in range(1, 8)
-            ]
-        )
-        wide_labels = VGroup(
-            *[
-                Text("32 bits", font=SANS, font_size=19, color=BLUE).move_to(
-                    register.get_left() + RIGHT * register.width * (i + 0.5) / 8
-                )
-                for i in range(8)
-            ]
-        )
-        eight_ints = Text(
-            "256 / 32 = 8 integers", font=SANS, font_size=32, color=INK
-        ).move_to(equation)
-        wide_caption = Text(
-            "For a 32-bit integer, each lane occupies four bytes.",
-            font=SANS,
-            font_size=23,
-            color=MUTED,
-        ).move_to(caption)
-        self.play(
-            FadeOut(capacity),
-            LaggedStart(*[Create(line) for line in wide_dividers], lag_ratio=0.08),
-            run_time=1.1,
-        )
-        self.play(
-            FadeIn(wide_labels),
-            ReplacementTransform(equation, eight_ints),
-            ReplacementTransform(caption, wide_caption),
-            run_time=0.8,
-        )
-        self.wait(1.5)
-
         self.next_slide(notes="Our CellState type uses an 8-bit integer: one byte per cell.")
         cell_type = Text(
             "enum class CellState : std::uint8_t { Empty, Tree, Burning };",
@@ -147,23 +103,23 @@ class S7AVX(Slide):
         cell_type.move_to([-0.35, 1.8, 0])
         cell_size = Text(
             "1 cell = 8 bits = 1 byte", font=SANS, font_size=32, color=ORANGE
-        ).move_to(eight_ints)
+        ).move_to(equation)
         byte_caption = Text(
             "Our cell state uses an 8-bit unsigned integer.",
             font=SANS,
             font_size=23,
             color=MUTED,
-        ).move_to(wide_caption)
+        ).move_to(caption)
         self.play(FadeOut(code), run_time=0.35)
         self.play(
+            FadeOut(capacity),
             Write(cell_type),
-            ReplacementTransform(eight_ints, cell_size),
-            ReplacementTransform(wide_caption, byte_caption),
+            ReplacementTransform(equation, cell_size),
+            ReplacementTransform(caption, byte_caption),
             run_time=1.3,
         )
         self.wait(1.5)
 
-        self.next_slide(notes="Split each 32-bit lane into four bytes: 32 cell states fit in total.")
         byte_dividers = VGroup(
             *[
                 Line(
@@ -173,7 +129,6 @@ class S7AVX(Slide):
                     stroke_width=1.2,
                 )
                 for i in range(1, 32)
-                if i % 4
             ]
         )
         cell_labels = VGroup(
@@ -197,9 +152,7 @@ class S7AVX(Slide):
             color=MUTED,
         ).move_to(byte_caption)
         self.play(
-            FadeOut(wide_labels),
             register.animate.set_fill(PALE_TEAL).set_stroke(TEAL),
-            wide_dividers.animate.set_color(TEAL),
             LaggedStart(*[Create(line) for line in byte_dividers], lag_ratio=0.025),
             run_time=1.3,
         )

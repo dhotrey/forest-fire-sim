@@ -4,16 +4,15 @@
 
 - The baseline is `serial.cpp` built with `-O3 -march=native` , allowing the compiler to auto vectorise. `make serial` always builds it as **v1.0 serial-baseline** in `bin/fire-v1.0-serial-baseline-o3`.
 - we're comparing the SIMD version against these same rules : empty cells can grow , trees catch fire from a neighbour or randomly , burning cells become empty. all updates read the old grid.
-- not permuting the SIMD growth/fire masks doesn't violate those rules. the RNG generates values , not values assigned to particular cells , so we're choosing the packing's natural assignment instead. growth and fire use the same assignment so each cell still gets one shared random value for its two checks. this doesn't add entropy , it just changes where draws are used.
-- the SIMD run won't have the same hash as this baseline : it uses different RNG streams/seeds and float probability checks instead of the scalar integer thresholds. the rules match , the exact random trajectory doesn't.
 
 # v1.1 - SIMD
 
 We're gonna have to turn our beautiful branching code into a branchless pain in the ass
 
+- the SIMD run won't have the same hash as this baseline : it uses different RNG streams/seeds and float probability checks instead of the scalar integer thresholds. the rules match , the exact random trajectory doesn't.
 - the first kernel is now implemented in `main.cpp`. we're using floats for the probability checks to get it working first , integer comparisons can wait for v1.2.
 - we're keeping `grid` and `next` as `std::vector<CellState>` , each cell is already 1 byte.
-- the workload is **5120 x 5120 interior cells** , with padding on top of that. allocated width is 5122 , so we get exactly 160 batches per interior row and don't need a leftover-cell path for this workload.
+- the workload is **8320x8320 interior cells** , with padding on top of that. allocated width is 5122 , so we get exactly 160 batches per interior row and don't need a leftover-cell path for this workload.
 - a `__m256i` holds 256 bits , so we can load **32 cells at once** instead of 8. the instructions decide whether we're working with 32 byte lanes or 8 32-bit lanes.
   - cell comparisons use `_mm256_cmpeq_epi8` , random float comparisons use `_mm256_cmp_ps`.
   - 32 cells at once doesn't automatically mean 4x the speedup , we still have to generate and compare 32 random numbers.

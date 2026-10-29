@@ -1,9 +1,10 @@
-"""Port PowerPoint slides 1–6 into the existing S7 browser presentation."""
+"""Build the final browser deck from the original intro and Manim scenes."""
 
 import argparse
 import base64
 import json
 import os
+import re
 from pathlib import Path, PurePosixPath
 import subprocess
 import sys
@@ -63,6 +64,10 @@ def main():
                     if blip is None:
                         continue
                     target = media.get(blip.attrib.get(f"{{{NS['r']}}}embed"), "")
+                    if number in (3, 4) and target.lower().endswith(".png"):
+                        filename = "node-info.png" if number == 3 else "build-info.png"
+                        media_name = os.path.normpath(str(slide_path.parent / target))
+                        (assets / filename).write_bytes(archive.read(media_name))
                     if not target.lower().endswith(".gif"):
                         continue
                     # PowerPoint image relationships are relative to ppt/slides/.
@@ -107,16 +112,65 @@ def main():
         str(assets / "slide"),
     )
 
-    intro = {"slides": [], "resolution": [width, height], "background_color": "white"}
-    for number in range(1, 7):
-        media = f"assets/intro/slide-{number}.png"
-        intro["slides"].append({
-            "file": media, "rev_file": media,
-            "type": "image", "loop": False, "auto_next": False,
-        })
-    (ROOT / "slides/Intro.json").write_text(json.dumps(intro, indent=2) + "\n")
+    deck = {"slides": [], "resolution": [width, height], "background_color": "white"}
+    groups = []
+    script = (ROOT / "script-milestone-2.md").read_text()
+    spoken = {}
+    for match in re.finditer(r"^## S(\d+)[^\n]*\n(.*?)(?=^## |\Z)", script, re.M | re.S):
+        body = re.sub(r"```.*?```", "", match[2], flags=re.S)
+        body = re.sub(r"(?m)^\*.*?\*(?=\n|$)", "", body, flags=re.S)
+        spoken[int(match[1])] = body.replace("---", "").strip()
+    sources = {
+        2: "https://doi.org/10.1103/PhysRevLett.69.1629",
+        6: "https://clang.llvm.org/doxygen/avxintrin_8h.html",
+        7: "https://clang.llvm.org/doxygen/avx2intrin_8h.html",
+        8: "https://github.com/wjakob/pcg32; https://clang.llvm.org/doxygen/avx2intrin_8h.html",
+        9: "https://clang.llvm.org/doxygen/avx2intrin_8h.html",
+        10: "https://clang.llvm.org/doxygen/avx2intrin_8h.html",
+        11: "data/v1.0/benchmarking/benchmarks-o3.csv; data/v1.1/benchmarking/benchmarks-o3.csv",
+        12: "main.cpp at v1.3; https://www.openmp.org/spec-html/5.2/openmpse62.html",
+        13: "data/v1.3/{4,5,6,7,8}-threads/benchmarking/benchmarks-o3.csv; https://hpc.llnl.gov/documentation/tutorials/introduction-parallel-computing-tutorial",
+        14: "data/v1.0, data/v1.1 and data/v1.3/8-threads benchmark CSVs; same CPU model, different physical nodes",
+        15: "main.cpp; pcg32_8.h; presenter-reported rule-level checks",
+        16: "Presenter-provided disclosure; slides/milestone1.pdf, page 23",
+        17: "See bibliography; https://docs.manim.community/en/v0.19.0/",
+    }
+    sequence = [
+        (1, 1), (2, 2), (3, "S3Methodology"), (4, 5), (5, 6),
+        (6, "S7AVX"), (7, "S8Neighbours"), (7, "S9FireMask"),
+        (8, "S10RNGChecks"), (8, "S11PackMasks"), (9, "S9RuleMasks"),
+        (10, "S10Blending"), (11, "S11AVXResults"), (12, "S12OpenMP"),
+        (13, "S13Scaling"), (14, "S14Combined"), (15, "S15Reflection"),
+        (16, "S16AIDisclosure"), (17, "S17Bibliography"),
+    ]
+    static_images = {
+        "S9RuleMasks": "assets/rule-masks.png",
+        "S10Blending": "assets/blending.png",
+    }
+    for logical, scene in sequence:
+        if isinstance(scene, int):
+            media = f"assets/intro/slide-{scene}.png"
+            slides = [{"file": media, "rev_file": media, "type": "image",
+                       "loop": False, "auto_next": False}]
+        else:
+            slides = json.loads((ROOT / f"slides/{scene}.json").read_text())["slides"]
+            if scene in static_images:
+                # Export the completed static layout as an image, without a video player.
+                media = static_images[scene]
+                run("ffmpeg", "-v", "error", "-y", "-sseof", "-0.1", "-i",
+                    slides[0]["file"], "-frames:v", "1", str(ROOT / media))
+                slides = [{"file": media, "rev_file": media, "type": "image",
+                           "loop": False, "auto_next": False}]
+        for slide in slides:
+            slide["auto_next"] = False
+            slide["playback_rate"] = 1.0
+            slide["reversed_playback_rate"] = slide["playback_rate"]
+            slide["notes"] = spoken.get(logical, "") + "\n\nSources: " + sources.get(logical, "See bibliography.")
+            deck["slides"].append(slide)
+            groups.append(logical)
+    (ROOT / "slides/Milestone2.json").write_text(json.dumps(deck, indent=2) + "\n")
     run(
-        sys.executable, "-m", "manim_slides", "convert", "Intro", "S7AVX",
+        sys.executable, "-m", "manim_slides", "convert", "Milestone2",
         "milestone2.html", "--one-file", "--offline", "-creveal_theme=white",
         "-cbackground_color=white", "-ccontrols=true", "-cmargin=0", "-chash=true",
         f"-cwidth={width}", f"-cheight={height}",
@@ -128,6 +182,13 @@ def main():
     destination = ROOT / "milestone2.html"
     html = BeautifulSoup(destination.read_text(), "html.parser")
     sections = html.select(".slides > section")
+    seen = {}
+    for section, logical in zip(sections, groups, strict=True):
+        seen[logical] = seen.get(logical, 0) + 1
+        step = seen[logical]
+        section["id"] = f"s{logical}" if step == 1 else f"s{logical}-step-{step}"
+        section["data-script-slide"] = str(logical)
+        section["aria-label"] = f"Script slide {logical}, stage {step}"
     for number, gif_path, (x, y, w, h) in animations:
         section = sections[number - 1]
         background = section.attrs.pop("data-background-image")
@@ -147,8 +208,34 @@ def main():
                 f"border:0;box-shadow:none;image-rendering:{rendering}"
             )
             section.append(image)
+    counter = html.new_tag("script")
+    counter.string = """
+    Reveal.configure({
+      slideNumber: slide => [Number((slide && slide.dataset.scriptSlide) || 1), ' / ', 17]
+    });
+    """
+    html.body.append(counter)
+    # Reveal splits a background-video string on commas. A data URI contains
+    # a comma, and the converter's lazy-video repair can run before its sources
+    # exist. Blob URLs keep each embedded video a single offline source.
+    media_sources = html.new_tag("script")
+    media_sources.string = """
+    for (const slide of document.querySelectorAll('section[data-background-video]')) {
+      const source = slide.getAttribute('data-background-video');
+      if (!source.startsWith('data:video/')) continue;
+      const separator = source.indexOf(',');
+      const mime = source.slice(5, source.indexOf(';'));
+      const decoded = atob(source.slice(separator + 1));
+      const bytes = new Uint8Array(decoded.length);
+      for (let i = 0; i < decoded.length; i++) bytes[i] = decoded.charCodeAt(i);
+      slide.setAttribute('data-background-video', URL.createObjectURL(new Blob([bytes], {type: mime})));
+    }
+    """
+    initialization = next(tag for tag in html.find_all("script")
+                          if tag.string and "Reveal.initialize({" in tag.string)
+    initialization.insert_before(media_sources)
     destination.write_text(str(html))
-    print("Ready: milestone2.html — six imported slides followed by the four S7 stages.")
+    print(f"Ready: milestone2.html — 17 script slides, {len(sections)} animation stages.")
 
 
 if __name__ == "__main__":
